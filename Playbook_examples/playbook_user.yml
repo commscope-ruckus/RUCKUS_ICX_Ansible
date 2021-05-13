@@ -1,0 +1,56 @@
+---
+- hosts: icx
+  gather_facts: no
+  vars:
+    ansible_network_os: icx
+    ansible_user: super
+    ansible_become: True
+    ansible_password: test
+    ansible_become_method: enable
+    ansible_become_pass: test
+    ansible_persistent_log_messages: True
+
+  tasks:
+  - name: create new user
+    icx_user:
+      name: ale6
+      configured_password: alethea123
+      check_running_config: false
+  
+  #test1
+  # - name: create new user without password
+  #   icx_user:
+  #     name: ale7
+  #     nopassword: true
+
+  # - name: create new users using aggregate
+  #   icx_user:
+  #     aggregate:
+  #       - name: ale1
+  #         configured_password: ale1
+  #       - name: ale2
+  #         configured_password: ale2
+  #       - name: ale3
+  #         configured_password: ale3
+  #     privilege: 5
+  #     update_password: on_create
+  
+  # - name: Update password of test_user1
+  #   icx_user:
+  #     name: ale6
+  #     configured_password: test125
+  #     update_password: always
+  #   register: result
+
+  # - name: Update password of ale1
+  #   icx_user:
+  #     name: ale1
+  #     configured_password: test123
+  #     update_password: on_create
+  #   register: result
+
+  # - name: purge all the users except alethea
+  #   icx_user:
+  #     aggregate:
+  #       - name: alethea
+  #     purge: true

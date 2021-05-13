@@ -1,0 +1,108 @@
+---
+- hosts: icx
+  gather_facts: no
+  vars:
+    ansible_network_os: icx
+    ansible_user: super
+    ansible_become: yes
+    ansible_password: test
+    ansible_become_method: enable
+    ansible_become_pass: test
+    ansible_persistent_log_messages: True
+        
+  tasks:
+    #test1
+  - name: set the config on remote devices
+    icx_config:
+      lines:
+        - port-name test string4
+        - speed-duplex 10-full
+        - enable
+      parents:
+        - interface ethernet 1/1/9
+
+  # - name: setup
+  #   icx_config:
+  #     lines:
+  #       - permit ip host 192.0.2.3 any log
+  #       - permit ip host 192.0.2.1 any log
+  #       - permit ip host 192.0.2.2 any log
+  #     parents: ['ip access-list extended test1']
+  #     before: ['no ip access-list extended test1']
+  #     after: ['exit']
+  #     match: exact
+
+      #line,strict,exact,none
+
+  # - name: configure sub level command using block replace
+  #   icx_config:
+  #     lines:
+  #       - permit ip host 192.0.2.3 any log
+  #     parents: ['ip access-list extended test1']
+  #     # before: ['no ip access-list extended test1']
+  #     match: exact
+  #     # replace: line
+  #     after: ['exit']
+  # # block, line
+
+  # - name: icx_config diff against retrieved config
+  #   icx_config:
+  #     diff_against: startup
+  #     intended_config: "{{ lookup('file', '/home/alethea/Documents/config.j2') }}"
+  #   diff: true
+
+    # intended, startup
+
+  # - name: icx_config diff against provided running_config
+  #   icx_config:
+
+  #     diff_against: intended
+  #     intended_config: "{{ lookup('file', '/home/alethea/Documents/config.j2') }}"
+  #     # running_config: "{{ lookup('file', '/home/alethea/Documents/baserunning.j2') }}"
+  #     # diff_ignore_lines: 
+  #     #   - port-name lldp-port
+  #     #   - port-name test-interface
+  #   diff: true
+
+  # - name: save config
+  #   icx_config:
+  #     save: true
+
+  # - name: delete config (setup) need to check
+  #   icx_config:
+  #     replace: line
+  #     lines:
+  #       - "logging on"
+  #     save_when: never
+    # always, never, changed
+
+  # - name: check for empty diff
+  #   icx_config:
+  #     running_config: |
+  #       ip ssh  authentication-retries 5
+  #       ip ssh  encryption disable-aes-cbc
+  #     lines:
+  #       - ip ssh  authentication-retries 5
+  #       - ip ssh  encryption disable-aes-cbc
+  #   check_mode: True
+
+  # - name: configure top level command with after check
+  #   icx_config:
+  #     lines: ['hostname foo']
+  #     after: ['snmp-server contact foo']
+
+  # - name: configure top level command with after check
+  #   icx_config:
+  #     lines: ['no hostname']
+  #     before: ['no snmp-server contact foo']
+ 
+
+  # - name: set path to copy
+  #   icx_config:
+  #     src: "{{ lookup('file', '/home/alethea/Documents/config.j2') }}"
+  #     backup: yes
+
+    register: result
+
+  - debug:
+     msg: ' {{ result }}'

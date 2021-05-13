@@ -1,0 +1,108 @@
+---
+- hosts: icx
+  gather_facts: yes
+  vars:
+    ansible_network_os: icx
+    ansible_become: True
+    ansible_user: super
+    ansible_password: test
+    ansible_become_method: enable
+    ansible_become_pass: test
+    ansible_persistent_log_messages: True
+    
+        
+  tasks:
+  # - name: configure interface port 1
+  #   icx_interface:
+  #     name: ethernet 1/1/9
+  #     description: interface ethernet port
+  #     speed: 100-half
+  #     stp: True
+  #     state: present
+  #     enabled: True
+      # check_running_config: false
+
+  # - name: configure interface power parameters
+  #   icx_interface:
+  #     name: ethernet 1/1/1
+  #     description: interface ethernet port 1
+  #     power:
+  #       by_class: 3
+  #     check_running_config: True
+
+  # - name: configure interface power parameters
+  #   icx_interface:
+  #     name: ethernet 1/1/1
+  #     description: interface ethernet port 1
+  #     power:
+  #        limit: 20000
+
+  # - name: configure interface power parameters
+  #   icx_interface:
+  #     name: ethernet 1/1/1
+  #     description: interface ethernet port 1
+  #     power:
+  #        priority: 1
+    
+  # - name: configure interface disable power parameters
+  #   icx_interface:
+  #     name: ethernet 1/1/33
+  #     enabled: false
+  #     check_running_config: True
+  
+  # - name: disable the interface
+  #   icx_interface:
+  #     name: ethernet 1/1/1
+  #     enabled: False
+
+  # - name: enable the interface
+  #   icx_interface:
+  #     name: ethernet 1/1/1
+  #     enabled: True
+
+  # - name: remove the interface
+  #   icx_interface:
+  #     name: ethernet 1/1/3
+  #     state: absent
+
+  # - name: Add interface aggregate
+  #   icx_interface:
+  #     aggregate:
+  #     - { name: ethernet 1/1/1, enabled: False }
+  #     - { name: ethernet 1/1/4, description: test-interface 14, power: { by_class: 3 } }
+  #     - { name: ethernet 1/1/5, description: test-interface 15, power: { by_class: 4 } }
+  #     speed: 10-half
+  
+  #test2
+  - name: check intent parameters
+    icx_interface:
+      name: ethernet 1/1/13
+      neighbors:
+        - port: GigabitEthernet1/1/13
+          host: ICX7650-48ZP Router
+  
+  # - name: Check tx,rx intent arguments
+  #   icx_interface:
+  #     name: ethernet 1/1/1
+  #     state: down
+  #     tx_rate: eq(0)
+  #     rx_rate: eq(0)
+
+  # - name: configure loopback interface
+  #   icx_interface:
+  #    aggregate:
+  #    - name: loopback 9
+  #    - name: loopback 10
+  #    description: loopback interfaces
+
+  # - name: configure lag interface
+  #   icx_interface:
+  #    name: lag 11
+  #    description: lag-interface-11
+  #    state: present
+ 
+    register: output
+
+  - name: show command
+    debug:
+      msg: '{{ output }}'

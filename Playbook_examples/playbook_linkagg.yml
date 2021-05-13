@@ -1,0 +1,53 @@
+---
+- hosts: icx
+  gather_facts: no
+  vars:
+    ansible_network_os: icx
+    ansible_user: super
+    ansible_become: True
+    ansible_password: test
+    ansible_become_method: enable
+    ansible_become_pass: test
+    ansible_command_timeout: 60
+    ansible_persistent_log_messages: True
+
+  tasks:
+    #test1
+  - name: create static link aggregation group
+    icx_linkagg:
+      group: 1
+      mode: static
+      members: 
+        - ethernet 1/1/14 to 1/1/17
+      name: LAG1
+      # check_running_config: True
+    register: result
+
+  - debug:
+      var: result
+
+  # - name: Remove LAG1 with id 10
+  #   icx_linkagg:
+  #     aggregate:
+  #       - { group: 10, name: LAG1, mode: static }
+  #     state: absent
+
+
+  # - name: Create dynamic LAG1 and LAG2 with id 10 and 20
+  #   icx_linkagg:
+  #     aggregate:
+  #       - {name: LAG1, group: 10, members: ['ethe 1/1/4 to 1/1/7'] }
+  #       - {name: LAG2, group: 20, members: ['ethe 1/1/14 to 1/1/17'] }
+  #     mode: dynamic
+
+  # - name: Create LAG1 and LAG2 using aggregate
+  #   icx_linkagg:
+  #     aggregate:
+  #       - { group: 10, name: LAG1, mode: dynamic, members: ['ethernet 1/1/1 to 1/1/5'] }
+  #       - { group: 20, name: LAG2, mode: dynamic, members: ['ethernet 1/1/11 to 1/1/15'] }
+  
+  # - name: Remove all the lags except LAG1 with id 10
+  #   icx_linkagg:
+  #     aggregate:
+  #       - { group: 10, name: LAG1, mode: dynamic, members: [''] }
+  #     purge: true

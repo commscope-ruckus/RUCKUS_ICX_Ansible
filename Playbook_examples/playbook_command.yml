@@ -1,0 +1,145 @@
+---
+- hosts: all
+  gather_facts: yes
+  vars:
+    ansible_network_os: icx
+    ansible_become: True
+    ansible_user: super
+    ansible_password: brocade
+    ansible_become_method: enable
+    ansible_become_pass: brocade
+    ansible_buffer_read_timeout: 30
+    ansible_persistent_log_messages: True
+    
+
+    
+        
+  tasks:
+  - name: sample command
+    icx_command:
+      commands: 
+        - command: config t
+        - command: ip ssh pub-key-file tftp 172.16.10.216 id_rsa.pub
+          prompt: 
+            - 'User already exists. Do you want to modify:.*'
+            - 'To modify or remove user, enter current password:'
+          answer: 
+            - 'y'
+            - "qqq\r"
+          check_all: True
+          newline: False
+
+  # - name: sample command
+  #   icx_command:
+  #     commands: 
+  #       - command: config t
+  #       - command: clear public-key
+  #       - command: ip ssh pub-key-file tftp 10.198.137.89 id_rsa_pub.txt
+        
+        
+
+  # - name: sample command2
+  #   icx_command:
+  #     commands: 
+  #       - command: config t
+  #       - command: ip ssh pub-key-file tftp 10.198.137.89 id_rsa_pub.txt
+
+
+  
+  # - name: sample command3
+  #   icx_command:
+  #     commands: 
+  #       - command: config t
+  #       - command: clear public-key
+  #       - command: ip ssh pub-key-file tftp 10.45.1.132 id_rsa_pub5.txt
+  
+  # - name: sample command4
+  #   icx_command:
+  #     commands: 
+  #       - command: config t
+  #       - command: clear public-key
+  #       - command: ip ssh pub-key-file tftp 10.198.137.89 id_rsa_pub.txt
+  #       # - command: ip ssh pub-key-file tftp 10.45.1.132 id_rsa_pub.txt
+
+  # - name: test contains operator
+  #   icx_command:
+  #     commands:
+  #       - show version
+  #       - show interface ethernet 1/1/1
+  #     wait_for:
+  #       - "result[0] contains ICXwr"
+  #       - "result[1] contains GigabitEthernet1/1/1"
+  #     match: any
+
+  # - name: test match any
+  #   icx_command:
+  #     commands:
+  #       - show version
+  #       - show interface ethernet 1/1/1
+  #     wait_for:
+  #       - "result[0] contains ICXswitches"
+  #       - "result[1] contains GigabitEthernet1/1/1"
+  #    match: any
+  
+  # - name: test retry parameter(fail)
+  #   icx_command:
+  #     commands:
+  #       - config t
+  #       - interface ethernet 1/1/2
+  #       - no inline power
+  #       - inline power
+  #       - end
+  # - icx_command:
+  #     commands:
+  #       - show interface ethernet 1/1/1
+  #     wait_for:
+  #       - "result[0] contains 'Port up'" 
+  #     retries: 2
+
+
+  # - name: test retry parameter
+  #   icx_command:
+  #     commands:
+  #       - config t
+  #       - interface ethernet 1/1/1
+  #       - no inline power
+  #       - inline power
+  #       - end
+  # - icx_command:
+  #     commands:
+  #       - show interface ethernet 1/1/1
+  #     wait_for:
+  #       - "result[0] contains 'Port up'" 
+  #     retries: 5
+  #     interval: 2
+
+  # - icx_command:
+  #     commands: 
+  #      - command: config t
+  #      - command: username qqq password qqq
+  #        prompt: 
+  #         - 'User already exists. Do you want to modify:.*'
+  #         - 'To modify or remove user, enter current password:'
+  #        answer: 
+  #         - 'y'
+  #         - "qqq\r"
+  #        check_all: True
+  #        newline: False
+
+    
+
+
+
+  - name: test contains operator
+    icx_command:
+      commands:
+        - show ip
+      wait_for:
+        - "result[0] eq 'Switch IP address: 172.16.10.183  \n\n           Subnet mask: 255.255.255.0  \n\nDefault router address: 172.16.10.1    \n   TFTP server address: None           \nConfiguration filename: None\n        Image filename: None\n                IP MTU: 1500'"
+      match: all
+
+
+    register: result
+
+  - debug:
+      msg: '{{ result }}'

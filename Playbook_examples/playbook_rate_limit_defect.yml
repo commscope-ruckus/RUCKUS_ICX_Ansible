@@ -1,0 +1,218 @@
+---
+- hosts: all
+  #connection: network_cli
+  # ignore_errors: yes
+  gather_facts: no
+  vars:
+    ansible_network_os: icx
+    ansible_become: True
+    ansible_user: super
+    ansible_password: brocade
+    ansible_become_method: enable
+    ansible_become_pass: brocade
+    # ansible_python_interpreter: /usr/bin/python3.9
+    ansible_persistent_log_messages: True
+    # ansible_buffer_read_timeout: 30
+    
+        
+  tasks:
+
+  - name: set rate-limit input without Lag state=absent and burst_size
+    icx_rate_limit:
+        rate_limit_input:
+          port: 1/1/2
+          average_rate: 800
+          burst_size: 500
+          state: present
+        
+              
+  # - name: set rate-limit input with Lag state=present aggregate check_running_config=False
+  #   icx_rate_limit:
+  #     aggregate:
+  #       - { rate_limit_input: { lag: lag25, port: 1/1/42, average_rate: 800, state: present} }    
+  #       - { rate_limit_input: { port: 1/1/2, average_rate: 800, state: present} }
+  #       - { rate_limit_output: { port: 1/1/3, value: 2400,priority_queue: 5, state: absent}}
+       
+         #check_running_config: False
+  #  register: result1      
+
+
+  #- name: set rate-limit input and output
+  #  icx_rate_limit:
+  #    aggregate:
+  #            - { rate_limit_input: { lag: LAG2, port: 1/1/20, average_rate: 800} }
+  #
+  #          #check_running_config: true
+  #          #       rate_limit_input:
+  #          #lag: LAG2
+  #          #port: 1/1/20
+  #          #average_rate: 800
+  #          #state: absent
+  #  register: result2
+
+  # - name: set rate-limit output  
+  #   icx_rate_limit:
+  #     rate_limit_output:
+  #        port: 1/1/42
+  #        lag: lag25
+  #        value: 3600
+  #        state: absent
+      
+  #     rate_limit_input:
+  #       port: 1/1/3
+  #       average_rate: 800
+  #       burst_size: 500
+  #       state: present
+
+  #     rate_limit_bum:
+  #       minutes: 5
+  #       state: absent
+  
+  #   register: result3
+         
+
+
+  # - name: set rate-limit input without Lag state=present and burst_size
+  #   icx_rate_limit:
+  #     rate_limit_input:
+  #       port: 1/1/11
+  #       average_rate: 800
+  #       burst_size: 500
+  #       state: present
+  # register: result4
+ 
+
+  #- name: set rate-limit input without Lag state=absent and burst_size
+  #  icx_rate_limit:
+  #    rate_limit_input:
+  #       port: 1/1/3
+  #       average_rate: 800
+  #       burst_size: 500
+  #       state: absent
+    #register: result4
+    
+
+    #- name: set rate-limit output without Lag state=present
+    #icx_rate_limit:
+    #   rate_limit_output:
+    #     port: 1/1/6
+    #     value: 800
+    #register: result5
+ 
+
+
+    #- name: set rate-limit output with Lag state=present
+    #icx_rate_limit:
+    #  rate_limit_output:
+    #    port: 1/1/2
+    #    lag: LAG1
+    #    value: 3600
+    #    state : absent
+    #register: result6
+   
+
+ 
+
+  #- name: set rate-limit output with Lag state=present and priority_queue
+  #  icx_rate_limit:
+  #    rate_limit_output:
+  #      port: 1/1/10
+  #      lag: LAG2
+  #      value: 800
+  #      priority_queue: 5
+  #      state : absent
+    #register: result7
+    
+   
+
+
+    #- name: set rate-limit output with Lag state=absent and priority_queue
+    #icx_rate_limit:
+    #   rate_limit_output:
+    #     port: 1/1/10
+    #     lag: LAG2
+    #     value: 800
+    #     priority_queue: 5
+    #     state: absent
+    #register: result8
+
+
+    #- name: set rate-limit output without Lag state=present and priority_queue
+    #icx_rate_limit:
+    #  rate_limit_output:
+    #    port: 1/1/12
+    #    value: 800
+    #    priority_queue: 5
+    #    state: present
+    #register: result9
+
+
+  
+  # - name: set rate-limit arp state=absent
+  #   icx_rate_limit:
+  #     rate_limit_arp:
+  #       number: 51
+  #       state: absent
+      
+  
+  # - name: set rate-limit arp
+  #   icx_rate_limit:
+  #     rate_limit_arp:
+  #       number: 51
+  
+  # - name: set rate-limit BUM state=absent
+  #   icx_rate_limit:
+  #     rate_limit_bum:
+  #       minutes: 7
+  #       state: absent
+  #
+  #  
+  # - name: set rate-limit BUM state=present
+  #   icx_rate_limit:
+  #     rate_limit_bum:
+  #       minutes: 5
+  #       state: absent
+  #
+  #  
+  # - name: set broadcast_limit with log state=present
+  #   icx_rate_limit:
+  #     broadcast_limit:
+  #       port: 1/1/6
+  #       kbps: 1
+  #       log: yes
+  #     check_running_config: True
+      
+        
+
+  #- name: set broadcast_limit without log state=present
+  #  icx_rate_limit:
+  #    broadcast_limit:
+  #      port: 1/1/18
+  #      kbps: 0
+         
+
+  #  
+  # - name: set unknown_unicast_limit state=present
+  #   icx_rate_limit:
+  #     unknown_unicast_limit:
+  #       port: 1/1/6
+  #       kbps: 2
+      
+        
+  #
+  #  
+  - name: set multicast_limit state=present
+    icx_rate_limit:
+      multicast_limit:
+        port: 1/1/6
+        kbps: 2
+        
+      
+
+    register: result
+ 
+ 
+  - name: debug
+    debug:
+      msg: '{{result }}'
+    
