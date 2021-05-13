@@ -1,0 +1,8 @@
+#!/bin/bash
+OUTPUT=$(ansible --version | grep "ansible python module location")
+IFS='='; arrIN=($OUTPUT); unset IFS;
+PYTHON_MODULE_LOCATION=${arrIN[1]}
+echo Ansible Python module location: $PYTHON_MODULE_LOCATION
+sudo tar -xzf ansible.tar.gz -C $PYTHON_MODULE_LOCATION
+echo "done!"
+
