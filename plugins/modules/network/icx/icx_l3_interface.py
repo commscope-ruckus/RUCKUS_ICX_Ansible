@@ -99,7 +99,7 @@ options:
       check_running_config:
         description:
           - Check running configuration. This can be set as environment variable.
-           Module will use environment variable value(default:False), unless it is overridden, by specifying it as module parameter.
+           Module will use environment variable value(default:True), unless it is overridden, by specifying it as module parameter.
         type: bool
   state:
     description:
@@ -111,9 +111,9 @@ options:
   check_running_config:
     description:
       - Check running configuration. This can be set as environment variable.
-       Module will use environment variable value(default:False), unless it is overridden, by specifying it as module parameter.
+       Module will use environment variable value(default:True), unless it is overridden, by specifying it as module parameter.
     type: bool
-    default: no
+    default: yes
 '''
 
 EXAMPLES = """
@@ -123,43 +123,52 @@ EXAMPLES = """
     ipv4: 192.168.0.1/24
     ipv6: "fd5d:12c9:2201:1::1/64"
     state: absent
+
 - name: Replace ethernet 1/1/1 primary IPv4 address
   community.network.icx_l3_interface:
     name: ethernet 1/1/1
     ipv4: 192.168.0.1/24
     replace: yes
     state: absent
+
 - name: Replace ethernet 1/1/1 dynamic IPv4 address
   community.network.icx_l3_interface:
     name: ethernet 1/1/1
     ipv4: 192.168.0.1/24
     mode: dynamic
     state: absent
+
 - name: Set ethernet 1/1/1 secondary IPv4 address
   community.network.icx_l3_interface:
     name: ethernet 1/1/1
     ipv4: 192.168.0.1/24
     secondary: yes
     state: absent
+
 - name: Set ethernet 1/1/1 IPv4 address
   community.network.icx_l3_interface:
     name: ethernet 1/1/1
     ipv4: 192.168.0.1/24
+
 - name: Set ethernet 1/1/1 IPv6 address
   community.network.icx_l3_interface:
     name: ethernet 1/1/1
     ipv6: "fd5d:12c9:2201:1::1/64"
+
 - name: Set IP addresses on aggregate
   community.network.icx_l3_interface:
     aggregate:
       - { name: GigabitEthernet0/3, ipv4: 192.168.2.10/24 }
       - { name: GigabitEthernet0/3, ipv4: 192.168.3.10/24, ipv6: "fd5d:12c9:2201:1::1/64" }
+
 - name: Remove IP addresses on aggregate
   community.network.icx_l3_interface:
     aggregate:
       - { name: GigabitEthernet0/3, ipv4: 192.168.2.10/24 }
       - { name: GigabitEthernet0/3, ipv4: 192.168.3.10/24, ipv6: "fd5d:12c9:2201:1::1/64" }
     state: absent
+
+
 - name: Set the ipv4 and ipv6 of a virtual ethernet(ve)
   community.network.icx_l3_interface:
     name: ve 100
@@ -375,7 +384,7 @@ def main():
         replace=dict(choices=['yes', 'no']),
         mode=dict(choices=['dynamic', 'ospf-ignore', 'ospf-passive']),
         secondary=dict(choices=['yes', 'no']),
-        check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG'])),
+        check_running_config=dict(default=True, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG'])),
         state=dict(default='present',
                    choices=['present', 'absent']),
     )
@@ -401,6 +410,7 @@ def main():
     warnings = list()
 
     result = {'changed': False}
+    exec_command(module, 'skip')
     want = map_params_to_obj(module)
     have = map_config_to_obj(module)
     commands = map_obj_to_commands((want, have), module)

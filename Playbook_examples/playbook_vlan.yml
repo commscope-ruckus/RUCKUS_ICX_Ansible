@@ -23,8 +23,8 @@
         name:
           - ethernet 1/1/4
       # check_running_config: false
-      ip_dhcp_snooping: False
-      ip_arp_inspection: True
+      # ip_dhcp_snooping: False
+      # ip_arp_inspection: True
   ##########not working Error:"msg": "tagged lag 4\r\nError - invalid interface lg4\r\nSSH@ankit(config-vlan-12)#"
   ###An exception occurred during task execution. To see the full traceback, use -vvv. The error was: TypeError: Value of unknown type: <type '_sre.SRE_Match'>, <_sre.SRE_Match object at 0x7ffba40b18a0>
 

@@ -5,14 +5,9 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'community'}
-
-DOCUMENTATION = """
+DOCUMENTATION = '''
 ---
 module: icx_config
-version_added: "2.9"
 author: "Ruckus Wireless (@Commscope)"
 short_description: Manage configuration sections of Ruckus ICX 7000 series switches
 description:
@@ -171,22 +166,22 @@ options:
         argument, the task should also modify the C(diff_against) value and
         set it to I(intended).
     type: str
-"""
+'''
 
 EXAMPLES = """
-- name: configure top level configuration
-  icx_config:
+- name: Configure top level configuration
+  community.network.icx_config:
     lines: hostname {{ inventory_hostname }}
 
-- name: configure interface settings
-  icx_config:
+- name: Configure interface settings
+  community.network.icx_config:
     lines:
       - port-name test string
       - ip address 172.31.1.1 255.255.255.0
     parents: interface ethernet 1/1/2
 
-- name: configure ip helpers on multiple interfaces
-  icx_config:
+- name: Configure ip helpers on multiple interfaces
+  community.network.icx_config:
     lines:
       - ip helper-address 172.26.1.10
       - ip helper-address 172.26.3.8
@@ -195,8 +190,8 @@ EXAMPLES = """
     - interface ethernet 1/1/2
     - interface ethernet 1/1/3
 
-- name: load new acl into device
-  icx_config:
+- name: Load new acl into device
+  community.network.icx_config:
     lines:
       - permit ip host 192.0.2.1 any log
       - permit ip host 192.0.2.2 any log
@@ -206,19 +201,19 @@ EXAMPLES = """
     before: no ip access-list extended test
     match: exact
 
-- name: check the running-config against master config
-  icx_config:
+- name: Check the running-config against master config
+  community.network.icx_config:
     diff_against: intended
     intended_config: "{{ lookup('file', 'master.cfg') }}"
 
-- name: check the configuration against the running-config
-  icx_config:
+- name: Check the configuration against the running-config
+  community.network.icx_config:
     diff_against: startup
     diff_ignore_lines:
       - ntp clock .*
 
-- name: for idempotency, use full-form commands
-  icx_config:
+- name: For idempotency, use full-form commands
+  community.network.icx_config:
     lines:
       # - en
       - enable
@@ -228,15 +223,15 @@ EXAMPLES = """
 # Set boot image based on comparison to a group_var (version) and the version
 # that is returned from the `icx_facts` module
 - name: SETTING BOOT IMAGE
-  icx_config:
+  community.network.icx_config:
     lines:
       - no boot system
       - boot system flash bootflash:{{new_image}}
     host: "{{ inventory_hostname }}"
   when: ansible_net_version != version
 
-- name: render template onto an ICX device
-  icx_config:
+- name: Render template onto an ICX device
+  community.network.icx_config:
     backup: yes
     src: "{{ lookup('file', 'config.j2') }}"
 """
@@ -262,11 +257,11 @@ backup_path:
 import json
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import ConnectionError
-from ansible.module_utils.network.icx.icx import run_commands, get_config
-from ansible.module_utils.network.icx.icx import get_defaults_flag, get_connection
-from ansible.module_utils.network.icx.icx import check_args as icx_check_args
+from ansible_collections.community.network.plugins.module_utils.network.icx.icx import run_commands, get_config
+from ansible_collections.community.network.plugins.module_utils.network.icx.icx import get_defaults_flag, get_connection
+from ansible_collections.community.network.plugins.module_utils.network.icx.icx import check_args as icx_check_args
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.network.common.config import NetworkConfig, dumps
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import NetworkConfig, dumps
 
 
 def check_args(module, warnings):
@@ -366,6 +361,7 @@ def main():
     warnings = list()
     check_args(module, warnings)
     result['warnings'] = warnings
+    run_commands(module, 'skip')
     diff_ignore_lines = module.params['diff_ignore_lines']
     config = None
     contents = None

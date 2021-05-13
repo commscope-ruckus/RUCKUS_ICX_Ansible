@@ -5,15 +5,9 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'community'}
-
-
-DOCUMENTATION = """
+DOCUMENTATION = '''
 ---
 module: icx_copy
-version_added: "2.9"
 author: "Ruckus Wireless (@Commscope)"
 short_description: Transfer files from or to remote Ruckus ICX 7000 series switches
 description:
@@ -66,30 +60,27 @@ options:
       - public key type to be used to login to scp server
     type: str
     choices: ['rsa', 'dsa']
-
-"""
+'''
 
 EXAMPLES = """
-- name: upload running-config to the remote scp server
-  icx_copy:
+- name: Upload running-config to the remote scp server
+  community.network.icx_copy:
     upload: running-config
     protocol: scp
     remote_server: 172.16.10.49
     remote_filename: running.conf
     remote_user: user1
     remote_pass: pass123
-
-- name: download running-config from the remote scp server
-  icx_copy:
+- name: Download running-config from the remote scp server
+  community.network.icx_copy:
     download: running-config
     protocol: scp
     remote_server: 172.16.10.49
     remote_filename: running.conf
     remote_user: user1
     remote_pass: pass123
-
-- name: download running-config from the remote scp server using rsa public key
-  icx_copy:
+- name: Download running-config from the remote scp server using rsa public key
+  community.network.icx_copy:
     download: running-config
     protocol: scp
     remote_server: 172.16.10.49
@@ -97,45 +88,40 @@ EXAMPLES = """
     remote_user: user1
     remote_pass: pass123
     public_key: rsa
-
-- name: upload startup-config to the remote https server
-  icx_copy:
+- name: Upload startup-config to the remote https server
+  community.network.icx_copy:
     upload: startup-config
     protocol: https
     remote_server: 172.16.10.49
     remote_filename: config/running.conf
     remote_user: user1
     remote_pass: pass123
-
-- name: upload startup-config to the remote https server
-  icx_copy:
+- name: Upload startup-config to the remote https server
+  community.network.icx_copy:
     upload: startup-config
     protocol: https
     remote_server: 172.16.10.49
     remote_filename: config/running.conf
     remote_user: user1
     remote_pass: pass123
-
 - name: Download OS image into the flash from remote scp ipv6 server
-  icx_copy:
+  community.network.icx_copy:
     download: startup-config
     protocol: scp
     remote_server: ipv6 FE80:CD00:0000:0CDE:1257:0000:211E:729C
     remote_filename: img.bin
     remote_user: user1
     remote_pass: pass123
-
 - name: Download OS image into the secondary flash from remote scp ipv6 server
-  icx_copy:
+  community.network.icx_copy:
     Download: flash_secondary
     protocol: scp
     remote_server: ipv6 FE80:CD00:0000:0CDE:1257:0000:211E:729C
     remote_filename: img.bin
     remote_user: user1
     remote_pass: pass123
-
 - name: Download OS image into the secondary flash from remote scp ipv6 server on port 5000
-  icx_copy:
+  community.network.icx_copy:
     Download: flash_secondary
     protocol: scp
     remote_server: ipv6 FE80:CD00:0000:0CDE:1257:0000:211E:729C
@@ -143,18 +129,16 @@ EXAMPLES = """
     remote_filename: img.bin
     remote_user: user1
     remote_pass: pass123
-
 - name: Download OS image into the primary flash from remote https ipv6 server
-  icx_copy:
+  community.network.icx_copy:
     Download: flash_primary
     protocol: https
     remote_server: ipv6 FE80:CD00:0000:0CDE:1257:0000:211E:729C
     remote_filename: images/img.bin
     remote_user: user1
     remote_pass: pass123
-
 - name: Download OS image into the primary flash from remote https ipv6 server on port 8080
-  icx_copy:
+  community.network.icx_copy:
     Download: flash_primary
     protocol: https
     remote_server: ipv6 FE80:CD00:0000:0CDE:1257:0000:211E:729C
@@ -175,7 +159,7 @@ changed:
 from ansible.module_utils._text import to_text
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.connection import ConnectionError, exec_command
-from ansible.module_utils.network.icx.icx import exec_scp, run_commands
+from ansible_collections.community.network.plugins.module_utils.network.icx.icx import exec_scp, run_commands
 
 
 def map_params_to_obj(module):
