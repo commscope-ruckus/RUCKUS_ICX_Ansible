@@ -55,7 +55,6 @@ options:
           - Defines the username without assigning
             a password. This will allow the user to login to the system
             without being authenticated by a password.
-            This is not supported from 9.0.0.
         type: bool
       state:
         description:
@@ -105,7 +104,6 @@ options:
       - Defines the username without assigning
         a password. This will allow the user to login to the system
         without being authenticated by a password.
-        This is not supported from 9.0.0.
     type: bool
   purge:
     description:
