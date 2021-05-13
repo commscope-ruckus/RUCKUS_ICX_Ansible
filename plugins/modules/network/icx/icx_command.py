@@ -76,18 +76,15 @@ tasks:
   - name: Run show version on remote devices
     community.network.icx_command:
       commands: show version
-
   - name: Run show version and check to see if output contains ICX
     community.network.icx_command:
       commands: show version
       wait_for: result[0] contains ICX
-
   - name: Run multiple commands on remote nodes
     community.network.icx_command:
       commands:
         - show version
         - show interfaces
-
   - name: Run multiple commands and evaluate the output
     community.network.icx_command:
       commands:
@@ -181,7 +178,6 @@ def main():
     result = {'changed': False}
 
     warnings = list()
-    run_commands(module, ['skip'])
     commands = parse_commands(module, warnings)
     result['warnings'] = warnings
 

@@ -6,9 +6,15 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+ANSIBLE_METADATA = {'metadata_version': '1.1',
+                    'status': ['preview'],
+                    'supported_by': 'community'}
+
+
+DOCUMENTATION = """
 ---
 module: icx_banner
+version_added: "2.9"
 author: "Ruckus Wireless (@Commscope)"
 short_description: Manage multiline banners on Ruckus ICX 7000 series switches
 description:
@@ -21,6 +27,7 @@ options:
   banner:
     description:
       - Specifies which banner should be configured on the remote device.
+        banner choice "incoming" is not supported from 9.0.0 onwards.
     type: str
     required: true
     choices: ['motd', 'exec', 'incoming']
@@ -41,21 +48,21 @@ options:
     description:
       - Specifies whether or not the motd configuration should accept
         the require-enter-key
-      - Default is false.
     type: bool
+    default: no
   check_running_config:
     description:
       - Check running configuration. This can be set as environment variable.
-       Module will use environment variable value(default:True), unless it is overridden,
+       Module will use environment variable value(default:False), unless it is overridden,
        by specifying it as module parameter.
     type: bool
-    default: yes
+    default: no
 
-'''
+"""
 
 EXAMPLES = """
-- name: Configure the motd banner
-  community.network.icx_banner:
+- name: configure the motd banner
+  icx_banner:
     banner: motd
     text: |
         this is my motd banner
@@ -63,18 +70,18 @@ EXAMPLES = """
         string
     state: present
 
-- name: Remove the motd banner
-  community.network.icx_banner:
+- name: remove the motd banner
+  icx_banner:
     banner: motd
     state: absent
 
-- name: Configure require-enter-key for motd
-  community.network.icx_banner:
+- name: configure require-enter-key for motd
+  icx_banner:
     banner: motd
     enterkey: True
 
-- name: Remove require-enter-key for motd
-  community.network.icx_banner:
+- name: remove require-enter-key for motd
+  icx_banner:
     banner: motd
     enterkey: False
 """
@@ -95,7 +102,7 @@ import re
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import exec_command
 from ansible.module_utils.basic import AnsibleModule, env_fallback
-from ansible_collections.community.network.plugins.module_utils.network.icx.icx import load_config, get_config
+from ansible.module_utils.network.icx.icx import load_config, get_config
 from ansible.module_utils.connection import Connection, ConnectionError
 
 
@@ -134,7 +141,6 @@ def map_obj_to_commands(updates, module):
 def map_config_to_obj(module):
     compare = module.params.get('check_running_config')
     obj = {'banner': module.params['banner'], 'state': 'absent', 'enterkey': False}
-    exec_command(module, 'skip')
     output_text = ''
     output_re = ''
     out = get_config(module, flags=['| begin banner %s'
@@ -181,7 +187,7 @@ def main():
         text=dict(),
         enterkey=dict(type='bool'),
         state=dict(default='present', choices=['present', 'absent']),
-        check_running_config=dict(default=True, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
+        check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
     )
 
     required_one_of = [['text', 'enterkey', 'state']]

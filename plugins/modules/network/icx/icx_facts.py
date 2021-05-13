@@ -5,9 +5,14 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-DOCUMENTATION = '''
+ANSIBLE_METADATA = {'metadata_version': '1.1',
+                    'status': ['preview'],
+                    'supported_by': 'community'}
+
+DOCUMENTATION = """
 ---
 module: icx_facts
+version_added: "2.9"
 author: "Ruckus Wireless (@Commscope)"
 short_description: Collect facts from remote Ruckus ICX 7000 series switches
 description:
@@ -26,25 +31,25 @@ options:
         to a given subset.  Possible values for this argument include
         all, hardware, config, and interfaces.  Can specify a list of
         values to include a larger subset.  Values can also be used
-        with an initial C(!) to specify that a specific subset should
+        with an initial C(M(!)) to specify that a specific subset should
         not be collected.
     required: false
     type: list
     default: '!config'
-'''
+"""
 
 EXAMPLES = """
-- name: Collect all facts from the device
-  community.network.icx_facts:
+# Collect all facts from the device
+- icx_facts:
     gather_subset: all
 
-- name: Collect only the config and default facts
-  community.network.icx_facts:
+# Collect only the config and default facts
+- icx_facts:
     gather_subset:
       - config
 
-- name: Do not collect hardware facts
-  community.network.icx_facts:
+# Do not collect hardware facts
+- icx_facts:
     gather_subset:
       - "!hardware"
 """
@@ -130,12 +135,12 @@ ansible_net_neighbors:
 
 
 import re
-from ansible_collections.community.network.plugins.module_utils.network.icx.icx import run_commands
+from ansible.module_utils.network.icx.icx import run_commands
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.six import iteritems
 from ansible.module_utils.six.moves import zip
 
-
+ansible_facts = dict()
 class FactsBase(object):
 
     COMMANDS = list()
@@ -166,6 +171,7 @@ class Default(FactsBase):
             self.facts['model'] = self.parse_model(data)
             self.facts['image'] = self.parse_image(data)
             self.facts['hostname'] = self.parse_hostname(self.responses[1])
+            self.facts['data'] = data
             self.parse_stacks(data)
 
     def parse_version(self, data):
@@ -194,14 +200,14 @@ class Default(FactsBase):
             return match.group(1)
 
     def parse_stacks(self, data):
-        match = re.findall(r'UNIT [1-9]+: SL [1-9]+: (\S+)', data, re.M)
+        match = re.findall(r'UNIT [1-9]+: SL [1]+: (\S+)', data, re.M)
         if match:
             self.facts['stacked_models'] = match
-
-        match = re.findall(r'^System [Ss]erial [Nn]umber\s+: (\S+)', data, re.M)
+        
+        match = re.findall(r'UNIT [1-9]+: SL [1]+:.*\n      Serial  #:(\S+)', data, re.M)
         if match:
             self.facts['stacked_serialnums'] = match
-
+            
 
 class Hardware(FactsBase):
 
@@ -293,6 +299,7 @@ class Interfaces(FactsBase):
 
         if data and not any(err in data for err in lldp_errs):
             neighbors = self.run(['show lldp neighbors detail'])
+            #neighbors = self.run(['show lldp neighbors detail ports ethernet 1/1/1 to 1/1/13'])
             if neighbors:
                 self.facts['neighbors'] = self.parse_neighbors(neighbors[0])
 
@@ -372,16 +379,16 @@ class Interfaces(FactsBase):
 
     def parse_neighbors(self, neighbors):
         facts = dict()
-        for entry in neighbors.split('------------------------------------------------'):
-            if entry == '':
+        for entry in neighbors.split('\n'):
+            if not entry:
                 continue
-            intf = self.parse_lldp_intf(entry)
-            if intf not in facts:
-                facts[intf] = list()
-            fact = dict()
-            fact['host'] = self.parse_lldp_host(entry)
-            fact['port'] = self.parse_lldp_port(entry)
-            facts[intf].append(fact)
+            if re.search('Local port', entry):
+                intf = entry.split(':')[1].strip().replace('"', '')
+                facts[intf] = dict()
+            if re.search('System name', entry):
+                facts[intf]['host'] = entry.split(':')[1].strip().replace('"', '')
+            if re.search('Port ID', entry):
+                facts[intf]['port'] = entry.split(':')[1].strip().replace('"', '') 
         return facts
 
     def parse_interfaces(self, data):
@@ -532,7 +539,7 @@ def main():
         inst.populate()
         facts.update(inst.facts)
 
-    ansible_facts = dict()
+    
     for key, value in iteritems(facts):
         key = 'ansible_net_%s' % key
         ansible_facts[key] = value
@@ -542,3 +549,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

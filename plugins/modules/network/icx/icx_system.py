@@ -96,9 +96,9 @@ options:
   check_running_config:
     description:
       - Check running configuration. This can be set as environment variable.
-       Module will use environment variable value(default:True), unless it is overridden, by specifying it as module parameter.
+       Module will use environment variable value(default:False), unless it is overridden, by specifying it as module parameter.
     type: bool
-    default: yes
+    default: no
 '''
 
 EXAMPLES = """
@@ -109,7 +109,6 @@ EXAMPLES = """
       - ansible.com
       - redhat.com
       - ruckus.com
-
 - name: Configure radius server of type auth-port
   community.network.icx_system:
     aaa_servers:
@@ -123,7 +122,6 @@ EXAMPLES = """
         auth_key_type:
           - dot1x
           - mac-auth
-
 - name: Configure tacacs server
   community.network.icx_system:
     aaa_servers:
@@ -134,7 +132,6 @@ EXAMPLES = """
         acct_port_num: 1321
         acct_type: accounting-only
         auth_key: xyz
-
 - name: Configure name servers
   community.network.icx_system:
     name_servers:
@@ -152,7 +149,6 @@ commands:
     - ip domain name test.example.com
     - radius-server host 172.16.10.12 auth-port 2083 acct-port 1850 default key abc dot1x mac-auth
     - tacacs-server host 10.2.3.4 auth-port 4058 authorization-only key xyz
-
 """
 
 
@@ -425,7 +421,7 @@ def main():
         auth_port_num=dict(),
         acct_port_num=dict(),
         acct_type=dict(choices=['accounting-only', 'authentication-only', 'authorization-only', 'default']),
-        auth_key=dict(type='str', no_log=True),
+        auth_key=dict(),
         auth_key_type=dict(type='list', choices=['dot1x', 'mac-auth', 'web-auth'])
     )
     argument_spec = dict(
@@ -437,7 +433,7 @@ def main():
 
         aaa_servers=dict(type='list', elements='dict', options=server_spec),
         state=dict(choices=['present', 'absent'], default='present'),
-        check_running_config=dict(default=True, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
+        check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
     )
 
     module = AnsibleModule(argument_spec=argument_spec,
@@ -448,7 +444,6 @@ def main():
     warnings = list()
 
     result['warnings'] = warnings
-    exec_command(module, 'skip')
     want = map_params_to_obj(module)
     have = map_config_to_obj(module)
     commands = map_obj_to_commands(want, have, module)

@@ -6,9 +6,15 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+ANSIBLE_METADATA = {'metadata_version': '1.1',
+                    'status': ['preview'],
+                    'supported_by': 'community'}
+
+
+DOCUMENTATION = """
 ---
 module: icx_interface
+version_added: "2.9"
 author: "Ruckus Wireless (@Commscope)"
 short_description: Manage Interface on Ruckus ICX 7000 series switches
 description:
@@ -107,7 +113,7 @@ options:
         enabled:
           description:
             - "enable/disable the poe of the given interface C(name)"
-            - "Default is false."
+          default: no
           type: bool
   aggregate:
     description:
@@ -213,68 +219,68 @@ options:
        by specifying it as module parameter.
     default: yes
     type: bool
-'''
+"""
 
 EXAMPLES = """
-- name: Enable ethernet port and set name
-  community.network.icx_interface:
+- name: enable ethernet port and set name
+  icx_interface:
     name: ethernet 1/1/1
     description: interface-1
     stp: true
     enabled: true
 
-- name: Disable ethernet port 1/1/1
-  community.network.icx_interface:
+- name: disable ethernet port 1/1/1
+  icx_interface:
       name: ethernet 1/1/1
       enabled: false
 
-- name: Enable ethernet port range, set name and speed
-  community.network.icx_interface:
+- name: enable ethernet port range, set name and speed.
+  icx_interface:
       name: ethernet 1/1/1 to 1/1/10
       description: interface-1
       speed: 100-full
       enabled: true
 
-- name: Enable poe. Set class
-  community.network.icx_interface:
+- name: enable poe. Set class.
+  icx_interface:
       name: ethernet 1/1/1
       power:
        by_class: 2
 
-- name: Configure poe limit of interface
-  community.network.icx_interface:
+- name: configure poe limit of interface
+  icx_interface:
       name: ethernet 1/1/1
       power:
        limit: 10000
 
-- name: Disable poe of interface
-  community.network.icx_interface:
+- name: disable poe of interface
+  icx_interface:
       name: ethernet 1/1/1
       power:
        enabled: false
 
-- name: Set lag name for a range of lags
-  community.network.icx_interface:
+- name: set lag name for a range of lags
+  icx_interface:
       name: lag 1 to 10
       description: test lags
 
 - name: Disable lag
-  community.network.icx_interface:
+  icx_interface:
       name: lag 1
       enabled: false
 
-- name: Enable management interface
-  community.network.icx_interface:
+- name: enable management interface
+  icx_interface:
       name: management 1
       enabled: true
 
-- name: Enable loopback interface
-  community.network.icx_interface:
+- name: enable loopback interface
+  icx_interface:
       name: loopback 10
       enabled: true
 
 - name: Add interface using aggregate
-  community.network.icx_interface:
+  icx_interface:
       aggregate:
       - { name: ethernet 1/1/1, description: test-interface-1, power: { by_class: 2 } }
       - { name: ethernet 1/1/3, description: test-interface-3}
@@ -282,14 +288,14 @@ EXAMPLES = """
       enabled: true
 
 - name: Check tx_rate, rx_rate intent arguments
-  community.network.icx_interface:
+  icx_interface:
     name: ethernet 1/1/10
     state: up
     tx_rate: ge(0)
     rx_rate: le(0)
 
 - name: Check neighbors intent arguments
-  community.network.icx_interface:
+  icx_interface:
     name: ethernet 1/1/10
     neighbors:
     - port: 1/1/5
@@ -314,10 +320,10 @@ from copy import deepcopy
 from time import sleep
 from ansible.module_utils._text import to_text
 from ansible.module_utils.basic import AnsibleModule, env_fallback
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import NetworkConfig
-from ansible_collections.community.network.plugins.module_utils.network.icx.icx import load_config, get_config
+from ansible.module_utils.network.common.config import NetworkConfig
+from ansible.module_utils.network.icx.icx import load_config, get_config
 from ansible.module_utils.connection import Connection, ConnectionError, exec_command
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import conditional, remove_default_spec
+from ansible.module_utils.network.common.utils import conditional, remove_default_spec
 
 
 def parse_enable(configobj, name):

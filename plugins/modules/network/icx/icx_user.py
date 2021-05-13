@@ -55,6 +55,7 @@ options:
           - Defines the username without assigning
             a password. This will allow the user to login to the system
             without being authenticated by a password.
+            This is not supported from 9.0.0.
         type: bool
       state:
         description:
@@ -74,7 +75,7 @@ options:
       check_running_config:
         description:
           - Check running configuration. This can be set as environment variable.
-           Module will use environment variable value(default:True), unless it is overridden, by specifying it as module parameter.
+           Module will use environment variable value(default:False), unless it is overridden, by specifying it as module parameter.
         type: bool
   name:
     description:
@@ -104,8 +105,8 @@ options:
       - Defines the username without assigning
         a password. This will allow the user to login to the system
         without being authenticated by a password.
+        This is not supported from 9.0.0.
     type: bool
-    default: false
   purge:
     description:
       - If set to true module will remove any previously
@@ -131,9 +132,9 @@ options:
   check_running_config:
     description:
       - Check running configuration. This can be set as environment variable.
-       Module will use environment variable value(default:True), unless it is overridden, by specifying it as module parameter.
+       Module will use environment variable value(default:False), unless it is overridden, by specifying it as module parameter.
     type: bool
-    default: yes
+    default: no
 '''
 
 EXAMPLES = """
@@ -141,17 +142,14 @@ EXAMPLES = """
   community.network.icx_user:
     name: user1
     nopassword: true
-
 - name: Create a new user with password
   community.network.icx_user:
     name: user1
     configured_password: 'newpassword'
-
 - name: Remove users
   community.network.icx_user:
     name: user1
     state: absent
-
 - name: Set user privilege level to 5
   community.network.icx_user:
     name: user1
@@ -341,7 +339,7 @@ def main():
         privilege=dict(type='str', choices=['0', '4', '5']),
         access_time=dict(type='str'),
         state=dict(default='present', choices=['present', 'absent']),
-        check_running_config=dict(default=True, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
+        check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
     )
     aggregate_spec = deepcopy(element_spec)
     aggregate_spec['name'] = dict(required=True)
@@ -362,7 +360,6 @@ def main():
                            supports_check_mode=True)
 
     result = {'changed': False}
-    exec_command(module, 'skip')
     want = map_params_to_obj(module)
     have = map_config_to_obj(module)
     commands = map_obj_to_commands(update_objects(want, have), module)
