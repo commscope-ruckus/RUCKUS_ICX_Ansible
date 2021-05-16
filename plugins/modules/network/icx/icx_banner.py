@@ -21,6 +21,7 @@ options:
   banner:
     description:
       - Specifies which banner should be configured on the remote device.
+        banner choice "incoming" is not supported from 9.0.0 onwards.
     type: str
     required: true
     choices: ['motd', 'exec', 'incoming']

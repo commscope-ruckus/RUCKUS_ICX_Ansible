@@ -86,7 +86,7 @@ options:
     suboptions:
       type:
         description:
-          - Specify the type of spanning-tree
+          - Specify the type of spanning-tree.'rstp' is not supported from 9.0.0
         type: str
         default: 802-1w
         choices: ['802-1w','rstp']
@@ -161,7 +161,7 @@ options:
         suboptions:
           type:
             description:
-              - Specify the type of spanning-tree
+              - Specify the type of spanning-tree.'rstp' is not supported from 9.0.0
             type: str
             default: 802-1w
             choices: ['802-1w','rstp']
