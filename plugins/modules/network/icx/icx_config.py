@@ -172,14 +172,12 @@ EXAMPLES = """
 - name: Configure top level configuration
   community.network.icx_config:
     lines: hostname {{ inventory_hostname }}
-
 - name: Configure interface settings
   community.network.icx_config:
     lines:
       - port-name test string
       - ip address 172.31.1.1 255.255.255.0
     parents: interface ethernet 1/1/2
-
 - name: Configure ip helpers on multiple interfaces
   community.network.icx_config:
     lines:
@@ -189,7 +187,6 @@ EXAMPLES = """
   with_items:
     - interface ethernet 1/1/2
     - interface ethernet 1/1/3
-
 - name: Load new acl into device
   community.network.icx_config:
     lines:
@@ -200,18 +197,15 @@ EXAMPLES = """
     parents: ip access-list extended test
     before: no ip access-list extended test
     match: exact
-
 - name: Check the running-config against master config
   community.network.icx_config:
     diff_against: intended
     intended_config: "{{ lookup('file', 'master.cfg') }}"
-
 - name: Check the configuration against the running-config
   community.network.icx_config:
     diff_against: startup
     diff_ignore_lines:
       - ntp clock .*
-
 - name: For idempotency, use full-form commands
   community.network.icx_config:
     lines:
@@ -219,7 +213,6 @@ EXAMPLES = """
       - enable
     # parents: int eth1/0/11
     parents: interface ethernet 1/1/2
-
 # Set boot image based on comparison to a group_var (version) and the version
 # that is returned from the `icx_facts` module
 - name: SETTING BOOT IMAGE
@@ -229,7 +222,6 @@ EXAMPLES = """
       - boot system flash bootflash:{{new_image}}
     host: "{{ inventory_hostname }}"
   when: ansible_net_version != version
-
 - name: Render template onto an ICX device
   community.network.icx_config:
     backup: yes
@@ -361,7 +353,6 @@ def main():
     warnings = list()
     check_args(module, warnings)
     result['warnings'] = warnings
-    run_commands(module, 'skip')
     diff_ignore_lines = module.params['diff_ignore_lines']
     config = None
     contents = None

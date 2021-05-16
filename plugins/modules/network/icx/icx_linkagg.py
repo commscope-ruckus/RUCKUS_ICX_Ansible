@@ -45,9 +45,9 @@ options:
   check_running_config:
     description:
       - Check running configuration. This can be set as environment variable.
-       Module will use environment variable value(default:True), unless it is overridden, by specifying it as module parameter.
+       Module will use environment variable value(default:False), unless it is overridden, by specifying it as module parameter.
     type: bool
-    default: yes
+    default: no
   aggregate:
     description:
       - List of link aggregation definitions.
@@ -79,14 +79,13 @@ options:
      check_running_config:
        description:
          - Check running configuration. This can be set as environment variable.
-          Module will use environment variable value(default:True), unless it is overridden, by specifying it as module parameter.
+          Module will use environment variable value(default:False), unless it is overridden, by specifying it as module parameter.
        type: bool
   purge:
     description:
       - Purge links not defined in the I(aggregate) parameter.
     type: bool
     default: no
-
 '''
 
 EXAMPLES = """
@@ -95,18 +94,15 @@ EXAMPLES = """
     group: 10
     mode: static
     name: LAG1
-
 - name: Create link aggregation group with auto id
   community.network.icx_linkagg:
     group: auto
     mode: dynamic
     name: LAG2
-
 - name: Delete link aggregation group
   community.network.icx_linkagg:
     group: 10
     state: absent
-
 - name: Set members to LAG
   community.network.icx_linkagg:
     group: 200
@@ -114,7 +110,6 @@ EXAMPLES = """
     members:
       - ethernet 1/1/1 to 1/1/6
       - ethernet 1/1/10
-
 - name: Remove links other then LAG id 100 and 3 using purge
   community.network.icx_linkagg:
     aggregate:
@@ -273,7 +268,7 @@ def main():
         members=dict(type='list'),
         state=dict(default='present',
                    choices=['present', 'absent']),
-        check_running_config=dict(default=True, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
+        check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
     )
 
     aggregate_spec = deepcopy(element_spec)
@@ -300,7 +295,6 @@ def main():
 
     warnings = list()
     result = {'changed': False}
-    exec_command(module, 'skip')
     if warnings:
         result['warnings'] = warnings
 

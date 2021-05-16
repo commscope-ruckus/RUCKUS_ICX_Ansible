@@ -41,16 +41,15 @@ options:
     description:
       - Specifies whether or not the motd configuration should accept
         the require-enter-key
-      - Default is false.
     type: bool
+    default: no
   check_running_config:
     description:
       - Check running configuration. This can be set as environment variable.
-       Module will use environment variable value(default:True), unless it is overridden,
+       Module will use environment variable value(default:False), unless it is overridden,
        by specifying it as module parameter.
     type: bool
-    default: yes
-
+    default: no
 '''
 
 EXAMPLES = """
@@ -62,17 +61,14 @@ EXAMPLES = """
         that contains a multiline
         string
     state: present
-
 - name: Remove the motd banner
   community.network.icx_banner:
     banner: motd
     state: absent
-
 - name: Configure require-enter-key for motd
   community.network.icx_banner:
     banner: motd
     enterkey: True
-
 - name: Remove require-enter-key for motd
   community.network.icx_banner:
     banner: motd
@@ -134,7 +130,7 @@ def map_obj_to_commands(updates, module):
 def map_config_to_obj(module):
     compare = module.params.get('check_running_config')
     obj = {'banner': module.params['banner'], 'state': 'absent', 'enterkey': False}
-    exec_command(module, 'skip')
+    # exec_command(module, 'skip')
     output_text = ''
     output_re = ''
     out = get_config(module, flags=['| begin banner %s'
@@ -181,7 +177,7 @@ def main():
         text=dict(),
         enterkey=dict(type='bool'),
         state=dict(default='present', choices=['present', 'absent']),
-        check_running_config=dict(default=True, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
+        check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
     )
 
     required_one_of = [['text', 'enterkey', 'state']]

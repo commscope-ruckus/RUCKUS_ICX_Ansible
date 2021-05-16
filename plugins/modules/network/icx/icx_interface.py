@@ -107,7 +107,7 @@ options:
         enabled:
           description:
             - "enable/disable the poe of the given interface C(name)"
-            - "Default is false."
+          default: no
           type: bool
   aggregate:
     description:
@@ -178,7 +178,7 @@ options:
       check_running_config:
         description:
           - Check running configuration. This can be set as environment variable.
-          - Module will use environment variable value(default:True), unless it is overridden, by specifying it as module parameter.
+          - Module will use environment variable value(default:False), unless it is overridden, by specifying it as module parameter.
         type: bool
       power:
         description:
@@ -209,9 +209,9 @@ options:
   check_running_config:
     description:
       - Check running configuration. This can be set as environment variable.
-      - Module will use environment variable value(default:True), unless it is overridden,
+      - Module will use environment variable value(default:False), unless it is overridden,
        by specifying it as module parameter.
-    default: yes
+    default: no
     type: bool
 '''
 
@@ -222,57 +222,47 @@ EXAMPLES = """
     description: interface-1
     stp: true
     enabled: true
-
 - name: Disable ethernet port 1/1/1
   community.network.icx_interface:
       name: ethernet 1/1/1
       enabled: false
-
 - name: Enable ethernet port range, set name and speed
   community.network.icx_interface:
       name: ethernet 1/1/1 to 1/1/10
       description: interface-1
       speed: 100-full
       enabled: true
-
 - name: Enable poe. Set class
   community.network.icx_interface:
       name: ethernet 1/1/1
       power:
        by_class: 2
-
 - name: Configure poe limit of interface
   community.network.icx_interface:
       name: ethernet 1/1/1
       power:
        limit: 10000
-
 - name: Disable poe of interface
   community.network.icx_interface:
       name: ethernet 1/1/1
       power:
        enabled: false
-
 - name: Set lag name for a range of lags
   community.network.icx_interface:
       name: lag 1 to 10
       description: test lags
-
 - name: Disable lag
   community.network.icx_interface:
       name: lag 1
       enabled: false
-
 - name: Enable management interface
   community.network.icx_interface:
       name: management 1
       enabled: true
-
 - name: Enable loopback interface
   community.network.icx_interface:
       name: loopback 10
       enabled: true
-
 - name: Add interface using aggregate
   community.network.icx_interface:
       aggregate:
@@ -280,14 +270,12 @@ EXAMPLES = """
       - { name: ethernet 1/1/3, description: test-interface-3}
       speed: 10-full
       enabled: true
-
 - name: Check tx_rate, rx_rate intent arguments
   community.network.icx_interface:
     name: ethernet 1/1/10
     state: up
     tx_rate: ge(0)
     rx_rate: le(0)
-
 - name: Check neighbors intent arguments
   community.network.icx_interface:
     name: ethernet 1/1/10
@@ -640,7 +628,7 @@ def main():
         state=dict(default='present',
                    choices=['present', 'absent', 'up', 'down']),
         power=dict(type='dict', options=power_spec),
-        check_running_config=dict(default=True, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
+        check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
     )
     aggregate_spec = deepcopy(element_spec)
     aggregate_spec['name'] = dict(required=True)
@@ -664,7 +652,6 @@ def main():
     result['changed'] = False
     if warnings:
         result['warnings'] = warnings
-    exec_command(module, 'skip')
     want = map_params_to_obj(module)
     have = map_config_to_obj(module)
     commands = map_obj_to_commands((want, have))
