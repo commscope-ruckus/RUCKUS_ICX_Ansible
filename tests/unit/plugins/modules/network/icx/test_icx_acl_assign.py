@@ -30,10 +30,10 @@ class TestICXAclAssignModule(TestICXModule):
 
     def test_icx_acl_assign_all_options(self):
         ''' Test for successful acl assign with all options'''
-        set_module_args(dict(ip_access_group=dict(acl_name='scale12', in_out='in', ethernet='1/1/3',mirror_port=dict(ethernet='3/1/10'),logging='enable'),
+        set_module_args(dict(ip_access_group=dict(acl_name='scale12', in_out='in', ethernet='1/1/3', mirror_port=dict(ethernet='3/1/10'), logging='enable'),
                              ipv6_access_group=dict(acl_name='scale12', in_out='in', lag='7'),
                              mac_access_group=dict(mac_acl_name='mac_acl1', vlan=dict(vlan_num='10', interfaces=['ethernet 1/1/3']), logging='enable'),
-                             default_acl=dict(ip_type='ipv4',acl_name='guest', in_out='in')))
+                             default_acl=dict(ip_type='ipv4', acl_name='guest', in_out='in')))
         expected_commands = [
             'interface ethernet 1/1/3',
             'acl-mirror-port ethernet 3/1/10',
@@ -47,17 +47,18 @@ class TestICXAclAssignModule(TestICXModule):
             'exit',
             'authentication',
             'default-acl ipv4 guest in',
-            'exit'
-            ]
+            'exit']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], expected_commands)
-       
+
     def test_icx_acl_assign_all_options_remove(self):
         ''' Test for removing acl assign with all options'''
-        set_module_args(dict(ip_access_group=dict(acl_name='scale12', in_out='in', ethernet='1/1/3', mirror_port=dict(ethernet='3/1/10',state='absent'), logging='enable', state='absent'),
+        set_module_args(dict(ip_access_group=dict(acl_name='scale12', in_out='in', ethernet='1/1/3',
+                             mirror_port=dict(ethernet='3/1/10', state='absent'), logging='enable', state='absent'),
                              ipv6_access_group=dict(acl_name='scale12', in_out='in', lag='7', state='absent'),
-                             mac_access_group=dict(mac_acl_name='mac_acl1', vlan=dict(vlan_num='10', interfaces=['ethernet 1/1/3']), logging='enable', state='absent'),
-                             default_acl=dict(ip_type='ipv4',acl_name='guest', in_out='in', state='absent')))
+                             mac_access_group=dict(mac_acl_name='mac_acl1', vlan=dict(vlan_num='10', interfaces=['ethernet 1/1/3']),
+                                                   logging='enable', state='absent'),
+                             default_acl=dict(ip_type='ipv4', acl_name='guest', in_out='in', state='absent')))
         expected_commands = [
             'interface ethernet 1/1/3',
             'no acl-mirror-port ethernet 3/1/10',
@@ -71,8 +72,7 @@ class TestICXAclAssignModule(TestICXModule):
             'exit',
             'authentication',
             'no default-acl ipv4 guest in',
-            'exit'
-            ]
+            'exit']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], expected_commands)
 
@@ -85,43 +85,45 @@ class TestICXAclAssignModule(TestICXModule):
 
     def test_icx_acl_assign_ipv6_access_group(self):
         ''' Test for successful ipv6_access_group'''
-        set_module_args(dict(ipv6_access_group=dict(acl_name='scale123', in_out='in', vlan=dict(vlan_num='555', interfaces=['ethernet 1/1/2']), logging='enable')))
-        expected_commands = ['vlan 555','ipv6 access-group scale123 in ethernet 1/1/2 logging enable', 'exit']
-        result = self.execute_module(changed=True)
-        self.assertEqual(result['commands'], expected_commands)
-    
-    def test_icx_acl_assign_mac_access_group(self):
-        ''' Test for successful mac_access_group'''
-        set_module_args(dict(mac_access_group=dict(mac_acl_name='mac_acl1', lag='25')))
-        expected_commands = ['interface lag 25','mac access-group mac_acl1 in', 'exit']
-        result = self.execute_module(changed=True)
-        self.assertEqual(result['commands'], expected_commands)
-    
-    def test_icx_default_acl(self):
-        ''' Test for successful default acl'''
-        set_module_args(dict(default_acl=dict(ip_type='ipv4',acl_name='guest', in_out='out',state='present')))
-        expected_commands = ['authentication','default-acl ipv4 guest out', 'exit']
+        set_module_args(dict(ipv6_access_group=dict(acl_name='scale123', in_out='in', vlan=dict(vlan_num='555',
+                             interfaces=['ethernet 1/1/2']), logging='enable')))
+        expected_commands = ['vlan 555', 'ipv6 access-group scale123 in ethernet 1/1/2 logging enable', 'exit']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], expected_commands)
 
-    
+    def test_icx_acl_assign_mac_access_group(self):
+        ''' Test for successful mac_access_group'''
+        set_module_args(dict(mac_access_group=dict(mac_acl_name='mac_acl1', lag='25')))
+        expected_commands = ['interface lag 25', 'mac access-group mac_acl1 in', 'exit']
+        result = self.execute_module(changed=True)
+        self.assertEqual(result['commands'], expected_commands)
+
+    def test_icx_default_acl(self):
+        ''' Test for successful default acl'''
+        set_module_args(dict(default_acl=dict(ip_type='ipv4', acl_name='guest', in_out='out', state='present')))
+        expected_commands = ['authentication', 'default-acl ipv4 guest out', 'exit']
+        result = self.execute_module(changed=True)
+        self.assertEqual(result['commands'], expected_commands)
+
     def test_icx_acl_assign_invalid_arg_ip_access_group(self):
         ''' Test for invalid in_out'''
-        set_module_args(dict(ip_access_group=dict(acl_name='scale12', acl_num='123', in_out='aa', ethernet='1/1/2', lag='25', vlan=dict(vlan_num='555', interfaces=['ethernet 1/1/2']), logging='enable', frag_deny='yes')))
+        set_module_args(dict(ip_access_group=dict(acl_name='scale12', acl_num='123', in_out='aa',
+                             ethernet='1/1/2', lag='25', vlan=dict(vlan_num='555', interfaces=['ethernet 1/1/2']), logging='enable', frag_deny='yes')))
         result = self.execute_module(failed=True)
 
     def test_icx_acl_assign_invalid_arg_ipv6_access_group(self):
         ''' Test for invalid lag'''
-        set_module_args(dict(ipv6_access_group=dict(acl_name='scale12' , in_out='in', ethernet='1/1/2', lag='aa', vlan=dict(vlan_num='555', interfaces=['ethernet 1/1/2']), logging='enable')))
+        set_module_args(dict(ipv6_access_group=dict(acl_name='scale12', in_out='in', ethernet='1/1/2', lag='aa',
+                             vlan=dict(vlan_num='555', interfaces=['ethernet 1/1/2']), logging='enable')))
         result = self.execute_module(failed=True)
 
     def test_icx_acl_assign_invalid_arg_mac_access_group(self):
         ''' Test for invalid ethernet'''
-        set_module_args(dict(ip_access_group=dict(mac_acl_name='mac_acl', ethernet='111', lag='25', vlan=dict(vlan_num='555', interfaces=['ethernet 1/1/2']), logging='aaa')))
+        set_module_args(dict(ip_access_group=dict(mac_acl_name='mac_acl', ethernet='111', lag='25',
+                             vlan=dict(vlan_num='555', interfaces=['ethernet 1/1/2']), logging='aaa')))
         result = self.execute_module(failed=True)
-
 
     def test_icx_invalid_args_default_acl(self):
         ''' Test for invalid in_out '''
-        set_module_args(dict(default_acl=dict(ip_type='ipv4',acl_name='guest', in_out='aa',state='present')))
+        set_module_args(dict(default_acl=dict(ip_type='ipv4', acl_name='guest', in_out='aa', state='present')))
         result = self.execute_module(failed=True)
