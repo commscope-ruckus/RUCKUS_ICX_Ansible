@@ -287,7 +287,7 @@ EXAMPLES = """
 """
 from ansible.module_utils.basic import AnsibleModule, env_fallback
 from ansible.module_utils.connection import ConnectionError, exec_command
-from ansible_collections.community.network.plugins.module_utils.network.icx.icx import load_config
+from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx import load_config
 
 
 def build_command(
