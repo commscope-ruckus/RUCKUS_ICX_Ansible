@@ -1,0 +1,25 @@
+---
+- debug: msg="START ios_lldp cli/lldp.yaml on connection={{ ansible_connection
+    }}"
+- name: Enable LLDP
+  register: result
+  icx_lldp:
+    state: present
+    provider: '{{ cli }}'
+
+- assert:
+    that:
+      - result.changed == true
+      - '"lldp run" in result.commands'
+
+- name: disable lldp service
+  register: result
+  icx_lldp:
+    state: absent
+    provider: '{{ cli }}'
+
+- assert:
+    that:
+      - result.changed == false
+
+- debug: msg="END ios_lldp cli/lldp.yaml on connection={{ ansible_connection }}"
