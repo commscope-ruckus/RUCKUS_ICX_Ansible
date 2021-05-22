@@ -164,17 +164,17 @@ def build_command(module, dot1x=None, enable=None, login=None, snmp_server=None,
         else:
             cmd = "aaa authentication dot1x default"
         if dot1x['primary_method'] is not None:
-            cmd += " {}".format(dot1x['primary_method'])
+            cmd += " {0}".format(dot1x['primary_method'])
             if dot1x['backup_method1'] is not None:
-                cmd += " {}".format(dot1x['backup_method1'])
+                cmd += " {0}".format(dot1x['backup_method1'])
         cmds.append(cmd)
 
     if enable is not None:
         if enable['primary_method'] is not None:
             if enable['state'] == 'absent':
-                cmd = "no aaa authentication enable default {}".format(enable['primary_method'])
+                cmd = "no aaa authentication enable default {0}".format(enable['primary_method'])
             else:
-                cmd = "aaa authentication enable default {}".format(enable['primary_method'])
+                cmd = "aaa authentication enable default {0}".format(enable['primary_method'])
             if enable['backup_method_list'] is not None:
                 cmd += " " + " ".join(enable['backup_method_list'])
             cmds.append(cmd)
@@ -188,9 +188,9 @@ def build_command(module, dot1x=None, enable=None, login=None, snmp_server=None,
     if login is not None:
         if login['primary_method'] is not None:
             if login['state'] == 'absent':
-                cmd = "no aaa authentication login default {}".format(login['primary_method'])
+                cmd = "no aaa authentication login default {0}".format(login['primary_method'])
             else:
-                cmd = "aaa authentication login default {}".format(login['primary_method'])
+                cmd = "aaa authentication login default {0}".format(login['primary_method'])
             if login['backup_method_list'] is not None:
                 cmd += " " + " ".join(login['backup_method_list'])
             cmds.append(cmd)
@@ -203,18 +203,18 @@ def build_command(module, dot1x=None, enable=None, login=None, snmp_server=None,
 
     if snmp_server is not None:
         if snmp_server['state'] == 'absent':
-            cmd = "no aaa authentication snmp-server default {}".format(snmp_server['primary_method'])
+            cmd = "no aaa authentication snmp-server default {0}".format(snmp_server['primary_method'])
         else:
-            cmd = "aaa authentication snmp-server default {}".format(snmp_server['primary_method'])
+            cmd = "aaa authentication snmp-server default {0}".format(snmp_server['primary_method'])
         if snmp_server['backup_method_list'] is not None:
             cmd += " " + " ".join(snmp_server['backup_method_list'])
         cmds.append(cmd)
 
     if web_server is not None:
         if web_server['state'] == 'absent':
-            cmd = "no aaa authentication web-server default {}".format(web_server['primary_method'])
+            cmd = "no aaa authentication web-server default {0}".format(web_server['primary_method'])
         else:
-            cmd = "aaa authentication web-server default {}".format(web_server['primary_method'])
+            cmd = "aaa authentication web-server default {0}".format(web_server['primary_method'])
         if web_server['backup_method_list'] is not None:
             cmd += " " + " ".join(web_server['backup_method_list'])
         cmds.append(cmd)

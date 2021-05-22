@@ -127,23 +127,23 @@ def build_command(module, coa_enable=None, coa_ignore=None, commands=None, exec_
 
     if coa_ignore is not None:
         if coa_ignore['state'] == 'absent':
-            cmd = "no aaa authorization coa ignore {}".format(coa_ignore['request'])
+            cmd = "no aaa authorization coa ignore {0}".format(coa_ignore['request'])
         else:
-            cmd = "aaa authorization coa ignore {}".format(coa_ignore['request'])
+            cmd = "aaa authorization coa ignore {0}".format(coa_ignore['request'])
         cmds.append(cmd)
 
     if commands is not None:
         if commands['state'] == 'absent':
-            cmd = "no aaa authorization commands {} default".format(commands['privilege_level'])
+            cmd = "no aaa authorization commands {0} default".format(commands['privilege_level'])
         else:
-            cmd = "aaa authorization commands {} default".format(commands['privilege_level'])
+            cmd = "aaa authorization commands {0} default".format(commands['privilege_level'])
 
         if commands['primary_method'] is not None:
-            cmd += " {}".format(commands['primary_method'])
+            cmd += " {0}".format(commands['primary_method'])
             if commands['backup_method1'] is not None:
-                cmd += " {}".format(commands['backup_method1'])
+                cmd += " {0}".format(commands['backup_method1'])
                 if commands['backup_method2'] is not None:
-                    cmd += " {}".format(commands['backup_method2'])
+                    cmd += " {0}".format(commands['backup_method2'])
         cmds.append(cmd)
 
     if exec_ is not None:
@@ -153,11 +153,11 @@ def build_command(module, coa_enable=None, coa_ignore=None, commands=None, exec_
             cmd = "aaa authorization exec default"
 
         if exec_['primary_method'] is not None:
-            cmd += " {}".format(exec_['primary_method'])
+            cmd += " {0}".format(exec_['primary_method'])
             if exec_['backup_method1'] is not None:
-                cmd += " {}".format(exec_['backup_method1'])
+                cmd += " {0}".format(exec_['backup_method1'])
                 if exec_['backup_method2'] is not None:
-                    cmd += " {}".format(exec_['backup_method2'])
+                    cmd += " {0}".format(exec_['backup_method2'])
         cmds.append(cmd)
 
     return cmds

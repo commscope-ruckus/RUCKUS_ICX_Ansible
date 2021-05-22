@@ -144,9 +144,9 @@ def build_command(module, acl_name=None, accounting=None, rule=None, state=None)
     acl_cmds = []
     rule_acl_cmds = []
     if state == 'absent':
-        cmd = "no mac access-list {}".format(acl_name)
+        cmd = "no mac access-list {0}".format(acl_name)
     else:
-        cmd = "mac access-list {}".format(acl_name)
+        cmd = "mac access-list {0}".format(acl_name)
     acl_cmds.append(cmd)
     if accounting == 'disable':
         cmd = "no enable accounting"
@@ -160,25 +160,25 @@ def build_command(module, acl_name=None, accounting=None, rule=None, state=None)
             if elements['state'] == 'absent':
                 cmd = "no"
                 if elements['rule_type'] is not None:
-                    cmd += " {}".format(elements['rule_type'])
+                    cmd += " {0}".format(elements['rule_type'])
             else:
                 if elements['rule_type'] is not None:
-                    cmd = "{}".format(elements['rule_type'])
+                    cmd = "{0}".format(elements['rule_type'])
 
             if elements['source']['source_mac_address'] is not None:
-                cmd += " {}".format(elements['source']['source_mac_address'])
+                cmd += " {0}".format(elements['source']['source_mac_address'])
                 if elements['source']['source_mask'] is not None:
-                    cmd += " {}".format(elements['source']['source_mask'])
+                    cmd += " {0}".format(elements['source']['source_mask'])
             elif elements['source']['any'] is not None:
                 cmd += " any"
             if elements['destination']['destination_mac_address'] is not None:
-                cmd += " {}".format(elements['destination']['destination_mac_address'])
+                cmd += " {0}".format(elements['destination']['destination_mac_address'])
                 if elements['destination']['destination_mask'] is not None:
-                    cmd += " {}".format(elements['destination']['destination_mask'])
+                    cmd += " {0}".format(elements['destination']['destination_mask'])
             elif elements['destination']['any'] is not None:
                 cmd += " any"
             if elements['ether_type']:
-                cmd += " ether-type {}".format(elements['ether_type'])
+                cmd += " ether-type {0}".format(elements['ether_type'])
             if elements['log']:
                 cmd += " log"
             if elements['mirror']:

@@ -300,22 +300,22 @@ def build_command(
     cmds = []
     if ip_access_group is not None:
         if ip_access_group['ethernet'] is not None:
-            cmd = "interface ethernet {}".format(ip_access_group['ethernet'])
+            cmd = "interface ethernet {0}".format(ip_access_group['ethernet'])
             cmds.append(cmd)
             if ip_access_group['mirror_port'] is not None:
                 if ip_access_group['mirror_port']['state'] == 'absent':
-                    cmd = "no acl-mirror-port ethernet {}".format(ip_access_group['mirror_port']['ethernet'])
+                    cmd = "no acl-mirror-port ethernet {0}".format(ip_access_group['mirror_port']['ethernet'])
                 else:
-                    cmd = "acl-mirror-port ethernet {}".format(ip_access_group['mirror_port']['ethernet'])
+                    cmd = "acl-mirror-port ethernet {0}".format(ip_access_group['mirror_port']['ethernet'])
                 cmds.append(cmd)
 
         elif ip_access_group['lag'] is not None:
-            cmd = "interface lag {}".format(ip_access_group['lag'])
+            cmd = "interface lag {0}".format(ip_access_group['lag'])
             cmds.append(cmd)
 
         elif ip_access_group['vlan'] is not None:
             if ip_access_group['vlan']['vlan_num'] is not None:
-                cmd = "vlan {}".format(ip_access_group['vlan']['vlan_num'])
+                cmd = "vlan {0}".format(ip_access_group['vlan']['vlan_num'])
             cmds.append(cmd)
 
         if ip_access_group['state'] == 'absent':
@@ -327,47 +327,47 @@ def build_command(
             cmd += " frag deny"
 
         elif ip_access_group['acl_num'] is not None:
-            cmd += " {} {}".format(ip_access_group['acl_num'], ip_access_group['in_out'])
+            cmd += " {0} {1}".format(ip_access_group['acl_num'], ip_access_group['in_out'])
             if ip_access_group['in_out'] == 'in':
                 if ip_access_group['vlan'] is not None:
                     if ip_access_group['vlan']['interfaces'] is not None:
                         for elements in ip_access_group['vlan']['interfaces']:
-                            cmd += " {}".format(elements)
+                            cmd += " {0}".format(elements)
 
             if ip_access_group['logging'] is not None:
-                cmd += ' logging {}'.format(ip_access_group['logging'])
+                cmd += ' logging {0}'.format(ip_access_group['logging'])
 
         else:
-            cmd += " {} {}".format(ip_access_group['acl_name'], ip_access_group['in_out'])
+            cmd += " {0} {1}".format(ip_access_group['acl_name'], ip_access_group['in_out'])
             if ip_access_group['in_out'] == 'in':
                 if ip_access_group['vlan'] is not None:
                     if ip_access_group['vlan']['interfaces'] is not None:
                         for elements in ip_access_group['vlan']['interfaces']:
-                            cmd += " {}".format(elements)
+                            cmd += " {0}".format(elements)
 
             if ip_access_group['logging'] is not None:
-                cmd += ' logging {}'.format(ip_access_group['logging'])
+                cmd += ' logging {0}'.format(ip_access_group['logging'])
         cmds.append(cmd)
         cmds.append('exit')
 
     if ipv6_access_group is not None:
         if ipv6_access_group['ethernet'] is not None:
-            cmd = "interface ethernet {}".format(ipv6_access_group['ethernet'])
+            cmd = "interface ethernet {0}".format(ipv6_access_group['ethernet'])
             cmds.append(cmd)
             if ipv6_access_group['mirror_port'] is not None:
                 if ipv6_access_group['mirror_port']['state'] == 'absent':
-                    cmd = "no acl-mirror-port ethernet {}".format(ipv6_access_group['mirror_port']['ethernet'])
+                    cmd = "no acl-mirror-port ethernet {0}".format(ipv6_access_group['mirror_port']['ethernet'])
                 else:
-                    cmd = "acl-mirror-port ethernet {}".format(ipv6_access_group['mirror_port']['ethernet'])
+                    cmd = "acl-mirror-port ethernet {0}".format(ipv6_access_group['mirror_port']['ethernet'])
                 cmds.append(cmd)
 
         elif ipv6_access_group['lag'] is not None:
-            cmd = "interface lag {}".format(ipv6_access_group['lag'])
+            cmd = "interface lag {0}".format(ipv6_access_group['lag'])
             cmds.append(cmd)
 
         elif ipv6_access_group['vlan'] is not None:
             if ipv6_access_group['vlan']['vlan_num'] is not None:
-                cmd = "vlan {}".format(ipv6_access_group['vlan']['vlan_num'])
+                cmd = "vlan {0}".format(ipv6_access_group['vlan']['vlan_num'])
             cmds.append(cmd)
 
         if ipv6_access_group['state'] == 'absent':
@@ -375,35 +375,35 @@ def build_command(
         else:
             cmd = "ipv6 access-group"
         if ipv6_access_group['acl_name'] is not None:
-            cmd += " {} {}".format(ipv6_access_group['acl_name'], ipv6_access_group['in_out'])
+            cmd += " {0} {1}".format(ipv6_access_group['acl_name'], ipv6_access_group['in_out'])
 
             if ipv6_access_group['in_out'] == 'in':
                 if ipv6_access_group['vlan'] is not None:
                     if ipv6_access_group['vlan']['interfaces'] is not None:
                         for elements in ipv6_access_group['vlan']['interfaces']:
-                            cmd += " {}".format(elements)
+                            cmd += " {0}".format(elements)
 
             if ipv6_access_group['logging'] is not None:
-                cmd += ' logging {}'.format(ipv6_access_group['logging'])
+                cmd += ' logging {0}'.format(ipv6_access_group['logging'])
         cmds.append(cmd)
         cmds.append('exit')
 
     if mac_access_group is not None:
         if mac_access_group['ethernet'] is not None:
-            cmd = "interface ethernet {}".format(mac_access_group['ethernet'])
+            cmd = "interface ethernet {0}".format(mac_access_group['ethernet'])
             cmds.append(cmd)
             if mac_access_group['mirror_port'] is not None:
                 if mac_access_group['mirror_port']['state'] == 'absent':
-                    cmd = "no acl-mirror-port ethernet {}".format(mac_access_group['mirror_port']['ethernet'])
+                    cmd = "no acl-mirror-port ethernet {0}".format(mac_access_group['mirror_port']['ethernet'])
                 else:
-                    cmd = "acl-mirror-port ethernet {}".format(mac_access_group['mirror_port']['ethernet'])
+                    cmd = "acl-mirror-port ethernet {0}".format(mac_access_group['mirror_port']['ethernet'])
                 cmds.append(cmd)
         elif mac_access_group['lag'] is not None:
-            cmd = "interface lag {}".format(mac_access_group['lag'])
+            cmd = "interface lag {0}".format(mac_access_group['lag'])
             cmds.append(cmd)
         elif mac_access_group['vlan'] is not None:
             if mac_access_group['vlan']['vlan_num'] is not None:
-                cmd = "vlan {}".format(mac_access_group['vlan']['vlan_num'])
+                cmd = "vlan {0}".format(mac_access_group['vlan']['vlan_num'])
             cmds.append(cmd)
 
         if mac_access_group['state'] == 'absent':
@@ -411,14 +411,14 @@ def build_command(
         else:
             cmd = "mac access-group"
         if mac_access_group['mac_acl_name'] is not None:
-            cmd += " {} in".format(mac_access_group['mac_acl_name'])
+            cmd += " {0} in".format(mac_access_group['mac_acl_name'])
             if mac_access_group['vlan'] is not None:
                 if mac_access_group['vlan']['interfaces'] is not None:
                     for elements in mac_access_group['vlan']['interfaces']:
-                        cmd += " {}".format(elements)
+                        cmd += " {0}".format(elements)
 
             if mac_access_group['logging'] is not None:
-                cmd += ' logging {}'.format(mac_access_group['logging'])
+                cmd += ' logging {0}'.format(mac_access_group['logging'])
 
         cmds.append(cmd)
         cmds.append('exit')
@@ -426,16 +426,16 @@ def build_command(
         default_cmds = 'authentication'
         cmds.append(default_cmds)
         if default_acl['state'] == 'absent':
-            cmd = "no default-acl {}".format(default_acl['ip_type'])
+            cmd = "no default-acl {0}".format(default_acl['ip_type'])
         else:
-            cmd = "default-acl {}".format(default_acl['ip_type'])
+            cmd = "default-acl {0}".format(default_acl['ip_type'])
 
         if default_acl['acl_name'] is not None:
-            cmd += " {}".format(default_acl['acl_name'])
+            cmd += " {0}".format(default_acl['acl_name'])
         else:
-            cmd += " {}".format(default_acl['acl_id'])
+            cmd += " {0}".format(default_acl['acl_id'])
         if default_acl['in_out'] is not None:
-            cmd += " {}".format(default_acl['in_out'])
+            cmd += " {0}".format(default_acl['in_out'])
         cmds.append(cmd)
         cmds.append('exit')
     return cmds

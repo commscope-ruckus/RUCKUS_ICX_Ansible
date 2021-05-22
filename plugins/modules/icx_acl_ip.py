@@ -320,13 +320,13 @@ def build_command(module, acl_type=None, acl_name=None, acl_id=None, accounting=
 
     acl_cmds = []
     if state == 'absent':
-        cmd = "no ip access-list {}".format(acl_type)
+        cmd = "no ip access-list {0}".format(acl_type)
     else:
-        cmd = "ip access-list {}".format(acl_type)
+        cmd = "ip access-list {0}".format(acl_type)
     if acl_name is not None:
-        cmd += " {}".format(acl_name)
+        cmd += " {0}".format(acl_name)
     else:
-        cmd += " {}".format(acl_id)
+        cmd += " {0}".format(acl_id)
     acl_cmds.append(cmd)
 
     if accounting == 'disable':
@@ -344,33 +344,33 @@ def build_command(module, acl_type=None, acl_name=None, acl_id=None, accounting=
             for rule in standard_rules:
                 if rule['remark'] is not None:
                     if rule['remark']['state'] == 'absent':
-                        cmd = "no remark {}".format(rule['remark']['comment_text'])
+                        cmd = "no remark {0}".format(rule['remark']['comment_text'])
                     else:
-                        cmd = "remark {}".format(rule['remark']['comment_text'])
+                        cmd = "remark {0}".format(rule['remark']['comment_text'])
                     standard_rule_cmds.append(cmd)
                 cmd = ""
                 if rule['state'] == 'absent':
                     cmd += "no "
                 if rule['seq_num'] is not None:
-                    cmd += "sequence {} ".format(rule['seq_num'])
+                    cmd += "sequence {0} ".format(rule['seq_num'])
                 if rule['rule_type'] is not None:
-                    cmd += "{}".format(rule['rule_type'])
+                    cmd += "{0}".format(rule['rule_type'])
 
                 if rule['host']:
                     if rule['hostname'] is not None:
-                        cmd += " host {}".format(rule['hostname'])
+                        cmd += " host {0}".format(rule['hostname'])
                     else:
-                        cmd += " host {}".format(rule['source_ip'])
+                        cmd += " host {0}".format(rule['source_ip'])
                 elif rule['any']:
                     cmd += " any"
                 elif rule['hostname'] is not None:
-                    cmd += " {}".format(rule['hostname'])
+                    cmd += " {0}".format(rule['hostname'])
                     if rule['mask'] is not None:
-                        cmd += " {}".format(rule['mask'])
+                        cmd += " {0}".format(rule['mask'])
                 else:
-                    cmd += " {}".format(rule['source_ip'])
+                    cmd += " {0}".format(rule['source_ip'])
                     if rule['mask'] is not None:
-                        cmd += " {}".format(rule['mask'])
+                        cmd += " {0}".format(rule['mask'])
 
                 if rule['log']:
                     cmd += " log"
@@ -383,131 +383,131 @@ def build_command(module, acl_type=None, acl_name=None, acl_id=None, accounting=
             for rule in extended_rules:
                 if rule['remark'] is not None:
                     if rule['remark']['state'] == 'absent':
-                        cmd = "no remark {}".format(rule['remark']['comment_text'])
+                        cmd = "no remark {0}".format(rule['remark']['comment_text'])
                     else:
-                        cmd = "remark {}".format(rule['remark']['comment_text'])
+                        cmd = "remark {0}".format(rule['remark']['comment_text'])
                     extended_rule_cmds.append(cmd)
                 cmd = ""
                 if rule['state'] == 'absent':
                     cmd += "no "
                 if rule['seq_num'] is not None:
-                    cmd += "sequence {} ".format(rule['seq_num'])
+                    cmd += "sequence {0} ".format(rule['seq_num'])
                 if rule['rule_type'] is not None:
-                    cmd += "{}".format(rule['rule_type'])
+                    cmd += "{0}".format(rule['rule_type'])
 
                 if rule['ip_protocol_name'] is not None:
-                    cmd += " {}".format(rule['ip_protocol_name'])
+                    cmd += " {0}".format(rule['ip_protocol_name'])
                 elif rule['ip_protocol_num'] is not None:
-                    cmd += " {}".format(rule['ip_protocol_num'])
+                    cmd += " {0}".format(rule['ip_protocol_num'])
                 if rule['source']['host']:
                     if rule['source']['hostname'] is not None:
-                        cmd += " host {}".format(rule['source']['hostname'])
+                        cmd += " host {0}".format(rule['source']['hostname'])
                     elif rule['source']['ip_address'] is not None:
-                        cmd += " host {}".format(rule['source']['ip_address'])
+                        cmd += " host {0}".format(rule['source']['ip_address'])
                 elif rule['source']['any']:
                     cmd += " any"
                 else:
                     if rule['source']['ip_address'] is not None:
-                        cmd += " {}".format(rule['source']['ip_address'])
+                        cmd += " {0}".format(rule['source']['ip_address'])
                         if rule['source']['mask'] is not None:
-                            cmd += " {}".format(rule['source']['mask'])
+                            cmd += " {0}".format(rule['source']['mask'])
                 if (rule['ip_protocol_name'] == "tcp") or (rule['ip_protocol_name'] == "udp"):
                     if rule['source_comparison_operators'] is not None:
                         if rule['source_comparison_operators']['operator'] is not None:
-                            cmd += " {}".format(rule['source_comparison_operators']['operator'])
+                            cmd += " {0}".format(rule['source_comparison_operators']['operator'])
                             if rule['source_comparison_operators']['port_num'] is not None:
-                                cmd += " {}".format(rule['source_comparison_operators']['port_num'])
+                                cmd += " {0}".format(rule['source_comparison_operators']['port_num'])
                             elif rule['source_comparison_operators']['port_name'] is not None:
                                 if rule['ip_protocol_name'] == "udp":
                                     if rule['source_comparison_operators']['port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap', 'ssl', 'tftp', 'snmp']:
-                                        cmd += " {}".format(rule['source_comparison_operators']['port_name'])
+                                        cmd += " {0}".format(rule['source_comparison_operators']['port_name'])
                                 elif rule['ip_protocol_name'] == "tcp":
                                     if rule['source_comparison_operators']['port_name'] not in ['tftp', 'snmp']:
-                                        cmd += " {}".format(rule['source_comparison_operators']['port_name'])
+                                        cmd += " {0}".format(rule['source_comparison_operators']['port_name'])
                             if rule['source_comparison_operators']['operator'] == 'range':
                                 if rule['source_comparison_operators']['high_port_num'] is not None:
-                                    cmd += " {}".format(rule['source_comparison_operators']['high_port_num'])
+                                    cmd += " {0}".format(rule['source_comparison_operators']['high_port_num'])
                                 elif rule['source_comparison_operators']['high_port_name'] is not None:
                                     if rule['ip_protocol_name'] == "udp":
                                         if rule['source_comparison_operators']['high_port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap', 'ssl', 'tftp', 'snmp']:
-                                            cmd += " {}".format(rule['source_comparison_operators']['high_port_name'])
+                                            cmd += " {0}".format(rule['source_comparison_operators']['high_port_name'])
                                     elif rule['ip_protocol_name'] == "tcp":
                                         if rule['source_comparison_operators']['high_port_name'] not in ['tftp', 'snmp']:
-                                            cmd += " {}".format(rule['source_comparison_operators']['high_port_name'])
+                                            cmd += " {0}".format(rule['source_comparison_operators']['high_port_name'])
 
                 if rule['destination']['host']:
                     if rule['destination']['hostname'] is not None:
-                        cmd += " host {}".format(rule['destination']['hostname'])
+                        cmd += " host {0}".format(rule['destination']['hostname'])
                     elif rule['destination']['ip_address'] is not None:
-                        cmd += " host {}".format(rule['destination']['ip_address'])
+                        cmd += " host {0}".format(rule['destination']['ip_address'])
                 elif rule['destination']['any']:
                     cmd += " any"
                 else:
                     if rule['destination']['ip_address'] is not None:
-                        cmd += " {}".format(rule['destination']['ip_address'])
+                        cmd += " {0}".format(rule['destination']['ip_address'])
                         if rule['destination']['mask'] is not None:
-                            cmd += " {}".format(rule['destination']['mask'])
+                            cmd += " {0}".format(rule['destination']['mask'])
                 if rule['ip_protocol_name'] == "icmp":
                     if rule['icmp_num'] is not None:
-                        cmd += " {}".format(rule['icmp_num'])
+                        cmd += " {0}".format(rule['icmp_num'])
                     elif rule['icmp_type'] is not None:
-                        cmd += " {}".format(rule['icmp_type'])
+                        cmd += " {0}".format(rule['icmp_type'])
                 if (rule['ip_protocol_name'] == "tcp") or (rule['ip_protocol_name'] == "udp"):
                     if rule['destination_comparison_operators'] is not None:
                         if rule['destination_comparison_operators']['operator'] is not None:
-                            cmd += " {}".format(rule['destination_comparison_operators']['operator'])
+                            cmd += " {0}".format(rule['destination_comparison_operators']['operator'])
                             if rule['destination_comparison_operators']['port_num'] is not None:
-                                cmd += " {}".format(rule['destination_comparison_operators']['port_num'])
+                                cmd += " {0}".format(rule['destination_comparison_operators']['port_num'])
                             elif rule['destination_comparison_operators']['port_name'] is not None:
                                 if rule['ip_protocol_name'] == "udp":
                                     if rule['destination_comparison_operators']['port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap', 'ssl', 'tftp', 'snmp']:
-                                        cmd += " {}".format(rule['destination_comparison_operators']['port_name'])
+                                        cmd += " {0}".format(rule['destination_comparison_operators']['port_name'])
                                 elif rule['ip_protocol_name'] == "tcp":
                                     if rule['destination_comparison_operators']['port_name'] not in ['tftp', 'snmp']:
-                                        cmd += " {}".format(rule['destination_comparison_operators']['port_name'])
+                                        cmd += " {0}".format(rule['destination_comparison_operators']['port_name'])
                             if rule['destination_comparison_operators']['operator'] == 'range':
                                 if rule['destination_comparison_operators']['high_port_num'] is not None:
-                                    cmd += " {}".format(rule['destination_comparison_operators']['high_port_num'])
+                                    cmd += " {0}".format(rule['destination_comparison_operators']['high_port_num'])
                                 elif rule['destination_comparison_operators']['high_port_name'] is not None:
                                     if rule['ip_protocol_name'] == "udp":
                                         if rule['destination_comparison_operators']['high_port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap', 'ssl', 'tftp', 'snmp']:
-                                            cmd += " {}".format(rule['destination_comparison_operators']['high_port_name'])
+                                            cmd += " {0}".format(rule['destination_comparison_operators']['high_port_name'])
                                     elif rule['ip_protocol_name'] == "tcp":
                                         if rule['destination_comparison_operators']['high_port_name'] not in ['tftp', 'snmp']:
-                                            cmd += " {}".format(rule['destination_comparison_operators']['high_port_name'])
+                                            cmd += " {0}".format(rule['destination_comparison_operators']['high_port_name'])
                     if rule['ip_protocol_name'] == "tcp":
                         if rule['established']:
                             cmd += " established"
                 if rule['precedence'] is not None:
-                    cmd += " precedence {}".format(rule['precedence'])
+                    cmd += " precedence {0}".format(rule['precedence'])
                 if rule['tos'] is not None:
-                    cmd += " tos {}".format(rule['tos'])
+                    cmd += " tos {0}".format(rule['tos'])
                 if rule['dscp_matching'] is not None:
-                    cmd += " dscp-matching {}".format(rule['dscp_matching'])
+                    cmd += " dscp-matching {0}".format(rule['dscp_matching'])
                 if rule['priority_matching'] is not None:
-                    cmd += " 802.1p-priority-matching {}".format(rule['priority_matching'])
+                    cmd += " 802.1p-priority-matching {0}".format(rule['priority_matching'])
                 if rule['dscp_marking'] is not None:
-                    cmd += " dscp-marking {}".format(rule['dscp_marking'])
+                    cmd += " dscp-marking {0}".format(rule['dscp_marking'])
                     # log and mirror are not applicable for dscp marking
                     if rule['internal_marking'] is not None:
-                        cmd += " 802.1p-and-internal-marking {}".format(rule['internal_marking'])
+                        cmd += " 802.1p-and-internal-marking {0}".format(rule['internal_marking'])
                     # command ends with 802.1p-and-internal-marking
                     elif rule['priority_marking'] is not None:
-                        cmd += " 802.1p-priority-marking {}".format(rule['priority_marking'])
+                        cmd += " 802.1p-priority-marking {0}".format(rule['priority_marking'])
                         if rule['internal_priority_marking'] is not None:
-                            cmd += " internal-priority-marking {}".format(rule['internal_priority_marking'])
+                            cmd += " internal-priority-marking {0}".format(rule['internal_priority_marking'])
                             if rule['log']:
                                 cmd += " log"
                             if rule['mirror']:
                                 cmd += " mirror"
                     elif rule['internal_priority_marking'] is not None:
-                        cmd += " internal-priority-marking {}".format(rule['internal_priority_marking'])
+                        cmd += " internal-priority-marking {0}".format(rule['internal_priority_marking'])
                         if rule['log']:
                             cmd += " log"
                         if rule['mirror']:
                             cmd += " mirror"
                     elif rule['traffic_policy_name'] is not None:
-                        cmd += " traffic-policy {}".format(rule['traffic_policy_name'])
+                        cmd += " traffic-policy {0}".format(rule['traffic_policy_name'])
                         if rule['log']:
                             cmd += " log"
                         if rule['mirror']:
@@ -515,23 +515,23 @@ def build_command(module, acl_type=None, acl_name=None, acl_id=None, accounting=
                 else:
                     if rule['internal_marking'] is not None:
                         if (rule['dscp_matching'] is None) and (rule['priority_matching'] is None):
-                            cmd += " 802.1p-and-internal-marking {}".format(rule['internal_marking'])
+                            cmd += " 802.1p-and-internal-marking {0}".format(rule['internal_marking'])
                     elif rule['priority_marking'] is not None:
-                        cmd += " 802.1p-priority-marking {}".format(rule['priority_marking'])
+                        cmd += " 802.1p-priority-marking {0}".format(rule['priority_marking'])
                         if rule['internal_priority_marking'] is not None:
-                            cmd += " internal-priority-marking {}".format(rule['internal_priority_marking'])
+                            cmd += " internal-priority-marking {0}".format(rule['internal_priority_marking'])
                             if rule['log']:
                                 cmd += " log"
                             if rule['mirror']:
                                 cmd += " mirror"
                     elif rule['internal_priority_marking'] is not None:
-                        cmd += " internal-priority-marking {}".format(rule['internal_priority_marking'])
+                        cmd += " internal-priority-marking {0}".format(rule['internal_priority_marking'])
                         if rule['log']:
                             cmd += " log"
                         if rule['mirror']:
                             cmd += " mirror"
                     elif rule['traffic_policy_name'] is not None:
-                        cmd += " traffic-policy {}".format(rule['traffic_policy_name'])
+                        cmd += " traffic-policy {0}".format(rule['traffic_policy_name'])
                         if rule['log']:
                             cmd += " log"
                         if rule['mirror']:

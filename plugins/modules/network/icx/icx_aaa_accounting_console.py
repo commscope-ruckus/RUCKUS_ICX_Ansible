@@ -166,16 +166,16 @@ def build_command(module, commands=None, dot1x=None, exec_=None, mac_auth=None, 
     cmds = []
     if commands is not None:
         if commands['state'] == 'absent':
-            cmd = "no aaa accounting commands {} default start-stop".format(commands['privilege_level'])
+            cmd = "no aaa accounting commands {0} default start-stop".format(commands['privilege_level'])
         else:
-            cmd = "aaa accounting commands {} default start-stop".format(commands['privilege_level'])
+            cmd = "aaa accounting commands {0} default start-stop".format(commands['privilege_level'])
 
         if commands['primary_method'] is not None:
-            cmd += " {}".format(commands['primary_method'])
+            cmd += " {0}".format(commands['primary_method'])
             if commands['backup_method1'] is not None:
-                cmd += " {}".format(commands['backup_method1'])
+                cmd += " {0}".format(commands['backup_method1'])
                 if commands['backup_method2'] is not None:
-                    cmd += " {}".format(commands['backup_method2'])
+                    cmd += " {0}".format(commands['backup_method2'])
         cmds.append(cmd)
 
     if dot1x is not None:
@@ -185,9 +185,9 @@ def build_command(module, commands=None, dot1x=None, exec_=None, mac_auth=None, 
             cmd = "aaa accounting dot1x default start-stop"
 
         if dot1x['primary_method'] is not None:
-            cmd += " {}".format(dot1x['primary_method'])
+            cmd += " {0}".format(dot1x['primary_method'])
             if dot1x['backup_method1'] is not None:
-                cmd += " {}".format(dot1x['backup_method1'])
+                cmd += " {0}".format(dot1x['backup_method1'])
         cmds.append(cmd)
 
     if exec_ is not None:
@@ -197,11 +197,11 @@ def build_command(module, commands=None, dot1x=None, exec_=None, mac_auth=None, 
             cmd = "aaa accounting exec default start-stop"
 
         if exec_['primary_method'] is not None:
-            cmd += " {}".format(exec_['primary_method'])
+            cmd += " {0}".format(exec_['primary_method'])
             if exec_['backup_method1'] is not None:
-                cmd += " {}".format(exec_['backup_method1'])
+                cmd += " {0}".format(exec_['backup_method1'])
                 if exec_['backup_method2'] is not None:
-                    cmd += " {}".format(exec_['backup_method2'])
+                    cmd += " {0}".format(exec_['backup_method2'])
         cmds.append(cmd)
 
     if mac_auth is not None:
@@ -211,9 +211,9 @@ def build_command(module, commands=None, dot1x=None, exec_=None, mac_auth=None, 
             cmd = "aaa accounting mac-auth default start-stop"
 
         if mac_auth['primary_method'] is not None:
-            cmd += " {}".format(mac_auth['primary_method'])
+            cmd += " {0}".format(mac_auth['primary_method'])
             if mac_auth['backup_method1'] is not None:
-                cmd += " {}".format(mac_auth['backup_method1'])
+                cmd += " {0}".format(mac_auth['backup_method1'])
         cmds.append(cmd)
 
     if system is not None:
@@ -223,11 +223,11 @@ def build_command(module, commands=None, dot1x=None, exec_=None, mac_auth=None, 
             cmd = "aaa accounting system default start-stop"
 
         if system['primary_method'] is not None:
-            cmd += " {}".format(system['primary_method'])
+            cmd += " {0}".format(system['primary_method'])
             if system['backup_method1'] is not None:
-                cmd += " {}".format(system['backup_method1'])
+                cmd += " {0}".format(system['backup_method1'])
                 if system['backup_method2'] is not None:
-                    cmd += " {}".format(system['backup_method2'])
+                    cmd += " {0}".format(system['backup_method2'])
         cmds.append(cmd)
 
     if enable_console is not None:
