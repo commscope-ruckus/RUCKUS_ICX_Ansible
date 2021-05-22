@@ -1,4 +1,4 @@
-plugins/modules/network/icx/icx_acl_ip.py pep8:E501
+plugins/modules/network/icx/icx_acl_ip.py pep8!skip
 tests/unit/plugins/modules/network/icx/test_icx_acl_ip.py pep8:E501
 tests/utils/shippable/check_matrix.py replace-urlopen
 tests/utils/shippable/timing.py shebang
