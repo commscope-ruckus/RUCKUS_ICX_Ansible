@@ -2,9 +2,9 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
-from ansible_collections.community.network.tests.unit.compat.mock import patch
-from ansible_collections.community.network.plugins.modules.network.icx import icx_banner
-from ansible_collections.community.network.tests.unit.plugins.modules.utils import set_module_args
+from ansible_collections.commscope.icx.tests.unit.compat.mock import patch
+from ansible_collections.commscope.icx.plugins.modules.network.icx import icx_banner
+from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
 
 
@@ -14,13 +14,13 @@ class TestICXBannerModule(TestICXModule):
 
     def setUp(self):
         super(TestICXBannerModule, self).setUp()
-        self.mock_exec_command = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_banner.exec_command')
+        self.mock_exec_command = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_banner.exec_command')
         self.exec_command = self.mock_exec_command.start()
 
-        self.mock_load_config = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_banner.load_config')
+        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_banner.load_config')
         self.load_config = self.mock_load_config.start()
 
-        self.mock_get_config = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_banner.get_config')
+        self.mock_get_config = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_banner.get_config')
         self.get_config = self.mock_get_config.start()
 
         self.set_running_config()
@@ -70,10 +70,10 @@ class TestICXBannerModule(TestICXModule):
         set_module_args(dict(banner='motd', enterkey=True))
 
         if not self.ENV_ICX_USE_DIFF:
+            self.execute_module(changed=False)
+        else:
             commands = ['banner motd require-enter-key']
             self.execute_module(changed=True, commands=commands)
-        else:
-            self.execute_module(changed=False)
 
     def test_icx_banner_motd_enter_remove(self):
         set_module_args(dict(banner='motd', state='absent', enterkey=False))

@@ -3,9 +3,9 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible_collections.community.network.tests.unit.compat.mock import patch
-from ansible_collections.community.network.plugins.modules.network.icx import icx_user
-from ansible_collections.community.network.tests.unit.plugins.modules.utils import set_module_args
+from ansible_collections.commscope.icx.tests.unit.compat.mock import patch
+from ansible_collections.commscope.icx.plugins.modules.network.icx import icx_user
+from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
 
 
@@ -15,11 +15,11 @@ class TestICXSCPModule(TestICXModule):
 
     def setUp(self):
         super(TestICXSCPModule, self).setUp()
-        self.mock_get_config = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_user.get_config')
+        self.mock_get_config = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_user.get_config')
         self.get_config = self.mock_get_config.start()
-        self.mock_load_config = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_user.load_config')
+        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_user.load_config')
         self.load_config = self.mock_load_config.start()
-        self.mock_exec_command = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_user.exec_command')
+        self.mock_exec_command = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_user.exec_command')
         self.exec_command = self.mock_exec_command.start()
         self.set_running_config()
 
@@ -72,10 +72,10 @@ class TestICXSCPModule(TestICXModule):
     def test_icx_user_update_password(self):
         set_module_args(dict(name='ale1', configured_password='alethea123'))
         if not self.ENV_ICX_USE_DIFF:
-            commands = ['username ale1 password alethea123']  # previous privilage will be added
+            commands = ['username ale1 privilege 5 password alethea123']  # previous privilage will be added
             self.execute_module(commands=commands, changed=True)
         else:
-            commands = ['username ale1 privilege 5 password alethea123']  # previous privilage will be added
+            commands = ['username ale1 password alethea123']  # previous privilage will be added
             self.execute_module(commands=commands, changed=True)
 
     def test_icx_user_update_password_compare(self):
@@ -135,12 +135,12 @@ class TestICXSCPModule(TestICXModule):
         ))
         if not self.ENV_ICX_USE_DIFF:
             commands = [
-                'username ale1 password alethea123',
                 'username ale6 password alethea123',
             ]
             self.execute_module(commands=commands, changed=True)
         else:
             commands = [
+                'username ale1 password alethea123',
                 'username ale6 password alethea123',
             ]
             self.execute_module(commands=commands, changed=True)
@@ -165,12 +165,12 @@ class TestICXSCPModule(TestICXModule):
         ))
         if not self.ENV_ICX_USE_DIFF:
             commands = [
-                'username ale2 privilege 5 password ale123',
                 'username ale3 privilege 4 password ale123'
             ]
             self.execute_module(commands=commands, changed=True)
         else:
             commands = [
+                'username ale2 privilege 5 password ale123',
                 'username ale3 privilege 4 password ale123'
             ]
             self.execute_module(commands=commands, changed=True)
@@ -185,13 +185,12 @@ class TestICXSCPModule(TestICXModule):
         ))
         if not self.ENV_ICX_USE_DIFF:
             commands = [
-
-            ]
-            self.execute_module(commands=commands, changed=False)
-        else:
-            commands = [
                 'no username ale2',
                 'no username ale3',
                 'no username ale4'
             ]
             self.execute_module(commands=commands, changed=True)
+        else:
+            commands = [
+            ]
+            self.execute_module(commands=commands, changed=False)
