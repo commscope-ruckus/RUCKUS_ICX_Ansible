@@ -42,6 +42,8 @@ class TerminalModule(TerminalBase):
         re.compile(br"SSH tftp client public key failed!"),
         re.compile(br"Error: .*"),
         re.compile(br"^Error: .*", re.I),
+        re.compile(br"Error:.*"),
+        re.compile(br"Error:.*"), re.I,
         re.compile(br"^Ambiguous input"),
         re.compile(br"Errno")
     ]
