@@ -421,7 +421,7 @@ def main():
         auth_port_num=dict(),
         acct_port_num=dict(),
         acct_type=dict(choices=['accounting-only', 'authentication-only', 'authorization-only', 'default']),
-        auth_key=dict(),
+        auth_key=dict(no_log=True),
         auth_key_type=dict(type='list', choices=['dot1x', 'mac-auth', 'web-auth'])
     )
     argument_spec = dict(
@@ -431,7 +431,7 @@ def main():
         domain_search=dict(type='list'),
         name_servers=dict(type='list'),
 
-        aaa_servers=dict(type='list', elements='dict', options=server_spec, no_log=True),
+        aaa_servers=dict(type='list', elements='dict', options=server_spec),
         state=dict(choices=['present', 'absent'], default='present'),
         check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
     )
