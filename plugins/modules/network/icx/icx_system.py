@@ -431,7 +431,7 @@ def main():
         domain_search=dict(type='list'),
         name_servers=dict(type='list'),
 
-        aaa_servers=dict(type='list', elements='dict', options=server_spec),
+        aaa_servers=dict(type='list', elements='dict', options=server_spec, no_log=True),
         state=dict(choices=['present', 'absent'], default='present'),
         check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
     )
