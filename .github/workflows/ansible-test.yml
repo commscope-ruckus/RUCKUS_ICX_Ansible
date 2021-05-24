@@ -56,6 +56,9 @@ jobs:
       # Install the head of the given branch (devel, stable-2.10)
       - name: Install ansible-base (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
+      
+      - name: Install collection dependencies
+        run: ansible-galaxy collection install ansible.netcommon -p .
 
       # run ansible-test sanity inside of Docker.
       # The docker container has all the pinned dependencies that are required
