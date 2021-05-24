@@ -57,6 +57,9 @@ jobs:
       - name: Install ansible-base (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
 
+      - name: Install collection dependencies
+        run: ansible-galaxy collection install ansible.netcommon -p .
+
       # run ansible-test sanity inside of Docker.
       # The docker container has all the pinned dependencies that are required
       # and all python versions ansible supports.
