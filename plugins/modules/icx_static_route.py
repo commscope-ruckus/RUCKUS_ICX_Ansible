@@ -221,14 +221,14 @@ def map_params_to_obj(module, required_together=None):
                 if route.get(key) is None:
                     route[key] = module.params.get(key)
 
-            module._check_required_together(required_together, route)
+            # module._check_required_together(required_together, route)
 
             prefix, mask = prefix_length_parser(route['prefix'], route['mask'], module)
             route.update({'prefix': prefix, 'mask': mask})
 
             obj.append(route)
     else:
-        module._check_required_together(required_together, module.params)
+        # module._check_required_together(required_together, module.params)
         prefix, mask = prefix_length_parser(module.params['prefix'], module.params['mask'], module)
 
         obj.append({
@@ -258,24 +258,25 @@ def main():
         check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
     )
 
+    required_one_of = [['aggregate', 'prefix']]
+    required_together = [['prefix', 'next_hop']]
+    mutually_exclusive = [['aggregate', 'prefix']]
+
     aggregate_spec = deepcopy(element_spec)
     aggregate_spec['prefix'] = dict(required=True)
 
     remove_default_spec(aggregate_spec)
 
     argument_spec = dict(
-        aggregate=dict(type='list', elements='dict', options=aggregate_spec),
+        aggregate=dict(type='list', elements='dict', options=aggregate_spec, required_together=required_together),
         purge=dict(default=False, type='bool')
     )
 
     argument_spec.update(element_spec)
 
-    required_one_of = [['aggregate', 'prefix']]
-    required_together = [['prefix', 'next_hop']]
-    mutually_exclusive = [['aggregate', 'prefix']]
-
     module = AnsibleModule(argument_spec=argument_spec,
                            required_one_of=required_one_of,
+                           required_together=required_together,
                            mutually_exclusive=mutually_exclusive,
                            supports_check_mode=True)
 
@@ -288,7 +289,7 @@ def main():
     if warnings:
         result['warnings'] = warnings
 
-    want = map_params_to_obj(module, required_together=required_together)
+    want = map_params_to_obj(module)
     have = map_config_to_obj(module)
 
     commands = map_obj_to_commands(want, have, module)

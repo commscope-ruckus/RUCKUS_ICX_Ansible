@@ -16,14 +16,17 @@ class TestICXRateLimitModule(TestICXModule):
         super(TestICXRateLimitModule, self).setUp()
         self.mock_exec_command = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_rate_limit.exec_command')
         # self.mock_run_commands = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_rate_limit.run_commands')
+        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_rate_limit.load_config')
         self.mock_get_config = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_rate_limit.get_config')
         self.get_config = self.mock_get_config.start()
         # self.run_commands = self.mock_run_commands.start()
+        self.load_config = self.mock_load_config.start()
         self.exec_command = self.mock_exec_command.start()
 
     def tearDown(self):
         super(TestICXRateLimitModule, self).tearDown()
         # self.mock_run_commands.stop()
+        self.mock_load_config.stop()
         self.mock_exec_command.stop()
         self.mock_get_config.stop()
 
@@ -44,7 +47,7 @@ class TestICXRateLimitModule(TestICXModule):
                 rate_limit_bum=dict(minutes=7, state='absent')
             ))
         result = self.execute_module(changed=True)
-        expected_commands = ['conf t', 'no rate-limit-log 7']
+        expected_commands = ['no rate-limit-log 7']
         self.assertEqual(result['commands'], expected_commands)
 
     def test_icx_rate_limit_bum_present(self):
@@ -52,7 +55,7 @@ class TestICXRateLimitModule(TestICXModule):
             dict(
                 rate_limit_bum=dict(minutes=7, state='present')
             ))
-        commands = ['conf t', 'rate-limit-log 7']
+        commands = ['rate-limit-log 7']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -61,7 +64,7 @@ class TestICXRateLimitModule(TestICXModule):
             dict(
                 rate_limit_arp=dict(number=77, state='absent')
             ))
-        commands = ['conf t', 'no rate-limit-arp 77']
+        commands = ['no rate-limit-arp 77']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -70,7 +73,7 @@ class TestICXRateLimitModule(TestICXModule):
             dict(
                 rate_limit_arp=dict(number=77, state='present')
             ))
-        commands = ['conf t', 'rate-limit-arp 77']
+        commands = ['rate-limit-arp 77']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -83,7 +86,7 @@ class TestICXRateLimitModule(TestICXModule):
                     average_rate=500,
                     state='absent')
             ))
-        commands = ['conf t', 'lag LAG1', 'no rate-limit input fixed ethernet 1/1/2 500', 'exit']
+        commands = ['lag LAG1', 'no rate-limit input fixed ethernet 1/1/2 500']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -95,7 +98,7 @@ class TestICXRateLimitModule(TestICXModule):
                     lag='LAG1',
                     average_rate=800),
             ))
-        commands = ['conf t', 'lag LAG1', 'rate-limit input fixed ethernet 1/1/2 800', 'exit']
+        commands = ['lag LAG1', 'rate-limit input fixed ethernet 1/1/2 800']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -107,7 +110,7 @@ class TestICXRateLimitModule(TestICXModule):
                     average_rate=500,
                     state='absent')
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'no rate-limit input fixed 500', 'exit']
+        commands = ['interface ethernet 1/1/2', 'no rate-limit input fixed 500']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -118,7 +121,7 @@ class TestICXRateLimitModule(TestICXModule):
                     port='1/1/2',
                     average_rate=500)
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'rate-limit input fixed 500', 'exit']
+        commands = ['interface ethernet 1/1/2', 'rate-limit input fixed 500']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -137,8 +140,8 @@ class TestICXRateLimitModule(TestICXModule):
             )
         ]
         set_module_args(dict(aggregate=aggregate))
-        expected_commands = ['conf t', 'lag LAG1', 'rate-limit output shaping ethernet 1/1/2 800',
-                             'exit', 'interface ethernet 1/1/3', 'rate-limit output shaping 800', 'exit']
+        expected_commands = ['lag LAG1', 'rate-limit output shaping ethernet 1/1/2 800',
+                             'interface ethernet 1/1/3', 'rate-limit output shaping 800']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], expected_commands)
 
@@ -151,7 +154,7 @@ class TestICXRateLimitModule(TestICXModule):
                     burst_size=500,
                     state='absent')
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'no rate-limit input fixed 500 burst 500', 'exit']
+        commands = ['interface ethernet 1/1/2', 'no rate-limit input fixed 500 burst 500']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -163,7 +166,7 @@ class TestICXRateLimitModule(TestICXModule):
                     average_rate=500,
                     burst_size=500)
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'rate-limit input fixed 500 burst 500', 'exit']
+        commands = ['interface ethernet 1/1/2', 'rate-limit input fixed 500 burst 500']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -185,7 +188,7 @@ class TestICXRateLimitModule(TestICXModule):
                 self.assertEqual(result['commands'], expected_commands)
             else:
                 result = self.execute_module(changed=True)
-                expected_commands = ['conf t', 'lag LAG1', 'rate-limit output shaping ethernet 1/1/2 800', 'exit']
+                expected_commands = ['lag LAG1', 'rate-limit output shaping ethernet 1/1/2 800']
                 self.assertEqual(result['commands'], expected_commands)
 
     def test_icx_rate_limit_output_lag_preset(self):
@@ -197,7 +200,7 @@ class TestICXRateLimitModule(TestICXModule):
                     value=500,
                     state='present')
             ))
-        commands = ['conf t', 'lag LAG1', 'rate-limit output shaping ethernet 1/1/2 500', 'exit']
+        commands = ['lag LAG1', 'rate-limit output shaping ethernet 1/1/2 500']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -209,7 +212,7 @@ class TestICXRateLimitModule(TestICXModule):
                     value=500,
                     state='absent')
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'no rate-limit output shaping 500', 'exit']
+        commands = ['interface ethernet 1/1/2', 'no rate-limit output shaping 500']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -220,7 +223,7 @@ class TestICXRateLimitModule(TestICXModule):
                     port='1/1/2',
                     value=500)
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'rate-limit output shaping 500', 'exit']
+        commands = ['interface ethernet 1/1/2', 'rate-limit output shaping 500']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -233,7 +236,7 @@ class TestICXRateLimitModule(TestICXModule):
                     priority_queue=5,
                     state='absent')
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'no rate-limit output shaping 500 priority 5', 'exit']
+        commands = ['interface ethernet 1/1/2', 'no rate-limit output shaping 500 priority 5']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -245,7 +248,7 @@ class TestICXRateLimitModule(TestICXModule):
                     value=500,
                     priority_queue=5)
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'rate-limit output shaping 500 priority 5', 'exit']
+        commands = ['interface ethernet 1/1/2', 'rate-limit output shaping 500 priority 5']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], commands)
 
@@ -257,7 +260,7 @@ class TestICXRateLimitModule(TestICXModule):
                     kbps=50,
                     log=True)
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'broadcast limit 50 kbps log', 'exit']
+        commands = ['interface ethernet 1/1/2', 'broadcast limit 50 kbps log']
         result = self.execute_module(changed=True, failed=False)
         self.assertEqual(result['commands'], commands)
 
@@ -269,7 +272,7 @@ class TestICXRateLimitModule(TestICXModule):
                     kbps=50,
                     log=False)
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'no broadcast limit 50 kbps log', 'exit']
+        commands = ['interface ethernet 1/1/2', 'no broadcast limit 50 kbps log']
         result = self.execute_module(changed=True, failed=False)
         self.assertEqual(result['commands'], commands)
 
@@ -281,7 +284,7 @@ class TestICXRateLimitModule(TestICXModule):
                     kbps=50,
                     log=True)
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'unknown-unicast limit 50 kbps log', 'exit']
+        commands = ['interface ethernet 1/1/2', 'unknown-unicast limit 50 kbps log']
         result = self.execute_module(changed=True, failed=False)
         self.assertEqual(result['commands'], commands)
 
@@ -293,7 +296,7 @@ class TestICXRateLimitModule(TestICXModule):
                     kbps=50,
                     log=False)
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'no unknown-unicast limit 50 kbps log', 'exit']
+        commands = ['interface ethernet 1/1/2', 'no unknown-unicast limit 50 kbps log']
         result = self.execute_module(changed=True, failed=False)
         self.assertEqual(result['commands'], commands)
 
@@ -305,7 +308,7 @@ class TestICXRateLimitModule(TestICXModule):
                     kbps=50,
                     log=True)
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'multicast limit 50 kbps log', 'exit']
+        commands = ['interface ethernet 1/1/2', 'multicast limit 50 kbps log']
         result = self.execute_module(changed=True, failed=False)
         self.assertEqual(result['commands'], commands)
 
@@ -317,6 +320,6 @@ class TestICXRateLimitModule(TestICXModule):
                     kbps=50,
                     log=False)
             ))
-        commands = ['conf t', 'interface ethernet 1/1/2', 'no multicast limit 50 kbps log', 'exit']
+        commands = ['interface ethernet 1/1/2', 'no multicast limit 50 kbps log']
         result = self.execute_module(changed=True, failed=False)
         self.assertEqual(result['commands'], commands)
