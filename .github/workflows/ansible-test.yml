@@ -83,7 +83,6 @@ jobs:
           # - stable-2.9 # Only if your collection supports Ansible 2.9
           - stable-2.10
           - stable-2.11
-          - devel
 
     steps:
       - name: Check out code
