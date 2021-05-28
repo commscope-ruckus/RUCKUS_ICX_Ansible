@@ -59,6 +59,7 @@ options:
       - Check the operational state of given interface C(name) for CDP/LLDP neighbor.
       - The following suboptions are available.
     type: list
+    elements: dict
     suboptions:
       host:
         description:
@@ -107,17 +108,18 @@ options:
         enabled:
           description:
             - "enable/disable the poe of the given interface C(name)"
-          default: no
           type: bool
   aggregate:
     description:
       - List of Interfaces definitions.
     type: list
+    elements: dict
     suboptions:
       name:
         description:
           - Name of the Interface.
         type: str
+        required: true
       description:
         description:
           - Name of the description.
@@ -154,6 +156,7 @@ options:
           - Check the operational state of given interface C(name) for CDP/LLDP neighbor.
           - The following suboptions are available.
         type: list
+        elements: dict
         suboptions:
           host:
             description:

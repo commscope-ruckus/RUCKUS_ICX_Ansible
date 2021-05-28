@@ -31,6 +31,7 @@ options:
         type: str
         choices: ['present', 'absent', 'enabled', 'disabled']
     type: list
+    elements: dict
   check_running_config:
     description:
       - Check running configuration. This can be set as environment variable.

@@ -379,7 +379,8 @@ def build_command(module, acl_name=None, accounting=None, rules=None, state=None
                                 cmd += " {0}".format(rule['source_comparison_operators']['high_port_num'])
                             elif rule['source_comparison_operators']['high_port_name'] is not None:
                                 if rule['ip_protocol_name'] == "udp":
-                                    if rule['source_comparison_operators']['high_port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap', 'ssl', 'tftp', 'snmp']:
+                                    if rule['source_comparison_operators']['high_port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap',
+                                                                                                 'ssl', 'tftp', 'snmp']:
                                         cmd += " {0}".format(rule['source_comparison_operators']['high_port_name'])
                                 elif rule['ip_protocol_name'] == "tcp":
                                     if rule['source_comparison_operators']['high_port_name'] not in ['tftp', 'snmp']:
@@ -396,17 +397,21 @@ def build_command(module, acl_name=None, accounting=None, rules=None, state=None
                             cmd += " {0} {1}".format(rule['destination_comparison_operators']['operator'], rule['destination_comparison_operators']['port_num'])
                         elif rule['destination_comparison_operators']['port_name'] is not None:
                             if rule['ip_protocol_name'] == "udp":
-                                if rule['destination_comparison_operators']['port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap', 'ssl', 'tftp', 'snmp']:
-                                    cmd += " {0} {1}".format(rule['destination_comparison_operators']['operator'], rule['destination_comparison_operators']['port_name'])
+                                if rule['destination_comparison_operators']['port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap', 'ssl',
+                                                                                             'tftp', 'snmp']:
+                                    cmd += " {0} {1}".format(rule['destination_comparison_operators']['operator'],
+                                                             rule['destination_comparison_operators']['port_name'])
                             elif rule['ip_protocol_name'] == "tcp":
                                 if rule['destination_comparison_operators']['port_name'] not in ['tftp', 'snmp']:
-                                    cmd += " {0} {1}".format(rule['destination_comparison_operators']['operator'], rule['destination_comparison_operators']['port_name'])
+                                    cmd += " {0} {1}".format(rule['destination_comparison_operators']['operator'],
+                                                             rule['destination_comparison_operators']['port_name'])
                         if rule['destination_comparison_operators']['operator'] == 'range':
                             if rule['destination_comparison_operators']['high_port_num'] is not None:
                                 cmd += " {0}".format(rule['destination_comparison_operators']['high_port_num'])
                             elif rule['destination_comparison_operators']['high_port_name'] is not None:
                                 if rule['ip_protocol_name'] == "udp":
-                                    if rule['destination_comparison_operators']['high_port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap', 'ssl', 'tftp', 'snmp']:
+                                    if rule['destination_comparison_operators']['high_port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap',
+                                                                                                      'ssl', 'tftp', 'snmp']:
                                         cmd += " {0}".format(rule['destination_comparison_operators']['high_port_name'])
                                 elif rule['ip_protocol_name'] == "tcp":
                                     if rule['destination_comparison_operators']['high_port_name'] not in ['tftp', 'snmp']:
@@ -534,9 +539,11 @@ def main():
     source_comparison_operators_spec = dict(
         operator=dict(type='str', choices=['eq', 'gt', 'lt', 'neq', 'range']),
         port_num=dict(type='int'),
-        port_name=dict(type='str', choices=['ftp-data', 'ftp', 'ssh', 'telnet', 'smtp', 'dns', 'http', 'gppitnp', 'pop2', 'pop3', 'sftp', 'sqlserv', 'bgp', 'ldap', 'ssl', 'tftp', 'snmp']),
+        port_name=dict(type='str', choices=['ftp-data', 'ftp', 'ssh', 'telnet', 'smtp', 'dns', 'http',
+                                            'gppitnp', 'pop2', 'pop3', 'sftp', 'sqlserv', 'bgp', 'ldap', 'ssl', 'tftp', 'snmp']),
         high_port_num=dict(type='int'),
-        high_port_name=dict(type='str', choices=['ftp-data', 'ftp', 'ssh', 'telnet', 'smtp', 'dns', 'http', 'gppitnp', 'pop2', 'pop3', 'sftp', 'sqlserv', 'bgp', 'ldap', 'ssl', 'tftp', 'snmp'])
+        high_port_name=dict(type='str', choices=['ftp-data', 'ftp', 'ssh', 'telnet', 'smtp', 'dns', 'http',
+                                                 'gppitnp', 'pop2', 'pop3', 'sftp', 'sqlserv', 'bgp', 'ldap', 'ssl', 'tftp', 'snmp'])
     )
     destination_spec = dict(
         host_ipv6_address=dict(type='str'),
@@ -546,9 +553,11 @@ def main():
     destination_comparison_operators_spec = dict(
         operator=dict(type='str', choices=['eq', 'gt', 'lt', 'neq', 'range']),
         port_num=dict(type='int'),
-        port_name=dict(type='str', choices=['ftp-data', 'ftp', 'ssh', 'telnet', 'smtp', 'dns', 'http', 'gppitnp', 'pop2', 'pop3', 'sftp', 'sqlserv', 'bgp', 'ldap', 'ssl', 'tftp', 'snmp']),
+        port_name=dict(type='str', choices=['ftp-data', 'ftp', 'ssh', 'telnet', 'smtp', 'dns', 'http', 'gppitnp',
+                                            'pop2', 'pop3', 'sftp', 'sqlserv', 'bgp', 'ldap', 'ssl', 'tftp', 'snmp']),
         high_port_num=dict(type='int'),
-        high_port_name=dict(type='str', choices=['ftp-data', 'ftp', 'ssh', 'telnet', 'smtp', 'dns', 'http', 'gppitnp', 'pop2', 'pop3', 'sftp', 'sqlserv', 'bgp', 'ldap', 'ssl', 'tftp', 'snmp'])
+        high_port_name=dict(type='str', choices=['ftp-data', 'ftp', 'ssh', 'telnet', 'smtp', 'dns', 'http', 'gppitnp',
+                                                 'pop2', 'pop3', 'sftp', 'sqlserv', 'bgp', 'ldap', 'ssl', 'tftp', 'snmp'])
     )
     rules_spec = dict(
         remark=dict(type='dict', options=remark_spec),
@@ -556,13 +565,19 @@ def main():
         rule_type=dict(type='str', choices=['deny', 'permit'], required=True),
         ip_protocol_name=dict(type='str', choices=['ahp', 'esp', 'icmp', 'ipv6', 'sctp', 'tcp', 'udp']),
         ip_protocol_num=dict(type='int'),
-        source=dict(type='dict', required=True, options=source_spec, required_one_of=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']], mutually_exclusive=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']]),
+        source=dict(type='dict', required=True, options=source_spec, required_one_of=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']],
+                    mutually_exclusive=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']]),
         source_comparison_operators=dict(type='dict', options=source_comparison_operators_spec),
-        destination=dict(type='dict', required=True, options=destination_spec, required_one_of=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']], mutually_exclusive=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']]),
+        destination=dict(type='dict', required=True, options=destination_spec, required_one_of=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']],
+                         mutually_exclusive=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']]),
         established=dict(type='bool', default='no'),
         destination_comparison_operators=dict(type='dict', options=destination_comparison_operators_spec),
         icmp_num=dict(type='int'),
-        icmp_type=dict(type='str', choices=['beyond-scope', 'destination-unreachable', 'echo-reply', 'echo-request', 'header', 'hop-limit', 'mld-query', 'mld-reduction', 'mld-report', 'nd-na', 'nd-ns', 'next-header', 'no-admin', 'no-route', 'packet-too-big', 'parameter-option', 'parameter-problem', 'port-unreachable', 'reassembly-timeout', 'renum-command', 'renum-result', 'renum-seq-number', 'router-advertisement', 'router-renumbering', 'router-solicitation', 'time-exceeded', 'unreachable']),
+        icmp_type=dict(type='str', choices=['beyond-scope', 'destination-unreachable', 'echo-reply', 'echo-request', 'header', 'hop-limit', 'mld-query',
+                                            'mld-reduction', 'mld-report', 'nd-na', 'nd-ns', 'next-header', 'no-admin', 'no-route', 'packet-too-big',
+                                            'parameter-option', 'parameter-problem', 'port-unreachable', 'reassembly-timeout', 'renum-command', 'renum-result',
+                                            'renum-seq-number', 'router-advertisement', 'router-renumbering', 'router-solicitation', 'time-exceeded',
+                                            'unreachable']),
         fragments=dict(type='bool', default='no'),
         routing=dict(type='bool', default='no'),
         dscp_matching=dict(type='int'),

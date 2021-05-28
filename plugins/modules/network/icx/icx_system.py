@@ -30,6 +30,7 @@ options:
        Value should be in the dotted name form and
        will be appended to the hostname to create a fully-qualified domain name.
     type: list
+    elements: str
   domain_search:
     description:
       - Provides the list of domain names to
@@ -37,15 +38,18 @@ options:
         This argument accepts a list of names and will be reconciled
         with the current active configuration on the running node.
     type: list
+    elements: str
   name_servers:
     description:
       - List of DNS name servers by IP address to use to perform name resolution
         lookups.
     type: list
+    elements: str
   aaa_servers:
     description:
       - Configures radius/tacacs server
     type: list
+    elements: dict
     suboptions:
       type:
         description:
@@ -82,6 +86,7 @@ options:
         description:
           - List of authentication level specified in the choices
         type: list
+        elements: str
         choices: ['dot1x','mac-auth','web-auth']
   state:
     description:
@@ -422,14 +427,14 @@ def main():
         acct_port_num=dict(),
         acct_type=dict(choices=['accounting-only', 'authentication-only', 'authorization-only', 'default']),
         auth_key=dict(no_log=True),
-        auth_key_type=dict(type='list', choices=['dot1x', 'mac-auth', 'web-auth'])
+        auth_key_type=dict(type='list', elements='str', choices=['dot1x', 'mac-auth', 'web-auth'])
     )
     argument_spec = dict(
         hostname=dict(),
 
-        domain_name=dict(type='list'),
-        domain_search=dict(type='list'),
-        name_servers=dict(type='list'),
+        domain_name=dict(type='list', elements='str'),
+        domain_search=dict(type='list', elements='str'),
+        name_servers=dict(type='list', elements='str'),
 
         aaa_servers=dict(type='list', elements='dict', options=server_spec),
         state=dict(choices=['present', 'absent'], default='present'),

@@ -52,12 +52,14 @@ options:
     description:
       - List of link aggregation definitions.
     type: list
+    elements: dict
     suboptions:
      group:
        description:
          - Channel-group number for the port-channel
            Link aggregation group. Range 1-255 or set to 'auto' to auto-generates a LAG ID
        type: int
+       required: true
      name:
        description:
          - Name of the LAG

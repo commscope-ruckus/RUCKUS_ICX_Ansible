@@ -56,11 +56,13 @@ options:
       - List of Layer-3 interfaces definitions. Each of the entry in aggregate list should
         define name of interface C(name) and a optional C(ipv4) or C(ipv6) address.
     type: list
+    elements: dict
     suboptions:
       name:
         description:
           - Name of the Layer-3 interface to be configured eg. GigabitEthernet0/2, ve 10, ethernet 1/1/1
         type: str
+        required: true
       ipv4:
         description:
           - IPv4 address to be set for the Layer-3 interface mentioned in I(name) option.

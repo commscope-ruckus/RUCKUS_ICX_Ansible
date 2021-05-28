@@ -48,13 +48,11 @@ options:
   boot_only:
     description:
       - Boot the switch if True.
-    default: no
     type: bool
     required: true
   save_running_config:
     description:
       - execute Write memory Command.
-    default: no
     type: bool
   filename:
     description:
