@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 from ansible_collections.commscope.icx.tests.unit.compat.mock import patch, MagicMock
-from ansible_collections.commscope.icx.plugins.modules.network.icx import icx_config
+from ansible_collections.commscope.icx.plugins.modules import icx_config
 from ansible_collections.commscope.icx.plugins.cliconf.icx import Cliconf
 from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
@@ -17,16 +17,16 @@ class TestICXConfigModule(TestICXModule):
     def setUp(self):
         super(TestICXConfigModule, self).setUp()
 
-        self.mock_get_config = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_config.get_config')
+        self.mock_get_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_config.get_config')
         self.get_config = self.mock_get_config.start()
 
-        self.mock_get_connection = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_config.get_connection')
+        self.mock_get_connection = patch('ansible_collections.commscope.icx.plugins.modules.icx_config.get_connection')
         self.get_connection = self.mock_get_connection.start()
 
         self.conn = self.get_connection()
         self.conn.edit_config = MagicMock()
 
-        self.mock_run_commands = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_config.run_commands')
+        self.mock_run_commands = patch('ansible_collections.commscope.icx.plugins.modules.icx_config.run_commands')
         self.run_commands = self.mock_run_commands.start()
 
         self.cliconf_obj = Cliconf(MagicMock())

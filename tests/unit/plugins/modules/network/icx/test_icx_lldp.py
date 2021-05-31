@@ -3,7 +3,7 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 from ansible_collections.commscope.icx.tests.unit.compat.mock import patch
-from ansible_collections.commscope.icx.plugins.modules.network.icx import icx_lldp
+from ansible_collections.commscope.icx.plugins.modules import icx_lldp
 from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
 
@@ -15,10 +15,10 @@ class TestICXlldpModule(TestICXModule):
     def setUp(self):
         super(TestICXlldpModule, self).setUp()
 
-        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_lldp.load_config')
+        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_lldp.load_config')
         self.load_config = self.mock_load_config.start()
 
-        self.mock_run_commands = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_lldp.run_commands')
+        self.mock_run_commands = patch('ansible_collections.commscope.icx.plugins.modules.icx_lldp.run_commands')
         self.run_commands = self.mock_run_commands.start()
 
         self.set_running_config()

@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 from ansible_collections.commscope.icx.tests.unit.compat.mock import patch
-from ansible_collections.commscope.icx.plugins.modules.network.icx import icx_aaa_accounting_console
+from ansible_collections.commscope.icx.plugins.modules import icx_aaa_accounting_console
 from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
 
@@ -15,9 +15,9 @@ class TestICXAaaAccountingModule(TestICXModule):
 
     def setUp(self):
         super(TestICXAaaAccountingModule, self).setUp()
-        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_aaa_accounting_console.load_config')
+        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_aaa_accounting_console.load_config')
         self.load_config = self.mock_load_config.start()
-        self.mock_exec_command = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_aaa_accounting_console.exec_command')
+        self.mock_exec_command = patch('ansible_collections.commscope.icx.plugins.modules.icx_aaa_accounting_console.exec_command')
         self.exec_command = self.mock_exec_command.start()
 
     def tearDown(self):

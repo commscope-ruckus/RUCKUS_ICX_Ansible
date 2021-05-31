@@ -5,7 +5,7 @@ __metaclass__ = type
 
 from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from ansible_collections.commscope.icx.tests.unit.compat.mock import patch
-from ansible_collections.commscope.icx.plugins.modules.network.icx import icx_static_route6
+from ansible_collections.commscope.icx.plugins.modules import icx_static_route6
 from .icx_module import TestICXModule, load_fixture
 
 
@@ -15,10 +15,10 @@ class TestICXStaticRouteModule6(TestICXModule):
 
     def setUp(self):
         super(TestICXStaticRouteModule6, self).setUp()
-        self.mock_get_config = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_static_route6.get_config')
+        self.mock_get_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_static_route6.get_config')
         self.get_config = self.mock_get_config.start()
 
-        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_static_route6.load_config')
+        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_static_route6.load_config')
         self.load_config = self.mock_load_config.start()
         self.set_running_config()
 

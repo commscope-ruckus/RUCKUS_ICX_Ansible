@@ -3,7 +3,7 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 from ansible_collections.commscope.icx.tests.unit.compat.mock import patch
-from ansible_collections.commscope.icx.plugins.modules.network.icx import icx_firmware_upgrade
+from ansible_collections.commscope.icx.plugins.modules import icx_firmware_upgrade
 from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
 
@@ -14,8 +14,8 @@ class TestICXfirmwareUpgradeModule(TestICXModule):
 
     def setUp(self):
         super(TestICXfirmwareUpgradeModule, self).setUp()
-        self.mock_exec_scp = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_firmware_upgrade.exec_scp')
-        self.mock_run_commands = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_firmware_upgrade.run_commands')
+        self.mock_exec_scp = patch('ansible_collections.commscope.icx.plugins.modules.icx_firmware_upgrade.exec_scp')
+        self.mock_run_commands = patch('ansible_collections.commscope.icx.plugins.modules.icx_firmware_upgrade.run_commands')
         self.exec_command = self.mock_exec_scp.start()
         self.run_commands = self.mock_run_commands.start()
 
