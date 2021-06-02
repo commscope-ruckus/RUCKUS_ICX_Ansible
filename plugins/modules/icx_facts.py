@@ -30,6 +30,7 @@ options:
         not be collected.
     required: false
     type: list
+    elements: str
     default: '!config'
 '''
 
@@ -482,7 +483,7 @@ def main():
     """main entry point for module execution
     """
     argument_spec = dict(
-        gather_subset=dict(default=['!config'], type='list')
+        gather_subset=dict(default=['!config'], type='list', elements='str')
     )
 
     module = AnsibleModule(argument_spec=argument_spec,

@@ -36,6 +36,7 @@ options:
     description:
       - List of port members or ranges of the link aggregation group.
     type: list
+    elements: str
   state:
     description:
       - State of the link aggregation group.
@@ -73,6 +74,7 @@ options:
        description:
          - List of port members or ranges of the link aggregation group.
        type: list
+       elements: str
      state:
        description:
          - State of the link aggregation group.
@@ -267,7 +269,7 @@ def main():
         group=dict(type='int'),
         name=dict(type='str'),
         mode=dict(choices=['dynamic', 'static']),
-        members=dict(type='list'),
+        members=dict(type='list', elements='str'),
         state=dict(default='present',
                    choices=['present', 'absent']),
         check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))

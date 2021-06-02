@@ -25,6 +25,7 @@ options:
         description:
           - List of ethernet ports to enable lldp.  To add a range of ports use 'to' keyword. See the example.
         type: list
+        elements: str
       state:
         description:
           - State of lldp configuration for interfaces
@@ -113,7 +114,7 @@ def main():
     """ main entry point for module execution
     """
     interfaces_spec = dict(
-        name=dict(type='list'),
+        name=dict(type='list', elements='str'),
         state=dict(choices=['present', 'absent',
                             'enabled', 'disabled'])
     )

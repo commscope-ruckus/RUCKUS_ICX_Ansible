@@ -1,12 +1,3 @@
 #plugins/modules/network/icx/icx_command.py validate-modules:parameter-list-no-elements
-#plugins/modules/network/icx/icx_config.py validate-modules:parameter-list-no-elements
-#plugins/modules/network/icx/icx_facts.py validate-modules:parameter-list-no-elements
-#plugins/modules/network/icx/icx_linkagg.py validate-modules:parameter-list-no-elements
-#plugins/modules/network/icx/icx_lldp.py validate-modules:parameter-list-no-elements
-#plugins/modules/icx_command.py validate-modules:parameter-list-no-elements
-#plugins/modules/icx_config.py validate-modules:parameter-list-no-elements
-#plugins/modules/icx_facts.py validate-modules:parameter-list-no-elements
-#plugins/modules/icx_linkagg.py validate-modules:parameter-list-no-elements
-#plugins/modules/icx_lldp.py validate-modules:parameter-list-no-elements
 tests/utils/shippable/check_matrix.py replace-urlopen
 tests/utils/shippable/timing.py shebang
