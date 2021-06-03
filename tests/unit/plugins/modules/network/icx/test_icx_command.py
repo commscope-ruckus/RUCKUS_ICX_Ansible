@@ -5,7 +5,7 @@ __metaclass__ = type
 
 import json
 from ansible_collections.commscope.icx.tests.unit.compat.mock import patch
-from ansible_collections.commscope.icx.plugins.modules.network.icx import icx_command
+from ansible_collections.commscope.icx.plugins.modules import icx_command
 from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
 
@@ -17,7 +17,7 @@ class TestICXCommandModule(TestICXModule):
     def setUp(self):
         super(TestICXCommandModule, self).setUp()
 
-        self.mock_run_commands = patch('ansible_collections.commscope.icx.plugins.modules.network.icx.icx_command.run_commands')
+        self.mock_run_commands = patch('ansible_collections.commscope.icx.plugins.modules.icx_command.run_commands')
         self.run_commands = self.mock_run_commands.start()
 
     def tearDown(self):
