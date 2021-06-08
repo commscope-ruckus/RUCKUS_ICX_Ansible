@@ -6,11 +6,12 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
-module: icx_static_route
+module: icx_static_route6
+version_added: "1.3.0"
 author: "Ruckus Wireless (@Commscope)"
-short_description: Manage static IP routes on Ruckus ICX 7000 series switches
+short_description: Manage static IPV6 routes on Ruckus ICX 7000 series switches
 description:
   - This module provides declarative management of static
     IP routes on Ruckus ICX network devices.
@@ -20,39 +21,33 @@ notes:
 options:
   prefix:
     description:
-      - Network prefix of the static route.
-    type: str
-  mask:
-    description:
-      - Network prefix mask of the static route.
+      - Destination IPv6 address, including prefix length.
     type: str
   next_hop:
     description:
-      - Next hop IP of the static route.
+      - IPv6 address of a next-hop gateway. The next-hop address may be a global IPv6 address or a link-local IPv6 address.
     type: str
   admin_distance:
     description:
-      - Admin distance of the static route. Range is 1 to 255.
+      - Specifies the route's administrative distance. The default value is 1.
     type: int
   aggregate:
     description: List of static route definitions.
     type: list
+    elements: dict
     suboptions:
       prefix:
         description:
-          - Network prefix of the static route.
+          - Destination IPv6 address, including prefix length.
         type: str
-      mask:
-        description:
-          - Network prefix mask of the static route.
-        type: str
+        required: true
       next_hop:
         description:
-          - Next hop IP of the static route.
+          - IPv6 address of a next-hop gateway. The next-hop address may be a global IPv6 address or a link-local IPv6 address.
         type: str
       admin_distance:
         description:
-          - Admin distance of the static route. Range is 1 to 255.
+          - Specifies the route's administrative distance. The default value is 1.
         type: int
       state:
         description:
@@ -80,30 +75,30 @@ options:
       - Check running configuration. This can be set as environment variable.
        Module will use environment variable value(default:False), unless it is overridden, by specifying it as module parameter.
     type: bool
-    default: no
-'''
+    default: False
+"""
+
 
 EXAMPLES = """
-- name: Configure static route
-  community.network.icx_static_route:
-    prefix: 192.168.2.0/24
-    next_hop: 10.0.0.1
-- name: Remove configuration
-  community.network.icx_static_route:
-    prefix: 192.168.2.0
-    mask: 255.255.255.0
-    next_hop: 10.0.0.1
+- name: configure static route
+  community.network.icx_static_route6:
+    prefix: 6666:1:1::/64
+    next_hop: 6666:1:2::0
+- name: remove configuration
+  community.network.icx_static_route6:
+    prefix: 6666:1:1::/64
+    next_hop: 6666:1:2::0
     state: absent
 - name: Add static route aggregates
-  community.network.icx_static_route:
+  community.network.icx_static_route6:
     aggregate:
-      - { prefix: 172.16.32.0, mask: 255.255.255.0, next_hop: 10.0.0.8 }
-      - { prefix: 172.16.33.0, mask: 255.255.255.0, next_hop: 10.0.0.8 }
-- name: Remove static route aggregates
-  community.network.icx_static_route:
+      - { prefix: '6666:1:8::/64', next_hop: '6666:1:9::0' }
+      - { prefix: '6666:1:5::/64', next_hop: '6666:1:6::0' }
+- name: remove static route aggregates
+  community.network.icx_static_route6:
     aggregate:
-      - { prefix: 172.16.32.0, mask: 255.255.255.0, next_hop: 10.0.0.8 }
-      - { prefix: 172.16.33.0, mask: 255.255.255.0, next_hop: 10.0.0.8 }
+      - { prefix: '6666:1:8::/64', next_hop: '6666:1:9::0' }
+      - { prefix: '6666:1:5::/64', next_hop: '6666:1:6::0' }
     state: absent
 """
 
@@ -113,7 +108,7 @@ commands:
   returned: always
   type: list
   sample:
-    - ip route 192.168.2.0 255.255.255.0 10.0.0.1
+    - ip route 6666:1:1::/64 6666:1:2::0
 """
 
 
@@ -124,21 +119,29 @@ from ansible.module_utils._text import to_text
 from ansible.module_utils.basic import AnsibleModule, env_fallback
 from ansible.module_utils.connection import ConnectionError
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import remove_default_spec
-from ansible_collections.community.network.plugins.module_utils.network.icx.icx import get_config, load_config
+from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx import get_config, load_config
 
 try:
-    from ipaddress import ip_network
+    from ipaddress import ip_network, ip_interface, IPv6Address
     HAS_IPADDRESS = True
 except ImportError:
     HAS_IPADDRESS = False
 
 
+def shorten_ip(want):
+    for item in want:
+        item['prefix'] = ip_interface(item['prefix'].encode().decode('UTF-8')).network.compressed
+        item['next_hop'] = IPv6Address(item['next_hop'].encode().decode('UTF-8')).compressed
+    return want
+
+
 def map_obj_to_commands(want, have, module):
     commands = list()
     purge = module.params['purge']
+    want = shorten_ip(want)
     for w in want:
         for h in have:
-            for key in ['prefix', 'mask', 'next_hop']:
+            for key in ['prefix', 'next_hop']:
                 if w[key] != h[key]:
                     break
             else:
@@ -147,44 +150,41 @@ def map_obj_to_commands(want, have, module):
             h = None
 
         prefix = w['prefix']
-        mask = w['mask']
         next_hop = w['next_hop']
         admin_distance = w.get('admin_distance')
         if not admin_distance and h:
             w['admin_distance'] = admin_distance = h['admin_distance']
         state = w['state']
         del w['state']
+        if 'check_running_config' in w.keys():
+            del w['check_running_config']
 
         if state == 'absent' and have == []:
-            commands.append('no ip route %s %s %s' % (prefix, mask, next_hop))
+            commands.append('no ipv6 route %s %s' % (prefix, next_hop))
 
         if state == 'absent' and w in have:
-            commands.append('no ip route %s %s %s' % (prefix, mask, next_hop))
+            commands.append('no ipv6 route %s  %s' % (prefix, next_hop))
         elif state == 'present' and w not in have:
             if admin_distance:
-                commands.append('ip route %s %s %s distance %s' % (prefix, mask, next_hop, admin_distance))
+                commands.append('ipv6 route %s  %s distance %s' % (prefix, next_hop, admin_distance))
             else:
-                commands.append('ip route %s %s %s' % (prefix, mask, next_hop))
+                commands.append('ipv6 route %s  %s' % (prefix, next_hop))
     if purge:
-        commands = []
         for h in have:
             if h not in want:
-                commands.append('no ip route %s %s %s' % (prefix, mask, next_hop))
+                commands[:0] = ['no ipv6 route %s  %s' % (h['prefix'], h['next_hop'])]
     return commands
 
 
 def map_config_to_obj(module):
     obj = []
     compare = module.params['check_running_config']
-    out = get_config(module, flags='| include ip route', compare=compare)
-
+    out = get_config(module, flags='| include ipv6 route', compare=compare)
     for line in out.splitlines():
         splitted_line = line.split()
         if len(splitted_line) not in (4, 5, 6):
             continue
-        cidr = ip_network(to_text(splitted_line[2]))
-        prefix = str(cidr.network_address)
-        mask = str(cidr.netmask)
+        prefix = splitted_line[2]
         next_hop = splitted_line[3]
         if len(splitted_line) == 6:
             admin_distance = splitted_line[5]
@@ -192,27 +192,24 @@ def map_config_to_obj(module):
             admin_distance = '1'
 
         obj.append({
-            'prefix': prefix, 'mask': mask, 'next_hop': next_hop,
+            'prefix': prefix, 'next_hop': next_hop,
             'admin_distance': admin_distance
         })
-
     return obj
 
 
-def prefix_length_parser(prefix, mask, module):
-    if '/' in prefix and mask is not None:
-        module.fail_json(msg='Ambigous, specifed both length and mask')
+def prefix_length_parser(prefix, module):
+    '''if '/' in prefix and mask is not None:
+        module.fail_json(msg='Ambigous, specifed both length and mask')'''
     if '/' in prefix:
         cidr = ip_network(to_text(prefix))
         prefix = str(cidr.network_address)
-        mask = str(cidr.netmask)
-    return prefix, mask
+    return prefix
 
 
 def map_params_to_obj(module, required_together=None):
-    keys = ['prefix', 'mask', 'next_hop', 'admin_distance', 'state']
+    keys = ['prefix', 'next_hop', 'admin_distance', 'state']
     obj = []
-
     aggregate = module.params.get('aggregate')
     if aggregate:
         for item in aggregate:
@@ -220,21 +217,13 @@ def map_params_to_obj(module, required_together=None):
             for key in keys:
                 if route.get(key) is None:
                     route[key] = module.params.get(key)
-
-            module._check_required_together(required_together, route)
-
-            prefix, mask = prefix_length_parser(route['prefix'], route['mask'], module)
-            route.update({'prefix': prefix, 'mask': mask})
-
+            # module._check_required_together(required_together, route)
             obj.append(route)
     else:
-        module._check_required_together(required_together, module.params)
-        prefix, mask = prefix_length_parser(module.params['prefix'], module.params['mask'], module)
-
+        # module._check_required_together(required_together, module.params)
         obj.append({
-            'prefix': prefix,
-            'mask': mask,
-            'next_hop': module.params['next_hop'].strip(),
+            'prefix': module.params['prefix'],
+            'next_hop': module.params['next_hop'],
             'admin_distance': module.params.get('admin_distance'),
             'state': module.params['state'],
         })
@@ -242,7 +231,6 @@ def map_params_to_obj(module, required_together=None):
     for route in obj:
         if route['admin_distance']:
             route['admin_distance'] = str(route['admin_distance'])
-
     return obj
 
 
@@ -251,54 +239,49 @@ def main():
     """
     element_spec = dict(
         prefix=dict(type='str'),
-        mask=dict(type='str'),
         next_hop=dict(type='str'),
         admin_distance=dict(type='int'),
         state=dict(default='present', choices=['present', 'absent']),
         check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
     )
 
+    required_one_of = [['aggregate', 'prefix']]
+    required_together = [['prefix', 'next_hop']]
+    mutually_exclusive = [['aggregate', 'prefix']]
+
     aggregate_spec = deepcopy(element_spec)
     aggregate_spec['prefix'] = dict(required=True)
-
     remove_default_spec(aggregate_spec)
 
     argument_spec = dict(
-        aggregate=dict(type='list', elements='dict', options=aggregate_spec),
+        aggregate=dict(type='list', elements='dict', options=aggregate_spec, required_together=required_together),
         purge=dict(default=False, type='bool')
     )
 
     argument_spec.update(element_spec)
 
-    required_one_of = [['aggregate', 'prefix']]
-    required_together = [['prefix', 'next_hop']]
-    mutually_exclusive = [['aggregate', 'prefix']]
-
     module = AnsibleModule(argument_spec=argument_spec,
                            required_one_of=required_one_of,
+                           required_together=required_together,
                            mutually_exclusive=mutually_exclusive,
                            supports_check_mode=True)
 
     if not HAS_IPADDRESS:
         module.fail_json(msg="ipaddress python package is required")
-
-    warnings = list()
-
     result = {'changed': False}
+    warnings = list()
     if warnings:
         result['warnings'] = warnings
 
-    want = map_params_to_obj(module, required_together=required_together)
+    want = map_params_to_obj(module)
     have = map_config_to_obj(module)
-
     commands = map_obj_to_commands(want, have, module)
     result['commands'] = commands
-
     if commands:
         if not module.check_mode:
-            load_config(module, commands)
-
+            response = load_config(module, commands)
         result['changed'] = True
+        result['response'] = response
 
     module.exit_json(**result)
 

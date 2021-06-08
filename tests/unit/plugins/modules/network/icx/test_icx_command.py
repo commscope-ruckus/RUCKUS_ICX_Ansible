@@ -4,9 +4,9 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 import json
-from ansible_collections.community.network.tests.unit.compat.mock import patch
-from ansible_collections.community.network.plugins.modules.network.icx import icx_command
-from ansible_collections.community.network.tests.unit.plugins.modules.utils import set_module_args
+from ansible_collections.commscope.icx.tests.unit.compat.mock import patch
+from ansible_collections.commscope.icx.plugins.modules import icx_command
+from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
 
 
@@ -17,7 +17,7 @@ class TestICXCommandModule(TestICXModule):
     def setUp(self):
         super(TestICXCommandModule, self).setUp()
 
-        self.mock_run_commands = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_command.run_commands')
+        self.mock_run_commands = patch('ansible_collections.commscope.icx.plugins.modules.icx_command.run_commands')
         self.run_commands = self.mock_run_commands.start()
 
     def tearDown(self):
@@ -67,13 +67,13 @@ class TestICXCommandModule(TestICXModule):
         set_module_args(dict(commands=['show version'], wait_for=wait_for))
         self.execute_module(failed=True)
         # run_commands call count is 1(skip) + 10(current)
-        self.assertEqual(self.run_commands.call_count, 11)
+        self.assertEqual(self.run_commands.call_count, 10)
 
     def test_icx_command_retries(self):
         wait_for = 'result[0] contains "test string"'
         set_module_args(dict(commands=['show version'], wait_for=wait_for, retries=2))
         self.execute_module(failed=True)
-        self.assertEqual(self.run_commands.call_count, 3)
+        self.assertEqual(self.run_commands.call_count, 2)
 
     def test_icx_command_match_any(self):
         wait_for = ['result[0] contains "ICX"',

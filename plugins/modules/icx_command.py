@@ -134,7 +134,7 @@ failed_conditions:
 
 import re
 import time
-from ansible_collections.community.network.plugins.module_utils.network.icx.icx import run_commands
+from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx import run_commands
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import ComplexList, to_lines
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.parsing import Conditional

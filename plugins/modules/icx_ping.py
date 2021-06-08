@@ -115,7 +115,7 @@ rtt:
 '''
 
 from ansible.module_utils._text import to_text
-from ansible_collections.community.network.plugins.module_utils.network.icx.icx import run_commands
+from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx import run_commands
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.connection import Connection, ConnectionError
 import re
@@ -147,12 +147,7 @@ def build_ping(dest, count=None, source=None, timeout=None, ttl=None, size=None,
     if source is not None:
         cmd += " source {0}".format(source)
 
-    return {
-        'command': cmd,
-        'prompt': ['Success', 'No Reply', 'Ping self done'],
-        'answer': '',
-        'newline': True
-    }
+    return cmd
 
 
 def parse_ping(ping_stats):
@@ -233,7 +228,7 @@ def main():
     response = ''
     try:
         validate_parameters(module, timeout, count)
-        results["commands"] = build_ping(dest, count, source, timeout, ttl, size, vrf)
+        results["commands"] = [build_ping(dest, count, source, timeout, ttl, size, vrf)]
         ping_results = run_commands(module, commands=results["commands"])
         ping_results_list = ping_results[0].split("\n")
 

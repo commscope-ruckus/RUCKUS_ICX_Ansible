@@ -2,9 +2,9 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
-from ansible_collections.community.network.tests.unit.compat.mock import patch
-from ansible_collections.community.network.plugins.modules.network.icx import icx_interface
-from ansible_collections.community.network.tests.unit.plugins.modules.utils import set_module_args
+from ansible_collections.commscope.icx.tests.unit.compat.mock import patch
+from ansible_collections.commscope.icx.plugins.modules import icx_interface
+from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
 
 
@@ -14,13 +14,13 @@ class TestICXInterfaceModule(TestICXModule):
 
     def setUp(self):
         super(TestICXInterfaceModule, self).setUp()
-        self.mock_exec_command = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_interface.exec_command')
+        self.mock_exec_command = patch('ansible_collections.commscope.icx.plugins.modules.icx_interface.exec_command')
         self.exec_command = self.mock_exec_command.start()
 
-        self.mock_load_config = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_interface.load_config')
+        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_interface.load_config')
         self.load_config = self.mock_load_config.start()
 
-        self.mock_get_config = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_interface.get_config')
+        self.mock_get_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_interface.get_config')
         self.get_config = self.mock_get_config.start()
         self.set_running_config()
 
@@ -55,8 +55,7 @@ class TestICXInterfaceModule(TestICXModule):
                 'interface ethernet 1/1/1',
                 'speed-duplex 1000-full',
                 'port-name welcome port',
-                'inline power',
-                'enable'
+                'inline power'
             ]
             self.assertEqual(result['commands'], expected_commands)
         else:
@@ -65,7 +64,8 @@ class TestICXInterfaceModule(TestICXModule):
                 'interface ethernet 1/1/1',
                 'speed-duplex 1000-full',
                 'port-name welcome port',
-                'inline power'
+                'inline power',
+                'enable'
             ]
             self.assertEqual(result['commands'], expected_commands)
 
@@ -94,15 +94,15 @@ class TestICXInterfaceModule(TestICXModule):
             result = self.execute_module(changed=True)
             expected_commands = [
                 'interface ethernet 1/1/2',
-                'inline power power-by-class 2',
-                'enable'
+                'inline power power-by-class 2'
             ]
             self.assertEqual(result['commands'], expected_commands)
         else:
             result = self.execute_module(changed=True)
             expected_commands = [
                 'interface ethernet 1/1/2',
-                'inline power power-by-class 2'
+                'inline power power-by-class 2',
+                'enable'
             ]
             self.assertEqual(result['commands'], expected_commands)
 
@@ -152,7 +152,6 @@ class TestICXInterfaceModule(TestICXModule):
                 'interface lag 11',
                 'speed-duplex auto',
                 'port-name lag ports of id 11',
-                'enable'
             ]
             self.assertEqual(result['commands'], expected_commands)
         else:
@@ -160,7 +159,8 @@ class TestICXInterfaceModule(TestICXModule):
             expected_commands = [
                 'interface lag 11',
                 'speed-duplex auto',
-                'port-name lag ports of id 11'
+                'port-name lag ports of id 11',
+                'enable'
             ]
             self.assertEqual(result['commands'], expected_commands)
 
@@ -186,16 +186,16 @@ class TestICXInterfaceModule(TestICXModule):
     def test_icx_interface_state_up_cndt(self):
         set_module_args(dict(name='ethernet 1/1/1', state='up', tx_rate='ge(0)'))
         if not self.ENV_ICX_USE_DIFF:
-            self.assertTrue(self.execute_module(failed=True))
-        else:
             self.assertTrue(self.execute_module(failed=False))
+        else:
+            self.assertTrue(self.execute_module(failed=True))
 
     def test_icx_interface_lldp_neighbors_cndt(self):
         set_module_args(dict(name='ethernet 1/1/48', neighbors=[dict(port='GigabitEthernet1/1/48', host='ICX7150-48 Router')]))
         if not self.ENV_ICX_USE_DIFF:
-            self.assertTrue(self.execute_module(changed=False, failed=True))
-        else:
             self.assertTrue(self.execute_module(changed=False, failed=False))
+        else:
+            self.assertTrue(self.execute_module(changed=False, failed=True))
 
     def test_icx_interface_disable_compare(self):
         set_module_args(dict(name='ethernet 1/1/1', enabled=True, check_running_config='True'))

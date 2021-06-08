@@ -2,9 +2,9 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
-from ansible_collections.community.network.tests.unit.compat.mock import patch
-from ansible_collections.community.network.plugins.modules.network.icx import icx_lldp
-from ansible_collections.community.network.tests.unit.plugins.modules.utils import set_module_args
+from ansible_collections.commscope.icx.tests.unit.compat.mock import patch
+from ansible_collections.commscope.icx.plugins.modules import icx_lldp
+from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
 
 
@@ -15,10 +15,10 @@ class TestICXlldpModule(TestICXModule):
     def setUp(self):
         super(TestICXlldpModule, self).setUp()
 
-        self.mock_load_config = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_lldp.load_config')
+        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_lldp.load_config')
         self.load_config = self.mock_load_config.start()
 
-        self.mock_run_commands = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_lldp.run_commands')
+        self.mock_run_commands = patch('ansible_collections.commscope.icx.plugins.modules.icx_lldp.run_commands')
         self.run_commands = self.mock_run_commands.start()
 
         self.set_running_config()
@@ -64,31 +64,31 @@ class TestICXlldpModule(TestICXModule):
         set_module_args(dict(interfaces=interfaces_spec, state='present'))
         if not self.ENV_ICX_USE_DIFF:
             result = self.execute_module(changed=True)
-            self.assertEqual(result['commands'], ['lldp enable ports ethernet 1/1/9'])
+            self.assertEqual(result['commands'], ['lldp run', 'lldp enable ports ethernet 1/1/9'])
 
         else:
             result = self.execute_module(changed=True)
-            self.assertEqual(result['commands'], ['lldp enable ports ethernet 1/1/9'])
+            self.assertEqual(result['commands'], ['lldp run', 'lldp enable ports ethernet 1/1/9'])
 
     def test_icx_lldp_multi_enable_state_present(self):
         interfaces_spec = [dict(name=['ethernet 1/1/9', 'ethernet 1/1/1 to 1/1/6'], state='present')]
         set_module_args(dict(interfaces=interfaces_spec, state='present'))
         if not self.ENV_ICX_USE_DIFF:
             result = self.execute_module(changed=True)
-            self.assertEqual(result['commands'], ['lldp enable ports ethernet 1/1/9', 'lldp enable ports ethernet 1/1/1 to 1/1/6'])
+            self.assertEqual(result['commands'], ['lldp run', 'lldp enable ports ethernet 1/1/9', 'lldp enable ports ethernet 1/1/1 to 1/1/6'])
         else:
             result = self.execute_module(changed=True)
-            self.assertEqual(result['commands'], ['lldp enable ports ethernet 1/1/9', 'lldp enable ports ethernet 1/1/1 to 1/1/6'])
+            self.assertEqual(result['commands'], ['lldp run', 'lldp enable ports ethernet 1/1/9', 'lldp enable ports ethernet 1/1/1 to 1/1/6'])
 
     def test_icx_lldp_multi_disable_state_present(self):
         interfaces_spec = [dict(name=['ethernet 1/1/9', 'ethernet 1/1/1 to 1/1/6'], state='absent')]
         set_module_args(dict(interfaces=interfaces_spec, state='present'))
         if not self.ENV_ICX_USE_DIFF:
             result = self.execute_module(changed=True)
-            self.assertEqual(result['commands'], ['no lldp enable ports ethernet 1/1/9', 'no lldp enable ports ethernet 1/1/1 to 1/1/6'])
+            self.assertEqual(result['commands'], ['lldp run', 'no lldp enable ports ethernet 1/1/9', 'no lldp enable ports ethernet 1/1/1 to 1/1/6'])
         else:
             result = self.execute_module(changed=True)
-            self.assertEqual(result['commands'], ['no lldp enable ports ethernet 1/1/9', 'no lldp enable ports ethernet 1/1/1 to 1/1/6'])
+            self.assertEqual(result['commands'], ['lldp run', 'no lldp enable ports ethernet 1/1/9', 'no lldp enable ports ethernet 1/1/1 to 1/1/6'])
 
     def test_icx_lldp_all_error(self):
         interfaces_spec = [dict(name=['ethernet all'], state='absent')]

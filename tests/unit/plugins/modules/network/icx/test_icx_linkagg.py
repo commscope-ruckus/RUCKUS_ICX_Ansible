@@ -3,9 +3,9 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible_collections.community.network.tests.unit.compat.mock import patch
-from ansible_collections.community.network.plugins.modules.network.icx import icx_linkagg
-from ansible_collections.community.network.tests.unit.plugins.modules.utils import set_module_args
+from ansible_collections.commscope.icx.tests.unit.compat.mock import patch
+from ansible_collections.commscope.icx.plugins.modules import icx_linkagg
+from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
 
 
@@ -15,11 +15,11 @@ class TestICXLinkaggModule(TestICXModule):
 
     def setUp(self):
         super(TestICXLinkaggModule, self).setUp()
-        self.mock_get_config = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_linkagg.get_config')
+        self.mock_get_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_linkagg.get_config')
         self.get_config = self.mock_get_config.start()
-        self.mock_load_config = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_linkagg.load_config')
+        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_linkagg.load_config')
         self.load_config = self.mock_load_config.start()
-        self.mock_exec_command = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_linkagg.exec_command')
+        self.mock_exec_command = patch('ansible_collections.commscope.icx.plugins.modules.icx_linkagg.exec_command')
         self.exec_command = self.mock_exec_command.start()
         self.set_running_config()
 
@@ -57,16 +57,16 @@ class TestICXLinkaggModule(TestICXModule):
         if not self.ENV_ICX_USE_DIFF:
             commands = [
                 'lag LAG1 dynamic id 100',
-                'ports ethernet 1/1/4 to 1/1/7',
+                'no ports ethernet 1/1/3',
+                'no ports ethernet 1/1/8',
+                'ports ethernet 1/1/4',
                 'exit'
             ]
             self.execute_module(commands=commands, changed=True)
         else:
             commands = [
                 'lag LAG1 dynamic id 100',
-                'no ports ethernet 1/1/3',
-                'no ports ethernet 1/1/8',
-                'ports ethernet 1/1/4',
+                'ports ethernet 1/1/4 to 1/1/7',
                 'exit'
             ]
             self.execute_module(commands=commands, changed=True)
@@ -98,14 +98,14 @@ class TestICXLinkaggModule(TestICXModule):
         if not self.ENV_ICX_USE_DIFF:
             commands = [
                 'lag LAG1 dynamic id 100',
-                'exit'
+                'exit',
+                'no lag LAG2 dynamic id 200'
             ]
             self.execute_module(commands=commands, changed=True)
         else:
             commands = [
                 'lag LAG1 dynamic id 100',
-                'exit',
-                'no lag LAG2 dynamic id 200'
+                'exit'
             ]
             self.execute_module(commands=commands, changed=True)
 

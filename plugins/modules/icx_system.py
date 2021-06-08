@@ -155,7 +155,7 @@ commands:
 import re
 from copy import deepcopy
 from ansible.module_utils.basic import AnsibleModule, env_fallback
-from ansible_collections.community.network.plugins.module_utils.network.icx.icx import get_config, load_config
+from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx import get_config, load_config
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import ComplexList, validate_ip_v6_address
 from ansible.module_utils.connection import Connection, ConnectionError, exec_command
 
@@ -421,7 +421,7 @@ def main():
         auth_port_num=dict(),
         acct_port_num=dict(),
         acct_type=dict(choices=['accounting-only', 'authentication-only', 'authorization-only', 'default']),
-        auth_key=dict(),
+        auth_key=dict(no_log=True),
         auth_key_type=dict(type='list', choices=['dot1x', 'mac-auth', 'web-auth'])
     )
     argument_spec = dict(

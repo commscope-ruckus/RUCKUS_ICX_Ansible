@@ -1,7 +1,7 @@
 # See https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
 
-namespace: community
-name: FIXME
+namespace: commscope
+name: icx
 version: 0.1.0
 readme: README.md
 authors:
@@ -13,6 +13,8 @@ tags:
 # tags are all lower-case, no spaces, no dashes.
   - example1
   - example2
+dependencies:
+  ansible.netcommon: '>=1.0.0'
 repository: https://github.com/ansible-collections/community.REPO_NAME
 #documentation: https://github.com/ansible-collection-migration/community.REPO_NAME/tree/main/docs
 homepage: https://github.com/ansible-collections/community.REPO_NAME

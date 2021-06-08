@@ -3,10 +3,10 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible_collections.community.network.tests.unit.compat.mock import patch, MagicMock
-from ansible_collections.community.network.plugins.modules.network.icx import icx_config
-from ansible_collections.community.network.plugins.cliconf.icx import Cliconf
-from ansible_collections.community.network.tests.unit.plugins.modules.utils import set_module_args
+from ansible_collections.commscope.icx.tests.unit.compat.mock import patch, MagicMock
+from ansible_collections.commscope.icx.plugins.modules import icx_config
+from ansible_collections.commscope.icx.plugins.cliconf.icx import Cliconf
+from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
 
 
@@ -17,16 +17,16 @@ class TestICXConfigModule(TestICXModule):
     def setUp(self):
         super(TestICXConfigModule, self).setUp()
 
-        self.mock_get_config = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_config.get_config')
+        self.mock_get_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_config.get_config')
         self.get_config = self.mock_get_config.start()
 
-        self.mock_get_connection = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_config.get_connection')
+        self.mock_get_connection = patch('ansible_collections.commscope.icx.plugins.modules.icx_config.get_connection')
         self.get_connection = self.mock_get_connection.start()
 
         self.conn = self.get_connection()
         self.conn.edit_config = MagicMock()
 
-        self.mock_run_commands = patch('ansible_collections.community.network.plugins.modules.network.icx.icx_config.run_commands')
+        self.mock_run_commands = patch('ansible_collections.commscope.icx.plugins.modules.icx_config.run_commands')
         self.run_commands = self.mock_run_commands.start()
 
         self.cliconf_obj = Cliconf(MagicMock())
@@ -66,7 +66,7 @@ class TestICXConfigModule(TestICXModule):
         self.run_commands.return_value = "Hostname foo"
         set_module_args(dict(save_when='always'))
         self.execute_module(changed=True)
-        self.assertEqual(self.run_commands.call_count, 2)
+        self.assertEqual(self.run_commands.call_count, 1)
         self.assertEqual(self.get_config.call_count, 0)
         self.assertEqual(self.conn.edit_config.call_count, 0)
         args = self.run_commands.call_args[0][1]
@@ -75,7 +75,7 @@ class TestICXConfigModule(TestICXModule):
     def test_icx_config_save_changed_false(self):
         set_module_args(dict(save_when='changed'))
         self.execute_module(changed=False)
-        self.assertEqual(self.run_commands.call_count, 1)
+        self.assertEqual(self.run_commands.call_count, 0)
         self.assertEqual(self.get_config.call_count, 0)
         self.assertEqual(self.conn.edit_config.call_count, 0)
 
@@ -212,7 +212,7 @@ class TestICXConfigModule(TestICXModule):
         commands = ['hostname foo', 'interface ethernet 1/1/4', 'disable']
         self.conn.get_diff = MagicMock(return_value=self.cliconf_obj.get_diff(src, self.running_config))
         self.execute_module(changed=True, commands=commands)
-        self.assertEqual(self.run_commands.call_count, 2)
+        self.assertEqual(self.run_commands.call_count, 1)
         self.assertEqual(self.get_config.call_count, 1)
         self.assertEqual(self.conn.edit_config.call_count, 1)
         args = self.run_commands.call_args[0][1]
