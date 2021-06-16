@@ -6,10 +6,6 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'community'}
-
 DOCUMENTATION = """
 ---
 module: icx_vlan
@@ -308,8 +304,8 @@ from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx impo
 from ansible.module_utils.connection import Connection, ConnectionError, exec_command
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import conditional, remove_default_spec
 
-result = {}
-result['changed'] = False
+# result = {}
+# result['changed'] = False
 
 
 def search_obj_in_list(vlan_id, lst):
@@ -776,8 +772,8 @@ def main():
                            mutually_exclusive=mutually_exclusive,
                            supports_check_mode=True)
     warnings = list()
-    # result = {}
-    # result['changed'] = False
+    result = {}
+    result['changed'] = False
     if warnings:
         result['warnings'] = warnings
     exec_command(module, 'skip')
