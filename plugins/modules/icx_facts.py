@@ -35,16 +35,16 @@ options:
 
 EXAMPLES = """
 - name: Collect all facts from the device
-  community.network.icx_facts:
+  commscope.icx.icx_facts:
     gather_subset: all
 
 - name: Collect only the config and default facts
-  community.network.icx_facts:
+  commscope.icx.icx_facts:
     gather_subset:
       - config
 
 - name: Do not collect hardware facts
-  community.network.icx_facts:
+  commscope.icx.icx_facts:
     gather_subset:
       - "!hardware"
 """
@@ -94,7 +94,7 @@ ansible_net_filesystems_info:
   description: A hash of all file systems containing info about each file system (e.g. free and total space)
   returned: when hardware is configured
   type: dict
-ansible_net_memfree_mb:
+ansible_net_memfree_kb:
   description: The available free memory on the remote device in Mb
   returned: when hardware is configured
   type: int
@@ -154,19 +154,36 @@ class FactsBase(object):
 
 class Default(FactsBase):
 
-    COMMANDS = ['show version', 'show running-config | include hostname']
+    COMMANDS = ['show running-config | include hostname', 'show version', 'show stack']
 
     def populate(self):
         super(Default, self).run(['skip'])
         super(Default, self).populate()
-        data = self.responses[0]
+        data = self.responses[2]
+        det = {}
+        if data:
+            det = self.parse_unit(data)
+
+        data = self.responses[1]
         if data:
             self.facts['version'] = self.parse_version(data)
-            self.facts['serialnum'] = self.parse_serialnum(data)
             self.facts['model'] = self.parse_model(data)
             self.facts['image'] = self.parse_image(data)
-            self.facts['hostname'] = self.parse_hostname(self.responses[1])
+            self.facts['hostname'] = self.parse_hostname(self.responses[0])
+            self.facts['info'] = 'Unit' + det['Unit'] + ':' + det['model'] + ', ' + self.parse_serialnum(data, det['Unit'])
             self.parse_stacks(data)
+
+    def parse_serialnum(self, data, unit):
+        try:
+            match1 = re.search("UNIT " + unit + ": SL .*?. Software", data, re.DOTALL)
+            if match1:
+                line = match1.group(0)
+                match2 = re.search(r'Serial  #:(\S+)', line)
+                if match2:
+                    serial_num = match2.group(1)
+                    return serial_num
+        except:
+            return ""
 
     def parse_version(self, data):
         match = re.search(r'SW: Version ([0-9]+.[0-9]+.[0-9a-zA-Z]+)', data)
@@ -188,10 +205,13 @@ class Default(FactsBase):
         if match:
             return match.group(1)
 
-    def parse_serialnum(self, data):
-        match = re.search(r'Serial  #:(\S+)', data)
+    def parse_unit(self, data):
+        match = re.search(r'.*  (active|alone)  .*', data)
         if match:
-            return match.group(1)
+            det = match.group(0)
+            unit = det.split('  ')[0]
+            model = det.split('  ')[1]
+            return {'Unit': unit, 'model': model.split(' ')[1]}
 
     def parse_stacks(self, data):
         match = re.findall(r'UNIT [1-9]+: SL [1-9]+: (\S+)', data, re.M)
@@ -221,10 +241,13 @@ class Hardware(FactsBase):
             if 'Invalid input detected' in data:
                 warnings.append('Unable to gather memory statistics')
             else:
-                match = re.search(r'Dynamic memory: ([0-9]+) bytes total, ([0-9]+) bytes free, ([0-9]+%) used', data)
+                match = re.findall(r'Stack unit ([0-9]+):\nTotal DRAM: ([0-9]+) bytes\n  Dynamic memory: ([0-9]+) bytes total, ([0-9]+) bytes free, ([0-9]+%) used', data, re.DOTALL)
                 if match:
-                    self.facts['memtotal_mb'] = int(match.group(1)) / 1024
-                    self.facts['memfree_mb'] = int(match.group(2)) / 1024
+                    self.facts['memtotal_kb'] = dict()
+                    self.facts['memfree_kb'] = dict()
+                    for i in range(len(match)):
+                        self.facts['memtotal_kb']["Stack Unit" + str(i + 1)] = {"Total Memory": str(int(match[i][1]) / 1024) + "kb"}
+                        self.facts['memfree_kb']["Stack Unit" + str(i + 1)] = {"Free Memory": str(int(match[i][3]) / 1024) + "kb"}
 
     def parse_filesystems(self, data):
         return "flash"
@@ -342,7 +365,7 @@ class Interfaces(FactsBase):
             for address in addresses:
                 addr, subnet = address.split("/")
                 ipv4 = dict(address=addr.strip(), subnet=subnet.strip())
-                self.add_ip_address(addr.strip(), 'ipv4')
+                self.add_ip_address(addr.strip(), 'ipv4', key)
                 self.facts['interfaces'][key]['ipv4'] = ipv4
 
     def populate_ipv6_interfaces(self, data):
@@ -350,29 +373,51 @@ class Interfaces(FactsBase):
         for line in parts:
             match = re.match(r'\W*interface \S+ (\S+)', line)
             if match:
-                key = match.group(1)
+                key = match.group(0)
                 try:
                     self.facts['interfaces'][key]['ipv6'] = list()
+                    self.facts['interfaces'][key]['ipv4'] = list()
                 except KeyError:
                     self.facts['interfaces'][key] = dict()
                     self.facts['interfaces'][key]['ipv6'] = list()
-                self.facts['interfaces'][key]['ipv6'] = {}
+                    self.facts['interfaces'][key]['ipv4'] = list()
+                self.facts['interfaces'][key]['ipv6'] = list()
+                self.facts['interfaces'][key]['ipv4'] = list()
+                interface_type = key.split(' ')
+                interface_type = ' '.join((interface_type[1], interface_type[2]))
                 continue
             match = re.match(r'\W+ipv6 address (\S+)/(\S+)', line)
-            if match:
-                self.add_ip_address(match.group(1), "ipv6")
-                self.facts['interfaces'][key]['ipv6']["address"] = match.group(1)
-                self.facts['interfaces'][key]['ipv6']["subnet"] = match.group(2)
+            match_ipv4 = re.match(r'\W+ip address (\S+) (\S+)', line)
 
-    def add_ip_address(self, address, family):
+            if match_ipv4:
+                self.add_ip_address(match_ipv4.group(1), "ipv4", str(interface_type))
+                self.facts['interfaces'][key]['ipv4'].append({"address": match_ipv4.group(1), "subnet": match_ipv4.group(2)})
+
+            if match:
+                self.add_ip_address(match.group(1), "ipv6", str(interface_type))
+                self.facts['interfaces'][key]['ipv6'].append({"address": match.group(1), "subnet": match.group(2)})
+
+    def add_ip_address(self, address, family, interface_type):
         if family == 'ipv4':
-            self.facts['all_ipv4_addresses'].append(address)
+            if not self.facts['all_ipv4_addresses']:
+                self.facts['all_ipv4_addresses'] = dict()
+                self.facts['all_ipv4_addresses'][interface_type] = [address]
+            elif self.facts['all_ipv4_addresses'].get(interface_type):
+                self.facts['all_ipv4_addresses'][interface_type].append(address)
+            else:
+                self.facts['all_ipv4_addresses'][interface_type] = [address]
         else:
-            self.facts['all_ipv6_addresses'].append(address)
+            if not self.facts['all_ipv6_addresses']:
+                self.facts['all_ipv6_addresses'] = dict()
+                self.facts['all_ipv6_addresses'][interface_type] = [address]
+            elif self.facts['all_ipv6_addresses'].get(interface_type):
+                self.facts['all_ipv6_addresses'][interface_type].append(address)
+            else:
+                self.facts['all_ipv6_addresses'][interface_type] = [address]
 
     def parse_neighbors(self, neighbors):
         facts = dict()
-        for entry in neighbors.split('------------------------------------------------'):
+        for entry in neighbors.split('Local '):
             if entry == '':
                 continue
             intf = self.parse_lldp_intf(entry)
@@ -380,7 +425,10 @@ class Interfaces(FactsBase):
                 facts[intf] = list()
             fact = dict()
             fact['host'] = self.parse_lldp_host(entry)
-            fact['port'] = self.parse_lldp_port(entry)
+            fact['System name'] = self.parse_lldp_port(entry)
+            fact['description'] = self.parse_lldp_desc(entry)
+            fact['Neighbor'] = self.parse_lldp_Neighbor(entry)
+
             facts[intf].append(fact)
         return facts
 
@@ -451,17 +499,28 @@ class Interfaces(FactsBase):
             return match.group(1)
 
     def parse_lldp_intf(self, data):
-        match = re.search(r'^Local Intf: (.+)$', data, re.M)
+        match = re.search(r'^port: (.+)$', data, re.M)
         if match:
             return match.group(1)
 
     def parse_lldp_host(self, data):
-        match = re.search(r'System Name: (.+)$', data, re.M)
+        match = re.search(r'System name         : (.+)$', data, re.M | re.I)
         if match:
             return match.group(1)
 
     def parse_lldp_port(self, data):
-        match = re.search(r'Port id: (.+)$', data, re.M)
+        match = re.search(r'Port ID * (.+)$', data, re.M | re.I)
+        if match:
+            match = match.group(1)
+            return match.split(": ")[1]
+
+    def parse_lldp_desc(self, data):
+        match = re.search(r'System description  : (.+)$', data, re.M | re.I)
+        if match:
+            return match.group(1)
+
+    def parse_lldp_Neighbor(self, data):
+        match = re.search(r'Port VLAN ID: (.+)$', data, re.M | re.I)
         if match:
             return match.group(1)
 
