@@ -119,7 +119,7 @@ from ansible.module_utils._text import to_text
 from ansible.module_utils.basic import AnsibleModule, env_fallback
 from ansible.module_utils.connection import ConnectionError
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import remove_default_spec
-from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx import get_config, load_config
+from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx import get_config, load_config, run_commands
 
 try:
     from ipaddress import ip_network, ip_interface, IPv6Address
@@ -179,15 +179,15 @@ def map_obj_to_commands(want, have, module):
 def map_config_to_obj(module):
     obj = []
     compare = module.params['check_running_config']
-    out = get_config(module, flags='| include ipv6 route', compare=compare)
-    for line in out.splitlines():
+    out = run_commands(module, 'sh ipv6 static route')
+    for line in out[0].splitlines():
         splitted_line = line.split()
         if len(splitted_line) not in (4, 5, 6):
             continue
-        prefix = splitted_line[2]
-        next_hop = splitted_line[3]
-        if len(splitted_line) == 6:
-            admin_distance = splitted_line[5]
+        prefix = splitted_line[0]
+        next_hop = splitted_line[2]
+        if len(splitted_line) == 5:
+            admin_distance = splitted_line[3].rsplit('/', 1)[1]
         else:
             admin_distance = '1'
 
@@ -217,10 +217,11 @@ def map_params_to_obj(module, required_together=None):
             for key in keys:
                 if route.get(key) is None:
                     route[key] = module.params.get(key)
-            # module._check_required_together(required_together, route)
+            module._check_required_together(required_together, route)
             obj.append(route)
     else:
-        # module._check_required_together(required_together, module.params)
+        module._check_required_together(required_together, module.params)
+
         obj.append({
             'prefix': module.params['prefix'],
             'next_hop': module.params['next_hop'],
@@ -244,25 +245,23 @@ def main():
         state=dict(default='present', choices=['present', 'absent']),
         check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
     )
-
-    required_one_of = [['aggregate', 'prefix']]
-    required_together = [['prefix', 'next_hop']]
-    mutually_exclusive = [['aggregate', 'prefix']]
-
     aggregate_spec = deepcopy(element_spec)
     aggregate_spec['prefix'] = dict(required=True)
     remove_default_spec(aggregate_spec)
 
     argument_spec = dict(
-        aggregate=dict(type='list', elements='dict', options=aggregate_spec, required_together=required_together),
+        aggregate=dict(type='list', elements='dict', options=aggregate_spec),
         purge=dict(default=False, type='bool')
     )
 
     argument_spec.update(element_spec)
 
+    required_one_of = [['aggregate', 'prefix']]
+    required_together = [['prefix', 'next_hop']]
+    mutually_exclusive = [['aggregate', 'prefix']]
+
     module = AnsibleModule(argument_spec=argument_spec,
                            required_one_of=required_one_of,
-                           required_together=required_together,
                            mutually_exclusive=mutually_exclusive,
                            supports_check_mode=True)
 
@@ -273,10 +272,11 @@ def main():
     if warnings:
         result['warnings'] = warnings
 
-    want = map_params_to_obj(module)
+    want = map_params_to_obj(module, required_together=required_together)
     have = map_config_to_obj(module)
     commands = map_obj_to_commands(want, have, module)
     result['commands'] = commands
+    result['have'] = have
     if commands:
         if not module.check_mode:
             response = load_config(module, commands)
