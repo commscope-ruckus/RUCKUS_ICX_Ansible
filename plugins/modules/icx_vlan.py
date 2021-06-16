@@ -314,7 +314,7 @@ def search_obj_in_list(vlan_id, lst):
         if str(o['vlan_id']) == vlan_id:
             return o
 
-
+result = {}
 def parse_vlan_brief(module, vlan_id):
     command = 'show run vlan %s' % vlan_id
     rc, out, err = exec_command(module, command)
