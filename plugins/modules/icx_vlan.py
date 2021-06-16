@@ -223,7 +223,7 @@ options:
 
 EXAMPLES = """
 - name: Add a single ethernet 1/1/48 as access(untagged) port to vlan 20
-  community.network.icx_vlan:
+  commscope.icx.icx_vlan:
     name: test-vlan
     vlan_id: 20
     interfaces:
@@ -231,21 +231,21 @@ EXAMPLES = """
         - ethernet 1/1/48
 
 - name: Add a single LAG 10 as access(untagged) port to vlan 20
-  community.network.icx_vlan:
+  commscope.icx.icx_vlan:
     vlan_id: 20
     interfaces:
       name:
         - lag 10
 
 - name: Add a range of ethernet ports as trunk(tagged) ports to vlan 20 by port
-  community.network.icx_vlan:
+  commscope.icx.icx_vlan:
     vlan_id: 20
     tagged:
       name:
         - ethernet 1/1/40 to 1/1/48
 
 - name: Add discontinuous lags, ethernet ports as access(untagged) and trunk(tagged) port to vlan 20.
-  community.network.icx_vlan:
+  commscope.icx.icx_vlan:
     vlan_id: 20
     interfaces:
       name:
@@ -259,7 +259,7 @@ EXAMPLES = """
         - lag 1 to 3
 
 - name: Remove an access and range of trunk ports from vlan
-  community.network.icx_vlan:
+  commscope.icx.icx_vlan:
     vlan_id: 20
     interfaces:
       name:
@@ -269,19 +269,19 @@ EXAMPLES = """
         - ethernet 1/1/39 to 1/1/70
 
 - name: Enable dhcp snooping, disable arp inspection in vlan
-  community.network.icx_vlan:
+  commscope.icx.icx_vlan:
     vlan_id: 20
     ip_dhcp_snooping: present
     ip_arp_inspection: absent
 
 - name: Create vlan 20.  Enable  arp inspection in vlan. Purge all other vlans.
-  community.network.icx_vlan:
+  commscope.icx.icx_vlan:
     vlan_id: 20
     ip_arp_inspection: present
     purge: present
 
 - name: Remove vlan 20.
-  community.network.icx_vlan:
+  commscope.icx.icx_vlan:
     vlan_id: 20
     state: absent
 """
@@ -304,7 +304,7 @@ from time import sleep
 from ansible.module_utils._text import to_text
 from ansible.module_utils.basic import AnsibleModule, env_fallback
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import NetworkConfig
-from ansible_collections.community.network.plugins.module_utils.network.icx.icx import load_config, get_config
+from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx import load_config, get_config
 from ansible.module_utils.connection import Connection, ConnectionError, exec_command
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import conditional, remove_default_spec
 
