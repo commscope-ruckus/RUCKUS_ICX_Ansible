@@ -315,7 +315,7 @@ def search_obj_in_list(vlan_id, lst):
             return o
 
 
-result = {}
+# result = {}
 
 
 def parse_vlan_brief(module, vlan_id):
@@ -567,8 +567,8 @@ def map_obj_to_commands(updates, module):
                         want_tagged = list()
                         for tag in tagged['name']:
                             low, high = extract_list_from_interface(tag)
-                            result['low'] = low
-                            result['high'] = high
+                            # result['low'] = low
+                            # result['high'] = high
                             while(high >= low):
                                 if 'ethernet' in tag:
                                     if 'to' in tag:
