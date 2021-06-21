@@ -154,7 +154,8 @@ def map_obj_to_commands(want, have, module):
             w['admin_distance'] = admin_distance = h['admin_distance']
         state = w['state']
         del w['state']
-
+        if 'check_running_config' in w.keys():
+            del w['check_running_config']
         if state == 'absent' and have == []:
             commands.append('no ip route %s %s %s' % (prefix, mask, next_hop))
 
@@ -166,17 +167,16 @@ def map_obj_to_commands(want, have, module):
             else:
                 commands.append('ip route %s %s %s' % (prefix, mask, next_hop))
     if purge:
-        commands = []
         for h in have:
             if h not in want:
-                commands.append('no ip route %s %s %s' % (prefix, mask, next_hop))
+                commands.append('no ip route %s %s %s' % (h['prefix'], h['mask'], h['next_hop']))
     return commands
 
 
 def map_config_to_obj(module):
     obj = []
-    compare = module.params['check_running_config']
-    out = get_config(module, flags='| include ip route', compare=compare)
+    # compare = module.params['check_running_config']
+    out = get_config(module, flags='| include ip route')
 
     for line in out.splitlines():
         splitted_line = line.split()

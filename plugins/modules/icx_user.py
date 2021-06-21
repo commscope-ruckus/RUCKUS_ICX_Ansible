@@ -238,8 +238,8 @@ def parse_privilege(data):
 
 
 def map_config_to_obj(module):
-    compare = module.params['check_running_config']
-    data = get_config(module, flags=['| include username'], compare=compare)
+    # compare = module.params['check_running_config']
+    data = get_config(module, flags=['| include username'])
 
     match = re.findall(r'(?:^(?:u|\s{2}u))sername (\S+)', data, re.M)
     if not match:
@@ -359,11 +359,18 @@ def main():
 
     result = {'changed': False}
     want = map_params_to_obj(module)
-    have = map_config_to_obj(module)
+
+    if module.params['check_running_config'] is False:
+        have = []
+    else:
+        have = map_config_to_obj(module)
+
     commands = map_obj_to_commands(update_objects(want, have), module)
 
     if module.params['purge']:
         want_users = [x['name'] for x in want]
+        if module.params['check_running_config'] is False:
+            have = map_config_to_obj(module)
         have_users = [x['name'] for x in have]
         for item in set(have_users).difference(want_users):
             if item != 'admin':
