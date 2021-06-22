@@ -45,7 +45,7 @@ class TestICXLinkaggModule(TestICXModule):
 
     def test_icx_linkage_create_new_LAG(self):
         set_module_args(dict(group=10, name="LAG3", mode='static', members=['ethernet 1/1/4 to ethernet 1/1/7']))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['lag LAG3 static id 10', 'ports ethernet 1/1/4 to ethernet 1/1/7', 'exit']
             self.execute_module(commands=commands, changed=True)
         else:
@@ -54,7 +54,7 @@ class TestICXLinkaggModule(TestICXModule):
 
     def test_icx_linkage_modify_LAG(self):
         set_module_args(dict(group=100, name="LAG1", mode='dynamic', members=['ethernet 1/1/4 to 1/1/7']))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 'lag LAG1 dynamic id 100',
                 'no ports ethernet 1/1/3',
@@ -74,7 +74,7 @@ class TestICXLinkaggModule(TestICXModule):
     def test_icx_linkage_modify_LAG_compare(self):
         set_module_args(dict(group=100, name="LAG1", mode='dynamic', members=['ethernet 1/1/4 to 1/1/7'], check_running_config=True))
         if self.get_running_config(compare=True):
-            if not self.ENV_ICX_USE_DIFF:
+            if self.CHECK_RUNNING_CONFIG:
                 commands = [
                     'lag LAG1 dynamic id 100',
                     'no ports ethernet 1/1/3',
@@ -95,7 +95,7 @@ class TestICXLinkaggModule(TestICXModule):
 
     def test_icx_linkage_purge_LAG(self):
         set_module_args(dict(aggregate=[dict(group=100, name="LAG1", mode='dynamic')], purge=True))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 'lag LAG1 dynamic id 100',
                 'exit',
@@ -111,7 +111,7 @@ class TestICXLinkaggModule(TestICXModule):
 
     def test_icx_linkage_remove_LAG(self):
         set_module_args(dict(group=100, name="LAG1", mode='dynamic', members=['ethernet 1/1/4 to 1/1/7'], state='absent'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 'no lag LAG1 dynamic id 100'
             ]

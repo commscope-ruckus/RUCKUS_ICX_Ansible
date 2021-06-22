@@ -32,11 +32,11 @@ def load_fixture(name):
 
 
 class TestICXModule(ModuleTestCase):
-    ENV_ICX_USE_DIFF = True
-
+    CHECK_RUNNING_CONFIG = False
+    
     def set_running_config(self):
-        self.ENV_ICX_USE_DIFF = self.get_running_config()
-
+        self.CHECK_RUNNING_CONFIG = self.get_running_config()
+        
     def get_running_config(self, compare=None):
         if compare is not None:
             diff = compare
@@ -46,7 +46,7 @@ class TestICXModule(ModuleTestCase):
             else:
                 diff = True
         else:
-            diff = True
+            diff = False
         return diff
 
     def execute_module(self, failed=False, changed=False, commands=None, sort=True, defaults=False, fields=None):

@@ -51,7 +51,7 @@ class TestICXLoggingModule(TestICXModule):
 
     def test_icx_logging_set_host(self):
         set_module_args(dict(dest='host', name='172.16.10.15'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['logging host 172.16.10.15']
             self.execute_module(changed=True, commands=commands)
         else:
@@ -60,14 +60,14 @@ class TestICXLoggingModule(TestICXModule):
 
     def test_icx_logging_set_ipv6_host(self):
         set_module_args(dict(dest='host', name='2001:db8::1'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['logging host 2001:db8::1']
         else:
             commands = ['logging host 2001:db8::1']
 
     def test_icx_logging_set_host_udp_port(self):
         set_module_args(dict(dest='host', name='172.16.10.15', udp_port=2500))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['logging host 172.16.10.15 udp-port 2500']
             self.execute_module(changed=True, commands=commands)
         else:
@@ -76,7 +76,7 @@ class TestICXLoggingModule(TestICXModule):
 
     def test_icx_logging_remove_console(self):
         set_module_args(dict(dest='console', state='absent'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['no logging console']
             self.execute_module(changed=True, commands=commands)
         else:
@@ -85,7 +85,7 @@ class TestICXLoggingModule(TestICXModule):
 
     def test_icx_logging_remove_on(self):
         set_module_args(dict(dest='on', state='absent'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['no logging on']
             self.exec_command(changed=True, commands=commands)
         else:
@@ -98,7 +98,7 @@ class TestICXLoggingModule(TestICXModule):
             dict(dest='host', name='2001:db8::1', udp_port=5000)
         ]
         set_module_args(dict(aggregate=aggregate, state='present'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             expected_commands = [
                 'logging facility local0',
@@ -121,7 +121,7 @@ class TestICXLoggingModule(TestICXModule):
             dict(dest='host', name='2001:db8::1', udp_port=5500)
         ]
         set_module_args(dict(aggregate=aggregate, state='absent'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             expected_commands = [
                 'no logging facility',
@@ -143,7 +143,7 @@ class TestICXLoggingModule(TestICXModule):
     def test_icx_logging_compare(self):
         set_module_args(dict(dest='host', name='172.16.10.21', check_running_config=True))
         if self.get_running_config(compare=True):
-            if not self.ENV_ICX_USE_DIFF:
+            if self.CHECK_RUNNING_CONFIG:
                 self.execute_module(changed=False)
             else:
                 self.execute_module(changed=False)

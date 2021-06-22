@@ -182,7 +182,7 @@ class TestICXRateLimitModule(TestICXModule):
             ))
 
         if self.get_running_config(compare=False):
-            if not self.ENV_ICX_USE_DIFF:
+            if self.CHECK_RUNNING_CONFIG:
                 result = self.execute_module(changed=False)
                 expected_commands = []
                 self.assertEqual(result['commands'], expected_commands)

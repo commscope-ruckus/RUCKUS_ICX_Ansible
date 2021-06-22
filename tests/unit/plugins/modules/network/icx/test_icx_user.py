@@ -44,7 +44,7 @@ class TestICXSCPModule(TestICXModule):
 
     def test_icx_user_create_new_with_password(self):
         set_module_args(dict(name='ale6', configured_password='alethea123'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['username ale6 password alethea123']
             self.execute_module(commands=commands, changed=True)
         else:
@@ -53,7 +53,7 @@ class TestICXSCPModule(TestICXModule):
 
     def test_icx_user_create_new_with_password_and_privilege(self):
         set_module_args(dict(name='ale6', privilege="5", configured_password='alethea123'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['username ale6 privilege 5 password alethea123']
             self.execute_module(commands=commands, changed=True)
         else:
@@ -62,7 +62,7 @@ class TestICXSCPModule(TestICXModule):
 
     def test_icx_user_update_privilege(self):
         set_module_args(dict(name='ale1', privilege="0", configured_password='alethea123'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['username ale1 privilege 0 password alethea123']
             self.execute_module(commands=commands, changed=True)
         else:
@@ -71,7 +71,7 @@ class TestICXSCPModule(TestICXModule):
 
     def test_icx_user_update_password(self):
         set_module_args(dict(name='ale1', configured_password='alethea123'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['username ale1 privilege 5 password alethea123']  # previous privilage will be added
             self.execute_module(commands=commands, changed=True)
         else:
@@ -80,7 +80,7 @@ class TestICXSCPModule(TestICXModule):
 
     def test_icx_user_update_password_compare(self):
         set_module_args(dict(name='ale1', configured_password='alethea123', check_running_config=True))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['username ale1 privilege 5 password alethea123']  # previous privilage will be added
             self.execute_module(commands=commands, changed=True)
         else:
@@ -89,7 +89,7 @@ class TestICXSCPModule(TestICXModule):
 
     def test_icx_user_delete_user(self):
         set_module_args(dict(name='ale1', state="absent"))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['no username ale1']
             self.execute_module(commands=commands, changed=True)
         else:
@@ -107,7 +107,7 @@ class TestICXSCPModule(TestICXModule):
                 "configured_password": 'alethea123'
             }
         ]))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 'username ale6 password alethea123',
                 'username ale7 password alethea123'
@@ -133,7 +133,7 @@ class TestICXSCPModule(TestICXModule):
         ],
             update_password='on_create'
         ))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 'username ale6 password alethea123',
             ]
@@ -163,7 +163,7 @@ class TestICXSCPModule(TestICXModule):
         ],
             update_password="on_create"
         ))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 'username ale3 privilege 4 password ale123'
             ]
@@ -183,7 +183,7 @@ class TestICXSCPModule(TestICXModule):
         ],
             purge=True
         ))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 'no username ale2',
                 'no username ale3',

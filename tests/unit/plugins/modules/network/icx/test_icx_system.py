@@ -51,7 +51,7 @@ class TestICXSystemModule(TestICXModule):
 
     def test_icx_system_set_config(self):
         set_module_args(dict(hostname='ruckus', name_servers=['172.16.10.2', '11.22.22.4'], domain_search=['ansible.com', 'redhat.com']))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 'hostname ruckus',
                 'ip dns domain-list ansible.com',
@@ -78,7 +78,7 @@ class TestICXSystemModule(TestICXModule):
 
     def test_icx_system_remove_config(self):
         set_module_args(dict(name_servers=['10.22.22.64', '11.22.22.4'], domain_search=['ansib.eg.com', 'redhat.com'], state='absent'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 'no ip dns domain-list ansib.eg.com',
                 'no ip dns server-address 10.22.22.64',
@@ -106,7 +106,7 @@ class TestICXSystemModule(TestICXModule):
                 state='absent',
                 check_running_config=True))
         if self.get_running_config(compare=True):
-            if not self.ENV_ICX_USE_DIFF:
+            if self.CHECK_RUNNING_CONFIG:
                 commands = [
                     'no ip dns domain-list ansib.eg.com',
                     'no ip dns server-address 10.22.22.64',
@@ -143,7 +143,7 @@ class TestICXSystemModule(TestICXModule):
                 type='tacacs',
                 hostname='ansible.com')]
         set_module_args(dict(hostname='ruckus', aaa_servers=radius))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 'hostname ruckus',
                 'no radius-server host 172.16.20.14',
