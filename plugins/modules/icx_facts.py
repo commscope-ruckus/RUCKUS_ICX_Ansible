@@ -37,12 +37,10 @@ EXAMPLES = """
 - name: Collect all facts from the device
   commscope.icx.icx_facts:
     gather_subset: all
-
 - name: Collect only the config and default facts
   commscope.icx.icx_facts:
     gather_subset:
       - config
-
 - name: Do not collect hardware facts
   commscope.icx.icx_facts:
     gather_subset:
@@ -54,7 +52,6 @@ ansible_net_gather_subset:
   description: The list of fact subsets collected from the device
   returned: always
   type: list
-
 # default
 ansible_net_model:
   description: The model name returned from the device
@@ -84,7 +81,6 @@ ansible_net_stacked_serialnums:
   description: The serial numbers of each device in the stack
   returned: when multiple devices are configured in a stack
   type: list
-
 # hardware
 ansible_net_filesystems:
   description: All file system names available on the device
@@ -102,13 +98,11 @@ ansible_net_memtotal_mb:
   description: The total memory on the remote device in Mb
   returned: when hardware is configured
   type: int
-
 # config
 ansible_net_config:
   description: The current active config from the device
   returned: when config is configured
   type: str
-
 # interfaces
 ansible_net_all_ipv4_addresses:
   description: All IPv4 addresses configured on the device
@@ -424,10 +418,10 @@ class Interfaces(FactsBase):
             if intf not in facts:
                 facts[intf] = list()
             fact = dict()
-            fact['host'] = self.parse_lldp_host(entry)
-            fact['System name'] = self.parse_lldp_port(entry)
-            fact['description'] = self.parse_lldp_desc(entry)
-            fact['Neighbor'] = self.parse_lldp_Neighbor(entry)
+            fact['Port ID'] = self.parse_lldp_portid(entry)
+            fact['System name'] = self.parse_lldp_system_name(entry)
+            fact['System description'] = self.parse_lldp_system_desc(entry)
+            fact['Neighbor'] = self.parse_lldp_neighbor(entry)
 
             facts[intf].append(fact)
         return facts
@@ -503,24 +497,23 @@ class Interfaces(FactsBase):
         if match:
             return match.group(1)
 
-    def parse_lldp_host(self, data):
-        match = re.search(r'System name         : (.+)$', data, re.M | re.I)
+    def parse_lldp_system_name(self, data):
+        match = re.search(r'System name *: *"(.+)"$', data, re.M | re.I)
         if match:
             return match.group(1)
 
-    def parse_lldp_port(self, data):
-        match = re.search(r'Port ID * (.+)$', data, re.M | re.I)
-        if match:
-            match = match.group(1)
-            return match.split(": ")[1]
-
-    def parse_lldp_desc(self, data):
-        match = re.search(r'System description  : (.+)$', data, re.M | re.I)
+    def parse_lldp_portid(self, data):
+        match = re.search(r'Port ID.*: *(.+)$', data, re.M | re.I)
         if match:
             return match.group(1)
 
-    def parse_lldp_Neighbor(self, data):
-        match = re.search(r'Port VLAN ID: (.+)$', data, re.M | re.I)
+    def parse_lldp_system_desc(self, data):
+        match = re.search(r'System description *: *"(.+)"$', data, re.M | re.I)
+        if match:
+            return match.group(1)
+
+    def parse_lldp_neighbor(self, data):
+        match = re.search(r'Neighbor *: *([^,]+)', data, re.M | re.I)
         if match:
             return match.group(1)
 
