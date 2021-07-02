@@ -134,17 +134,16 @@ def main():
     if warnings:
         result['warnings'] = warnings
 
-
     commands = []
     state = module.params['state']
 
     if state == 'absent':
-      commands.append('no lldp run')
+        commands.append('no lldp run')
     elif state == 'present':
-      commands.append('lldp run')
-            
+        commands.append('lldp run')
+
     if module.params.get('interfaces'):
-      map_obj_to_commands(module, commands)
+        map_obj_to_commands(module, commands)
 
     result['commands'] = commands
 

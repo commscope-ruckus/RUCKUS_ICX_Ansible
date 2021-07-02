@@ -56,13 +56,15 @@ class TestICXFactsModule(TestICXModule):
             result['ansible_facts']['ansible_net_image'], 'SPR08095_b437.bin'
         )
         self.assertEqual(
-            result['ansible_facts']['ansible_net_stacked_models'], ['ICX7150-24P-2X10G_2X1G', 'ICX7150-2X1GC', 'ICX7150-4X10GF', 'ICX7150-48P-4X1G', 'ICX7150-2X1GC', 'ICX7150-4X10GF', 'ICX7150-C12-2X1G', 'ICX7150-2X1GC', 'ICX7150-2X10GF']
+            result['ansible_facts']['ansible_net_stacked_models'], ['ICX7150-24P-2X10G_2X1G', 'ICX7150-2X1GC', 'ICX7150-4X10GF',
+                                                                    'ICX7150-48P-4X1G', 'ICX7150-2X1GC', 'ICX7150-4X10GF',
+                                                                    'ICX7150-C12-2X1G', 'ICX7150-2X1GC', 'ICX7150-2X10GF']
         )
 
     def test_icx_facts_interfaces(self):
         set_module_args(dict(gather_subset=["interfaces"]))
         result = self.execute_module()
-        
+
         self.assertEqual(
             result['ansible_facts']['ansible_net_interfaces']["GigabitEthernet1/1/1"]["macaddress"], "609c.9fe7.d600"
         )
@@ -76,9 +78,10 @@ class TestICXFactsModule(TestICXModule):
             result['ansible_facts']['ansible_net_interfaces']["GigabitEthernet1/1/1"]["ipv4"]["subnet"], "24"
         )
         self.assertEqual(
-            result['ansible_facts']['ansible_net_neighbors']["1/1/1"],[{'Port ID': '609c.9f31.afe0','System name': 'ICX7450-48 Router','System description': 'Cisco IP Phone 9971, V1, sip9971.9-0-0-77','Neighbor': '609c.9f31.afe0'}]
-        ) 
-        
+            result['ansible_facts']['ansible_net_neighbors']["1/1/1"], [{'Port ID': '609c.9f31.afe0', 'System name': 'ICX7450-48 Router',
+                                                                         'System description': 'Cisco IP Phone 9971, V1, sip9971.9-0-0-77',
+                                                                         'Neighbor': '609c.9f31.afe0'}]
+        )
 
     def test_icx_facts_hardware(self):
         set_module_args(dict(gather_subset=["hardware"]))
@@ -140,5 +143,7 @@ class TestICXFactsModule(TestICXModule):
             result['ansible_facts']['ansible_net_image'], 'SPR08095_b437.bin'
         )
         self.assertEqual(
-            result['ansible_facts']['ansible_net_stacked_models'], ['ICX7150-24P-2X10G_2X1G', 'ICX7150-2X1GC', 'ICX7150-4X10GF', 'ICX7150-48P-4X1G', 'ICX7150-2X1GC', 'ICX7150-4X10GF', 'ICX7150-C12-2X1G', 'ICX7150-2X1GC', 'ICX7150-2X10GF']
+            result['ansible_facts']['ansible_net_stacked_models'], ['ICX7150-24P-2X10G_2X1G', 'ICX7150-2X1GC', 'ICX7150-4X10GF',
+                                                                    'ICX7150-48P-4X1G', 'ICX7150-2X1GC', 'ICX7150-4X10GF',
+                                                                    'ICX7150-C12-2X1G', 'ICX7150-2X1GC', 'ICX7150-2X10GF']
         )

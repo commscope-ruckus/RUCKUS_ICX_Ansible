@@ -213,7 +213,6 @@ class TestICXVlanModule(TestICXModule):
                 'exit'
             ]
             self.assertEqual(result['commands'], expected_commands)
-            
 
     def test_icx_vlan_tagged_cndt(self):
         set_module_args(dict(vlan_id=3, associated_tagged=['ethernet 1/1/9 to 1/1/11', 'ethernet 1/1/31', 'lag 13']))
