@@ -178,7 +178,7 @@ def map_obj_to_commands(want, have, module):
 
 def map_config_to_obj(module):
     obj = []
-    compare = module.params['check_running_config']
+    # compare = module.params['check_running_config']
     out = run_commands(module, 'sh ipv6 static route')
     for line in out[0].splitlines():
         splitted_line = line.split()
