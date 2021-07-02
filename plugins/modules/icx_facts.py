@@ -424,10 +424,10 @@ class Interfaces(FactsBase):
             if intf not in facts:
                 facts[intf] = list()
             fact = dict()
-            fact['host'] = self.parse_lldp_host(entry)
-            fact['System name'] = self.parse_lldp_port(entry)
-            fact['description'] = self.parse_lldp_desc(entry)
-            fact['Neighbor'] = self.parse_lldp_Neighbor(entry)
+            fact['Port ID'] = self.parse_lldp_portid(entry)
+            fact['System name'] = self.parse_lldp_system_name(entry)
+            fact['System description'] = self.parse_lldp_system_desc(entry)
+            fact['Neighbor'] = self.parse_lldp_neighbor(entry)
 
             facts[intf].append(fact)
         return facts
@@ -503,24 +503,23 @@ class Interfaces(FactsBase):
         if match:
             return match.group(1)
 
-    def parse_lldp_host(self, data):
-        match = re.search(r'System name         : (.+)$', data, re.M | re.I)
+    def parse_lldp_system_name(self, data):
+        match = re.search(r'System name *: *"(.+)"$', data, re.M | re.I)
         if match:
             return match.group(1)
 
-    def parse_lldp_port(self, data):
-        match = re.search(r'Port ID * (.+)$', data, re.M | re.I)
-        if match:
-            match = match.group(1)
-            return match.split(": ")[1]
-
-    def parse_lldp_desc(self, data):
-        match = re.search(r'System description  : (.+)$', data, re.M | re.I)
+    def parse_lldp_portid(self, data):
+        match = re.search(r'Port ID.*: *(.+)$', data, re.M | re.I)
         if match:
             return match.group(1)
 
-    def parse_lldp_Neighbor(self, data):
-        match = re.search(r'Port VLAN ID: (.+)$', data, re.M | re.I)
+    def parse_lldp_system_desc(self, data):
+        match = re.search(r'System description *: *"(.+)"$', data, re.M | re.I)
+        if match:
+            return match.group(1)
+
+    def parse_lldp_neighbor(self, data):
+        match = re.search(r'Neighbor *: *([^,]+)', data, re.M | re.I)
         if match:
             return match.group(1)
 

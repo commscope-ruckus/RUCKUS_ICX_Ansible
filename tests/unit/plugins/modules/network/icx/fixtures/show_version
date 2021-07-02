@@ -1,26 +1,54 @@
-Copyright (c) 1996-2017 Brocade Communications Systems, Inc. All rights reserved.
-    UNIT 1: compiled on Feb 17 2017 at 16:03:13 labeled as SPS08060
-      (23946048 bytes) from Secondary SPS08060.bin
-        SW: Version 08.0.60T211 
-      Compressed Boot-Monitor Image size = 786944, Version:10.1.09T225 (mnz10109)
-       Compiled on Sat Feb 18 00:15:43 2017
-
-  HW: Stackable ICX7150-48-POE
+ Copyright (c) Ruckus Networks, Inc. All rights reserved.
+    UNIT 3: compiled on Dec 13 2020 at 17:52:57 labeled as SPR08095_b437
+      (33056412 bytes) from Secondary SPR08095_b437.bin (UFI)
+        SW: Version 08.0.95_b437T213 
+      Compressed Secondary Boot Code size = 786944, Version:10.1.18T225 (mnz10118)
+       Compiled on Mon Jul 13 08:53:29 2020
+    UNIT 1: compiled on Dec 13 2020 at 17:52:57 labeled as SPR08095_b437
+      (33056412 bytes) from Secondary SPR08095_b437.bin (UFI)
+        SW: Version 08.0.95_b437T213 
+      Compressed Secondary Boot Code size = 786944, Version:10.1.18T225 (mnz10118)
+    UNIT 2: compiled on Dec 13 2020 at 17:52:57 labeled as SPR08095_b437
+      (33056412 bytes) from Secondary SPR08095_b437.bin (UFI)
+        SW: Version 08.0.95_b437T213 
+      Compressed Secondary Boot Code size = 786944, Version:10.1.18T225 (mnz10118)
+  HW: Stackable ICX7150-C12-POE
 ==========================================================================
-UNIT 1: SL 1: ICX7150-48P-4X1G POE 48-port Management Module
-      Serial  #:FEC3220N00C
-      Current License: 4X1G  
-      P-ASIC  0: type B160, rev 11  Chip BCM56160_B0
+UNIT 1: SL 1: ICX7150-24P-2X10G_2X1G POE 24-port Management Module
+      Serial  #:FEA3252M001
+      Software Package: ICX7150_L3_SOFT_PACKAGE   
+      Current License: 4X10GR  
 ==========================================================================
 UNIT 1: SL 2: ICX7150-2X1GC 2-port 2G Module
 ==========================================================================
 UNIT 1: SL 3: ICX7150-4X10GF 4-port 40G Module
 ==========================================================================
+UNIT 2: SL 1: ICX7150-48P-4X1G POE 48-port Management Module
+      Serial  #:BTC3243M01A
+      Software Package: ICX7150_L3_SOFT_PACKAGE   
+      Current License: 4X10GR  
+==========================================================================
+UNIT 2: SL 2: ICX7150-2X1GC 2-port 2G Module
+==========================================================================
+UNIT 2: SL 3: ICX7150-4X10GF 4-port 40G Module
+==========================================================================
+UNIT 3: SL 1: ICX7150-C12-2X1G POE 12-port Management Module
+      Serial  #:BSZ3242M003
+      Software Package: ICX7150_L3_SOFT_PACKAGE   
+      Current License: 2X10GR  
+      P-ASIC  4: type B160, rev 11  Chip BCM56160_B0
+==========================================================================
+UNIT 3: SL 2: ICX7150-2X1GC 2-port 2G Module
+==========================================================================
+UNIT 3: SL 3: ICX7150-2X10GF 2-port 20G Module
+==========================================================================
  1000 MHz ARM processor ARMv7 88 MHz bus
- 8192 KB boot flash memory
- 2048 MB code flash memory
- 1024 MB DRAM
-STACKID 1  system uptime is 4 day(s) 19 hour(s) 53 minute(s) 5 second(s) 
-The system started at 00:01:49 GMT+00 Sat Jan 01 2000             
-
-The system : started=cold start
+    8 MB boot flash memory
+    2 GB code flash memory
+    1 GB DRAM
+STACKID 3  system uptime is 58 day(s) 2 hour(s) 52 minute(s) 42 second(s) 
+STACKID 1  system uptime is 58 day(s) 2 hour(s) 14 minute(s) 46 second(s) 
+STACKID 2  system uptime is 58 day(s) 2 hour(s) 14 minute(s) 45 second(s) 
+The system started at 00:14:41 GMT+00 Tue Apr 27 2021
+The system : started=warm start   reloaded=by "reload"
+My stack unit ID = 3, bootup role = active

@@ -119,7 +119,7 @@ from ansible.module_utils._text import to_text
 from ansible.module_utils.basic import AnsibleModule, env_fallback
 from ansible.module_utils.connection import ConnectionError
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import remove_default_spec
-from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx import get_config, load_config, run_commands
+from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx import get_config, load_config
 
 try:
     from ipaddress import ip_network, ip_interface, IPv6Address
@@ -179,15 +179,15 @@ def map_obj_to_commands(want, have, module):
 def map_config_to_obj(module):
     obj = []
     # compare = module.params['check_running_config']
-    out = run_commands(module, 'sh ipv6 static route')
-    for line in out[0].splitlines():
+    out = get_config(module, flags='| include ipv6 route')
+    for line in out.splitlines():
         splitted_line = line.split()
         if len(splitted_line) not in (4, 5, 6):
             continue
-        prefix = splitted_line[0]
-        next_hop = splitted_line[2]
-        if len(splitted_line) == 5:
-            admin_distance = splitted_line[3].rsplit('/', 1)[1]
+        prefix = splitted_line[2]
+        next_hop = splitted_line[3]
+        if len(splitted_line) == 6:
+            admin_distance = splitted_line[5]
         else:
             admin_distance = '1'
 

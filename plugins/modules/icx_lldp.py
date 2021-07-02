@@ -134,31 +134,17 @@ def main():
     if warnings:
         result['warnings'] = warnings
 
-    if module.params['check_running_config'] is False:
-        HAS_LLDP = None
-    else:
-        HAS_LLDP = has_lldp(module)
 
     commands = []
     state = module.params['state']
 
-    if state is None:
-        if HAS_LLDP:
-            map_obj_to_commands(module, commands)
-        else:
-            module.fail_json(msg='LLDP is not running')
-    else:
-        if state == 'absent' and HAS_LLDP is None:
-            commands.append('no lldp run')
-
-        if state == 'absent' and HAS_LLDP:
-            commands.append('no lldp run')
-
-        elif state == 'present':
-            if not HAS_LLDP:
-                commands.append('lldp run')
-            if module.params.get('interfaces'):
-                map_obj_to_commands(module, commands)
+    if state == 'absent':
+      commands.append('no lldp run')
+    elif state == 'present':
+      commands.append('lldp run')
+            
+    if module.params.get('interfaces'):
+      map_obj_to_commands(module, commands)
 
     result['commands'] = commands
 

@@ -35,15 +35,17 @@ class TestICXStaticRouteModule6(TestICXModule):
             for arg in args:
                 if arg.params['check_running_config'] is True:
                     return load_fixture('icx_static_route_config6.txt').strip()
+                elif arg.params['purge'] is True and arg.params['check_running_config'] is False:
+                    return load_fixture('icx_static_route_config6.txt').strip()
                 else:
                     return ''
-
         self.get_config.side_effect = load_file
         self.load_config.return_value = None
 
     def test_icx_static_route_config(self):
+
         set_module_args(dict(prefix='6666:1:2::0/64', next_hop='6666:1:2::0'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             expected_commands = [
                 'ipv6 route 6666:1:2::/64  6666:1:2::'
@@ -59,7 +61,7 @@ class TestICXStaticRouteModule6(TestICXModule):
     def test_icx_static_route_config_compare(self):
         set_module_args(dict(prefix='6666:1:1::0/64', next_hop='6666:1:1::0', check_running_config=True))
         if self.get_running_config(compare=True):
-            if not self.ENV_ICX_USE_DIFF:
+            if self.CHECK_RUNNING_CONFIG:
                 result = self.execute_module(changed=False)
                 expected_commands = [
                 ]
@@ -72,7 +74,7 @@ class TestICXStaticRouteModule6(TestICXModule):
 
     def test_icx_static_route_distance_config(self):
         set_module_args(dict(prefix='6666:1:1::/64', next_hop='6666:1:1::', admin_distance='40'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             expected_commands = [
                 'ipv6 route 6666:1:1::/64  6666:1:1:: distance 40'
@@ -91,7 +93,7 @@ class TestICXStaticRouteModule6(TestICXModule):
             dict(prefix='6666:1:2::/64', next_hop='6666:1:2::', admin_distance=40)
         ]
         set_module_args(dict(aggregate=aggregate))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             expected_commands = [
                 'ipv6 route 6666:1:3::/64  6666:1:3:: distance 1',
@@ -108,7 +110,7 @@ class TestICXStaticRouteModule6(TestICXModule):
 
     def test_icx_static_route_remove(self):
         set_module_args(dict(prefix="6666:1:1::0/64", next_hop="6666:1:1::0", state="absent"))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             expected_commands = [
                 'no ipv6 route 6666:1:1::/64 6666:1:1::',
