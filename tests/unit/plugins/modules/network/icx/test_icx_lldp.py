@@ -44,9 +44,11 @@ class TestICXlldpModule(TestICXModule):
         interfaces_spec = [dict(name='ethernet 1/1/9', state='present')]
         set_module_args(dict(interfaces=interfaces_spec))
         if self.CHECK_RUNNING_CONFIG:
-            result = self.execute_module(failed=True)
+            result = self.execute_module(changed=True)
+            self.assertEqual(result['commands'], ['lldp enable ports ethernet 1/1/9'])
         else:
-            result = self.execute_module(failed=True)
+            result = self.execute_module(changed=True)
+            self.assertEqual(result['commands'], ['lldp enable ports ethernet 1/1/9'])
 
     def test_icx_lldp_enable_state_absent_compare(self):
         interfaces_spec = [dict(name='ethernet 1/1/9', state='present')]
@@ -54,10 +56,10 @@ class TestICXlldpModule(TestICXModule):
         if self.get_running_config(compare=True):
             if self.CHECK_RUNNING_CONFIG:
                 result = self.execute_module(changed=True)
-                self.assertEqual(result['commands'], ['no lldp run'])
+                self.assertEqual(result['commands'], ['no lldp run', 'lldp enable ports ethernet 1/1/9'])
             else:
                 result = self.execute_module(changed=True)
-                self.assertEqual(result['commands'], ['no lldp run'])
+                self.assertEqual(result['commands'], ['no lldp run', 'lldp enable ports ethernet 1/1/9'])
 
     def test_icx_lldp_enable_state_present(self):
         interfaces_spec = [dict(name='ethernet 1/1/9', state='present')]

@@ -526,7 +526,7 @@ def map_obj_to_commands(updates, module):
                     commands.append('ip arp inspection vlan {0}'.format(vlan_id))
                 elif dhcp is False:
                     commands.append('no ip arp inspection vlan {0}'.format(vlan_id))
-                commands.append('vlan {0}'.format(vlan_id))
+                # commands.append('vlan {0}'.format(vlan_id))
 
             else:
                 commands.append('vlan {0}'.format(vlan_id))
@@ -606,13 +606,13 @@ def map_obj_to_commands(updates, module):
                         commands.append('ip arp inspection vlan {0}'.format(vlan_id))
                     elif arp is False:
                         commands.append('no ip arp inspection vlan {0}'.format(vlan_id))
-                commands.append('vlan {0}'.format(vlan_id))
+                # commands.append('vlan {0}'.format(vlan_id))
 
             if len(commands) == 1 and 'vlan ' + str(vlan_id) in commands:
                 commands = []
 
     if purge:
-        commands = []
+        # commands = []
         vlans = parse_vlan_id(module)
         for h in vlans:
             obj_in_want = search_obj_in_list(h, want)
@@ -679,7 +679,7 @@ def map_config_to_obj(module):
 
 def check_fail(module, output):
     error = [
-        re.compile(br"^error", re.I)
+        re.compile(r"^error", re.I)
     ]
     for x in output:
         for regex in error:

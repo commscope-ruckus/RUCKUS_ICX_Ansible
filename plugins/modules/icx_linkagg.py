@@ -162,8 +162,8 @@ def range_to_members(ranges, prefix=""):
 
 def map_config_to_obj(module):
     objs = dict()
-    compare = module.params['check_running_config']
-    config = get_config(module, None, compare=compare)
+    # compare = module.params['check_running_config']
+    config = get_config(module, None)
     obj = None
     for line in config.split('\n'):
         l = line.strip()
@@ -254,6 +254,8 @@ def map_obj_to_commands(updates, module):
             if w['state'] == 'present':
                 commands.append("exit")
     if purge:
+        if module.params['check_running_config'] is False:
+            have = map_config_to_obj(module)
         for h in have:
             if search_obj_in_list(have[h]['group'], want) is None:
                 commands.append("no lag %s %s id %s" % (have[h]['name'], have[h]['mode'], have[h]['group']))
@@ -299,7 +301,12 @@ def main():
         result['warnings'] = warnings
 
     want = map_params_to_obj(module)
-    have = map_config_to_obj(module)
+
+    if module.params['check_running_config'] is False:
+        have = {}
+    else:
+        have = map_config_to_obj(module)
+
     commands = map_obj_to_commands((want, have), module)
 
     result["commands"] = commands
