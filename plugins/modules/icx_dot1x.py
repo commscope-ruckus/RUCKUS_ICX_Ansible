@@ -23,6 +23,7 @@ options:
       all:
         description: Enables 802.1x authentication on all interfaces.
         type: bool
+        default: no
       ethernet:
         description: Enables 802.1x authentication on the specified interface or range of interfaces. For eg - [ethernet 1/1/2, ethernet 1/1/20 to 1/1/30]
         type: list
