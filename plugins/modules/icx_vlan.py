@@ -527,7 +527,6 @@ def map_obj_to_commands(updates, module):
                         for item in remove_interfaces:
                             commands.append('no untagged {0}'.format(item))
 
-
                 if tagged:
                     if tagged['name']:
                         for item in tagged['name']:
