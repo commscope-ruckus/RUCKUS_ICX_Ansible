@@ -183,15 +183,15 @@ def map_obj_to_commands(want, have, module):
 def map_config_to_obj(module):
     obj = []
     # compare = module.params['check_running_config']
-    out = get_config(module, flags='| include ipv6 route')
-    for line in out.splitlines():
+    out = run_commands(module, 'sh ipv6 static route')
+    for line in out[0].splitlines():
         splitted_line = line.split()
         if len(splitted_line) not in (4, 5, 6):
             continue
-        prefix = splitted_line[2]
-        next_hop = splitted_line[3]
-        if len(splitted_line) == 6:
-            admin_distance = splitted_line[5]
+        prefix = splitted_line[0]
+        next_hop = splitted_line[2]
+        if len(splitted_line) == 4:
+            admin_distance = splitted_line[3].rsplit('/', 2)[1]
         else:
             admin_distance = '1'
 
