@@ -20,7 +20,8 @@ notes:
 options:
   prefix:
     description:
-      - Network prefix of the static route.
+      - Specifies the destination IPv4 address. provide prefix in the format either A.B.C.D or A.B.C.D/L (where "L" is the prefix-length of the mask).
+        if A.B.C.D/L format is used, do not specify mask.
     type: str
   mask:
     description:
@@ -136,6 +137,10 @@ except ImportError:
 def map_obj_to_commands(want, have, module):
     commands = list()
     purge = module.params['purge']
+    """
+    We are deleting state & check_running_config fields so that want can be compared with have.
+    Have has only 4 fields. Also that routes are considered different if address/mask/hop is different.
+    """
     for w in want:
         for h in have:
             for key in ['prefix', 'mask', 'next_hop']:
@@ -290,7 +295,9 @@ def main():
         result['warnings'] = warnings
 
     want = map_params_to_obj(module)
-    have = map_config_to_obj(module)
+    have =[]
+    if module.params['check_running_config'] is True or module.params['purge'] is True:
+        have = map_config_to_obj(module)
 
     commands = map_obj_to_commands(want, have, module)
     result['commands'] = commands
