@@ -190,8 +190,8 @@ def map_config_to_obj(module):
             continue
         prefix = splitted_line[0]
         next_hop = splitted_line[2]
-        if len(splitted_line) == 4:
-            admin_distance = splitted_line[3].rsplit('/', 2)[1]
+        if len(splitted_line) >= 4:
+            admin_distance = splitted_line[3].split('/')[1]
         else:
             admin_distance = '1'
 
