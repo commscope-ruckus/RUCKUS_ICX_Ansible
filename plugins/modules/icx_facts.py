@@ -240,8 +240,8 @@ class Hardware(FactsBase):
                     self.facts['memtotal_kb'] = dict()
                     self.facts['memfree_kb'] = dict()
                     for i in range(len(match)):
-                        self.facts['memtotal_kb']["Stack Unit" + str(i + 1)] = {"Total Memory": str(int(match[i][1]) / 1024) + "kb"}
-                        self.facts['memfree_kb']["Stack Unit" + str(i + 1)] = {"Free Memory": str(int(match[i][3]) / 1024) + "kb"}
+                        self.facts['memtotal_kb']["Stack Unit " + str(match[i][0])] = {"Total Memory": str(int(match[i][1]) / 1024) + "kb"}
+                        self.facts['memfree_kb']["Stack Unit " + str(match[i][0])] = {"Free Memory": str(int(match[i][3]) / 1024) + "kb"}
 
     def parse_filesystems(self, data):
         return "flash"
