@@ -295,7 +295,7 @@ def main():
         result['warnings'] = warnings
 
     want = map_params_to_obj(module)
-    have =[]
+    have = []
     if module.params['check_running_config'] is True or module.params['purge'] is True:
         have = map_config_to_obj(module)
 
