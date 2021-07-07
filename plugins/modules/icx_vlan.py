@@ -506,36 +506,7 @@ def map_obj_to_commands(updates, module):
                     if interfaces['name']:
                         for item in interfaces['name']:
                             commands.append('untagged {0}'.format(item))
-
-                if tagged:
-                    if tagged['name']:
-                        for item in tagged['name']:
-                            commands.append('tagged {0}'.format(item))
-
-                if stp:
-                    if w.get('stp'):
-                        [commands.append(cmd) for cmd in w['stp']]
-
-                commands.append('exit')
-                if dhcp is True:
-                    commands.append('ip dhcp snooping vlan {0}'.format(vlan_id))
-                elif dhcp is False:
-                    commands.append('no ip dhcp snooping vlan {0}'.format(vlan_id))
-
-                if arp is True:
-                    commands.append('ip arp inspection vlan {0}'.format(vlan_id))
-                elif dhcp is False:
-                    commands.append('no ip arp inspection vlan {0}'.format(vlan_id))
-                # commands.append('vlan {0}'.format(vlan_id))
-
-            else:
-                commands.append('vlan {0}'.format(vlan_id))
-                if name:
-                    if name != obj_in_have['name']:
-                        commands.append('vlan {0} name {1}'.format(vlan_id, name))
-
-                if interfaces:
-                    if interfaces['name']:
+                    if interfaces['purge'] is True:
                         want_interfaces = list()
                         for interface in interfaces['name']:
                             low, high = extract_list_from_interface(interface)
@@ -551,19 +522,17 @@ def map_obj_to_commands(updates, module):
                                 if 'lag' in interface:
                                     want_interfaces.append('lag {0}'.format(low))
                                 low = low + 1
-
-                    if interfaces['purge'] is True:
-                        remove_interfaces = list(set(obj_in_have['interfaces']) - set(want_interfaces))
+                        have_interfaces = list(parse_interfaces_argument(module, vlan_id, "interfaces"))
+                        remove_interfaces = list(set(have_interfaces) - set(want_interfaces))
                         for item in remove_interfaces:
                             commands.append('no untagged {0}'.format(item))
 
-                    if interfaces['name']:
-                        add_interfaces = list(set(want_interfaces) - set(obj_in_have['interfaces']))
-                        for item in add_interfaces:
-                            commands.append('untagged {0}'.format(item))
 
                 if tagged:
                     if tagged['name']:
+                        for item in tagged['name']:
+                            commands.append('tagged {0}'.format(item))
+                    if tagged['purge'] is True:
                         want_tagged = list()
                         for tag in tagged['name']:
                             low, high = extract_list_from_interface(tag)
@@ -580,32 +549,25 @@ def map_obj_to_commands(updates, module):
                                 if 'lag' in tag:
                                     want_tagged.append('lag {0}'.format(low))
                                 low = low + 1
-                    if tagged['purge'] is True:
-                        remove_tagged = list(set(obj_in_have['tagged']) - set(want_tagged))
+                        have_tagged = list(parse_interfaces_argument(module, vlan_id, "tagged"))
+                        remove_tagged = list(set(have_tagged) - set(want_tagged))
                         for item in remove_tagged:
                             commands.append('no tagged {0}'.format(item))
-
-                    if tagged['name']:
-                        add_tagged = list(set(want_tagged) - set(obj_in_have['tagged']))
-                        for item in add_tagged:
-                            commands.append('tagged {0}'.format(item))
 
                 if stp:
                     if w.get('stp'):
                         [commands.append(cmd) for cmd in w['stp']]
 
                 commands.append('exit')
-                if dhcp != obj_in_have['ip_dhcp_snooping']:
-                    if dhcp is True:
-                        commands.append('ip dhcp snooping vlan {0}'.format(vlan_id))
-                    elif dhcp is False:
-                        commands.append('no ip dhcp snooping vlan {0}'.format(vlan_id))
+                if dhcp is True:
+                    commands.append('ip dhcp snooping vlan {0}'.format(vlan_id))
+                elif dhcp is False:
+                    commands.append('no ip dhcp snooping vlan {0}'.format(vlan_id))
 
-                if arp != obj_in_have['ip_arp_inspection']:
-                    if arp is True:
-                        commands.append('ip arp inspection vlan {0}'.format(vlan_id))
-                    elif arp is False:
-                        commands.append('no ip arp inspection vlan {0}'.format(vlan_id))
+                if arp is True:
+                    commands.append('ip arp inspection vlan {0}'.format(vlan_id))
+                elif dhcp is False:
+                    commands.append('no ip arp inspection vlan {0}'.format(vlan_id))
                 # commands.append('vlan {0}'.format(vlan_id))
 
             if len(commands) == 1 and 'vlan ' + str(vlan_id) in commands:
@@ -632,7 +594,7 @@ def parse_name_argument(module, item):
 
 def parse_interfaces_argument(module, item, port_type):
     untagged_ports, untagged_lags, tagged_ports, tagged_lags = parse_vlan_brief(module, item)
-    ports = list()
+    ports = []
     if port_type == "interfaces":
         if untagged_ports:
             for port in untagged_ports:
