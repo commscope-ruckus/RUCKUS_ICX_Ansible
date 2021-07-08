@@ -139,6 +139,10 @@ def map_obj_to_commands(want, have, module):
     commands = list()
     purge = module.params['purge']
     want = shorten_ip(want)
+    """
+    We are deleting state & check_running_config fields so that want can be compared with have.
+    Have has only 4 fields. Also that routes are considered different if address/mask/hop is different.
+    """
     for w in want:
         for h in have:
             for key in ['prefix', 'next_hop']:
@@ -186,8 +190,8 @@ def map_config_to_obj(module):
             continue
         prefix = splitted_line[0]
         next_hop = splitted_line[2]
-        if len(splitted_line) == 5:
-            admin_distance = splitted_line[3].rsplit('/', 1)[1]
+        if len(splitted_line) >= 4:
+            admin_distance = splitted_line[3].split('/')[1]
         else:
             admin_distance = '1'
 
@@ -273,7 +277,9 @@ def main():
         result['warnings'] = warnings
 
     want = map_params_to_obj(module, required_together=required_together)
-    have = map_config_to_obj(module)
+    have = []
+    if module.params['check_running_config'] is True or module.params['purge'] is True:
+        have = map_config_to_obj(module)
     commands = map_obj_to_commands(want, have, module)
     result['commands'] = commands
     result['have'] = have
