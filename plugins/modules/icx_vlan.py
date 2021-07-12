@@ -565,7 +565,7 @@ def map_obj_to_commands(updates, module):
 
                 if arp is True:
                     commands.append('ip arp inspection vlan {0}'.format(vlan_id))
-                elif dhcp is False:
+                elif arp is False:
                     commands.append('no ip arp inspection vlan {0}'.format(vlan_id))
                 # commands.append('vlan {0}'.format(vlan_id))
 
