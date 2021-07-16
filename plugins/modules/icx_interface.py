@@ -45,20 +45,21 @@ options:
   tx_rate:
     description:
       - Transmit rate in bits per second (bps).
-      - This is state check parameter only.
+      - This is state check parameter only. Cannot be configured.
       - Supports conditionals, see L(Conditionals in Networking Modules,../network/user_guide/network_working_with_command_output.html)
     type: str
   rx_rate:
     description:
       - Receiver rate in bits per second (bps).
-      - This is state check parameter only.
+      - This is state check parameter only. Cannot be configured.
       - Supports conditionals, see L(Conditionals in Networking Modules,../network/user_guide/network_working_with_command_output.html)
     type: str
   neighbors:
     description:
-      - Check the operational state of given interface C(name) for CDP/LLDP neighbor.
+      - Check the operational state of given interface C(name) for CDP/LLDP neighbor. Cannot be configured.
       - The following suboptions are available.
     type: list
+    elements: dict
     suboptions:
       host:
         description:
@@ -79,6 +80,7 @@ options:
     description:
       - State of the Interface configuration, C(up) means present and
         operationally up and C(down) means present and operationally C(down)
+      - Read only parameter. Cannot be configured.
     default: present
     type: str
     choices: ['present', 'absent', 'up', 'down']
@@ -107,17 +109,18 @@ options:
         enabled:
           description:
             - "enable/disable the poe of the given interface C(name)"
-          default: no
           type: bool
   aggregate:
     description:
       - List of Interfaces definitions.
     type: list
+    elements: dict
     suboptions:
       name:
         description:
           - Name of the Interface.
         type: str
+        required: true
       description:
         description:
           - Name of the description.
@@ -140,20 +143,21 @@ options:
       tx_rate:
         description:
           - Transmit rate in bits per second (bps).
-          - This is state check parameter only.
+          - This is state check parameter only. Cannot be configured.
           - Supports conditionals, see L(Conditionals in Networking Modules,../network/user_guide/network_working_with_command_output.html)
         type: str
       rx_rate:
         description:
           - Receiver rate in bits per second (bps).
-          - This is state check parameter only.
+          - This is state check parameter only. Cannot be configured.
           - Supports conditionals, see L(Conditionals in Networking Modules,../network/user_guide/network_working_with_command_output.html)
         type: str
       neighbors:
         description:
-          - Check the operational state of given interface C(name) for CDP/LLDP neighbor.
+          - Check the operational state of given interface C(name) for CDP/LLDP neighbor. Cannot be configured.
           - The following suboptions are available.
         type: list
+        elements: dict
         suboptions:
           host:
             description:
@@ -173,6 +177,7 @@ options:
         description:
           - State of the Interface configuration, C(up) means present and
             operationally up and C(down) means present and operationally C(down)
+          - Read only parameter. Cannot be configured.
         type: str
         choices: ['present', 'absent', 'up', 'down']
       check_running_config:
