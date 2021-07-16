@@ -35,115 +35,55 @@ class TestICXSCPModule(TestICXModule):
         def load_file(*args, **kwargs):
             module = args
             for arg in args:
-                if arg.params['check_running_config'] is True:
+                if arg.params['check_running_config'] is True or arg.params['purge'] is True:
                     return load_fixture('show_running-config_include_username.txt').strip()
                 else:
                     return ''
         self.get_config.side_effect = load_file
         self.load_config.return_value = None
 
+    def test_icx_user_create_with_all_options(self):
+        set_module_args(dict(name='ale1', privilege="5", configured_password='alethea123', update_password='always'))
+        commands = ['username ale1 privilege 5 password alethea123']
+        self.execute_module(commands=commands, changed=True)
+
     def test_icx_user_create_new_with_password(self):
         set_module_args(dict(name='ale6', configured_password='alethea123'))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = ['username ale6 password alethea123']
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = ['username ale6 password alethea123']
-            self.execute_module(commands=commands, changed=True)
+        commands = ['username ale6 password alethea123']
+        self.execute_module(commands=commands, changed=True)
 
     def test_icx_user_create_new_with_password_and_privilege(self):
         set_module_args(dict(name='ale6', privilege="5", configured_password='alethea123'))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = ['username ale6 privilege 5 password alethea123']
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = ['username ale6 privilege 5 password alethea123']
-            self.execute_module(commands=commands, changed=True)
+        commands = ['username ale6 privilege 5 password alethea123']
+        self.execute_module(commands=commands, changed=True)
 
-    def test_icx_user_update_privilege(self):
-        set_module_args(dict(name='ale1', privilege="0", configured_password='alethea123'))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = ['username ale1 privilege 0 password alethea123']
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = ['username ale1 privilege 0 password alethea123']
-            self.execute_module(commands=commands, changed=True)
-
-    def test_icx_user_update_password(self):
-        set_module_args(dict(name='ale1', configured_password='alethea123'))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = ['username ale1 privilege 5 password alethea123']  # previous privilage will be added
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = ['username ale1 password alethea123']  # previous privilage will be added
-            self.execute_module(commands=commands, changed=True)
-
-    def test_icx_user_update_password_compare(self):
-        set_module_args(dict(name='ale1', configured_password='alethea123', check_running_config=True))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = ['username ale1 privilege 5 password alethea123']  # previous privilage will be added
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = ['username ale1 privilege 5 password alethea123']  # previous privilage will be added
-            self.execute_module(commands=commands, changed=True)
+    def test_icx_user_create_new_with_nopassword(self):
+        set_module_args(dict(name='ale6', nopassword=True))
+        commands = ['username ale6 nopassword']
+        self.execute_module(commands=commands, changed=True)
 
     def test_icx_user_delete_user(self):
         set_module_args(dict(name='ale1', state="absent"))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = ['no username ale1']
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = ['no username ale1']
-            self.execute_module(commands=commands, changed=True)
+        commands = ['no username ale1']
+        self.execute_module(commands=commands, changed=True)
 
     def test_icx_user_agregate(self):
         set_module_args(dict(aggregate=[
             {
                 "name": 'ale6',
-                "configured_password": 'alethea123'
+                "configured_password": 'alethea123',
             },
             {
                 "name": 'ale7',
+                "privilege": 4,
                 "configured_password": 'alethea123'
             }
         ]))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = [
-                'username ale6 password alethea123',
-                'username ale7 password alethea123'
-            ]
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = [
-                'username ale6 password alethea123',
-                'username ale7 password alethea123'
-            ]
-            self.execute_module(commands=commands, changed=True)
-
-    def test_icx_user_not_update_old_user_password(self):
-        set_module_args(dict(aggregate=[
-            {
-                "name": 'ale6',
-                "configured_password": 'alethea123'
-            },
-            {
-                "name": 'ale1',
-                "configured_password": 'alethea123',
-            },
-        ],
-            update_password='on_create'
-        ))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = [
-                'username ale6 password alethea123',
-            ]
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = [
-                'username ale1 password alethea123',
-                'username ale6 password alethea123',
-            ]
-            self.execute_module(commands=commands, changed=True)
+        commands = [
+            'username ale6 password alethea123',
+            'username ale7 privilege 4 password alethea123'
+        ]
+        self.execute_module(commands=commands, changed=True)
 
     def test_icx_user_only_update_changed_settings(self):
         set_module_args(dict(aggregate=[
@@ -163,34 +103,46 @@ class TestICXSCPModule(TestICXModule):
         ],
             update_password="on_create"
         ))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = [
-                'username ale3 privilege 4 password ale123'
-            ]
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = [
-                'username ale2 privilege 5 password ale123',
-                'username ale3 privilege 4 password ale123'
-            ]
-            self.execute_module(commands=commands, changed=True)
+        commands = [
+            'username ale2 privilege 5 password ale123',
+            'username ale3 privilege 4 password ale123'
+        ]
+        self.execute_module(commands=commands, changed=True)
 
     def test_icx_user_purge(self):
+        set_module_args(dict(name='ale1', purge=True))
+        commands = [
+            'no username ale2',
+            'no username ale3',
+            'no username ale4'
+        ]
+        self.execute_module(commands=commands, changed=True)
+
+    def test_icx_user_aggregate_purge(self):
         set_module_args(dict(aggregate=[
             {
                 "name": 'ale1'
-            }
+            },
+            {
+                "name": 'ale5',
+                "privilege": 5,
+                "configured_password": "ale123"
+            },
         ],
             purge=True
         ))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = [
-                'no username ale2',
-                'no username ale3',
-                'no username ale4'
-            ]
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = [
-            ]
-            self.execute_module(commands=commands, changed=False)
+        commands = [
+            'no username ale2',
+            'no username ale3',
+            'no username ale4',
+            'username ale5 privilege 5 password ale123'
+        ]
+        self.execute_module(commands=commands, changed=True)
+
+    def test_icx_user_invalid_args_privilege(self):
+        set_module_args(dict(name='ale6', privilege="3", configured_password='alethea123'))
+        result = self.execute_module(failed=True)
+
+    def test_icx_user_invalid_args_nopassword(self):
+        set_module_args(dict(name='ale6', nopassword='present'))
+        result = self.execute_module(failed=True)

@@ -32,7 +32,7 @@ class TestICXStaticRouteModule(TestICXModule):
         def load_file(*args, **kwargs):
             module = args
             for arg in args:
-                if arg.params['check_running_config'] is True:
+                if arg.params['check_running_config'] is True or arg.params['purge'] is True:
                     return load_fixture('icx_static_route_config.txt').strip()
                 else:
                     return ''
@@ -40,49 +40,29 @@ class TestICXStaticRouteModule(TestICXModule):
         self.get_config.side_effect = load_file
         self.load_config.return_value = None
 
+    def test_icx_static_route_all_options(self):
+        set_module_args(dict(prefix='192.126.23.0', mask='255.255.255.0', next_hop='10.10.14.3', admin_distance='40'))
+        result = self.execute_module(changed=True)
+        expected_commands = [
+            'ip route 192.126.23.0 255.255.255.0 10.10.14.3 distance 40'
+        ]
+        self.assertEqual(result['commands'], expected_commands)
+
+    def test_icx_static_route_all_options_remove(self):
+        set_module_args(dict(prefix='192.126.23.0', mask='255.255.255.0', next_hop='10.10.14.3', admin_distance='40', state='absent'))
+        result = self.execute_module(changed=True)
+        expected_commands = [
+            'no ip route 192.126.23.0 255.255.255.0 10.10.14.3'
+        ]
+        self.assertEqual(result['commands'], expected_commands)
+
     def test_icx_static_route_config(self):
-        set_module_args(dict(prefix='192.126.23.0/24', next_hop='10.10.14.3'))
-        if not self.ENV_ICX_USE_DIFF:
-            result = self.execute_module(changed=True)
-            expected_commands = [
-                'ip route 192.126.23.0 255.255.255.0 10.10.14.3'
-            ]
-            self.assertEqual(result['commands'], expected_commands)
-        else:
-            result = self.execute_module(changed=True)
-            expected_commands = [
-                'ip route 192.126.23.0 255.255.255.0 10.10.14.3'
-            ]
-            self.assertEqual(result['commands'], expected_commands)
-
-    def test_icx_static_route_config_compare(self):
-        set_module_args(dict(prefix='172.16.10.0/24', next_hop='10.0.0.8', check_running_config=True))
-        if self.get_running_config(compare=True):
-            if not self.ENV_ICX_USE_DIFF:
-                result = self.execute_module(changed=False)
-                expected_commands = [
-                ]
-                self.assertEqual(result['commands'], expected_commands)
-            else:
-                result = self.execute_module(changed=False)
-                expected_commands = [
-                ]
-                self.assertEqual(result['commands'], expected_commands)
-
-    def test_icx_static_route_distance_config(self):
-        set_module_args(dict(prefix='192.126.0.0', mask='255.255.0.0', next_hop='10.10.14.3', admin_distance='40'))
-        if not self.ENV_ICX_USE_DIFF:
-            result = self.execute_module(changed=True)
-            expected_commands = [
-                'ip route 192.126.0.0 255.255.0.0 10.10.14.3 distance 40'
-            ]
-            self.assertEqual(result['commands'], expected_commands)
-        else:
-            result = self.execute_module(changed=True)
-            expected_commands = [
-                'ip route 192.126.0.0 255.255.0.0 10.10.14.3 distance 40'
-            ]
-            self.assertEqual(result['commands'], expected_commands)
+        set_module_args(dict(prefix='192.126.0.0/16', next_hop='10.10.14.2'))
+        result = self.execute_module(changed=True)
+        expected_commands = [
+            'ip route 192.126.0.0 255.255.0.0 10.10.14.2'
+        ]
+        self.assertEqual(result['commands'], expected_commands)
 
     def test_icx_static_route_aggregate(self):
         aggregate = [
@@ -90,33 +70,67 @@ class TestICXStaticRouteModule(TestICXModule):
             dict(prefix='192.126.0.0', mask='255.255.0.0', next_hop='10.10.14.3', admin_distance='40')
         ]
         set_module_args(dict(aggregate=aggregate))
-        if not self.ENV_ICX_USE_DIFF:
-            result = self.execute_module(changed=True)
-            expected_commands = [
-                'ip route 192.126.23.0 255.255.255.0 10.10.14.3',
-                'ip route 192.126.0.0 255.255.0.0 10.10.14.3 distance 40'
-            ]
-            self.assertEqual(result['commands'], expected_commands)
-        else:
-            result = self.execute_module(changed=True)
-            expected_commands = [
-                'ip route 192.126.23.0 255.255.255.0 10.10.14.3',
-                'ip route 192.126.0.0 255.255.0.0 10.10.14.3 distance 40'
-            ]
-            self.assertEqual(result['commands'], expected_commands)
+        result = self.execute_module(changed=True)
+        expected_commands = [
+            'ip route 192.126.23.0 255.255.255.0 10.10.14.3',
+            'ip route 192.126.0.0 255.255.0.0 10.10.14.3 distance 40'
+        ]
+        self.assertEqual(result['commands'], expected_commands)
 
-    def test_icx_static_route_remove(self):
-        set_module_args(dict(prefix='172.16.10.0/24', next_hop='10.0.0.8', state='absent'))
-        if not self.ENV_ICX_USE_DIFF:
-            result = self.execute_module(changed=True)
-            expected_commands = [
-                'no ip route 172.16.10.0 255.255.255.0 10.0.0.8',
-            ]
-            self.assertEqual(result['commands'], expected_commands)
+    def test_icx_static_route_aggregate_remove(self):
+        aggregate = [
+            dict(prefix='192.126.23.0/24', next_hop='10.10.14.3', state='absent'),
+            dict(prefix='192.126.0.0', mask='255.255.0.0', next_hop='10.10.14.3', admin_distance='40', state='absent')
+        ]
+        set_module_args(dict(aggregate=aggregate))
+        result = self.execute_module(changed=True)
+        expected_commands = [
+            'no ip route 192.126.23.0 255.255.255.0 10.10.14.3',
+            'no ip route 192.126.0.0 255.255.0.0 10.10.14.3'
+        ]
+        self.assertEqual(result['commands'], expected_commands)
 
-        else:
-            result = self.execute_module(changed=True)
-            expected_commands = [
-                'no ip route 172.16.10.0 255.255.255.0 10.0.0.8',
-            ]
-            self.assertEqual(result['commands'], expected_commands)
+    def test_icx_static_route_config_purge(self):
+        set_module_args(dict(prefix='172.16.10.0/32', next_hop='10.10.14.6', admin_distance=5, purge=True))
+        result = self.execute_module(changed=True)
+        expected_commands = [
+            'ip route 172.16.10.0 255.255.255.255 10.10.14.6 distance 5',
+            'no ip route 172.16.0.0 255.255.0.0 10.0.0.8',
+            'no ip route 172.16.10.0 255.255.255.0 10.0.0.8',
+            'no ip route 192.0.0.0 255.0.0.0 10.10.15.3',
+            'no ip route 192.126.0.0 255.255.0.0 10.10.14.31',
+            'no ip route 192.126.23.0 255.255.255.0 10.10.14.31',
+            'no ip route 192.128.0.0 255.255.0.0 10.10.14.3',
+            'no ip route 192.128.0.0 255.255.0.0 10.10.15.3',
+            'no ip route 192.128.0.0 255.255.0.0 10.10.15.31'
+        ]
+        self.assertEqual(result['commands'], expected_commands)
+
+    def test_icx_static_route_purge(self):
+        set_module_args(dict(prefix='192.0.0.0/8', next_hop='10.10.15.3', purge=True))
+        result = self.execute_module(changed=True)
+        expected_commands = [
+            'no ip route 172.16.0.0 255.255.0.0 10.0.0.8',
+            'no ip route 172.16.10.0 255.255.255.0 10.0.0.8',
+            'no ip route 192.126.0.0 255.255.0.0 10.10.14.31',
+            'no ip route 192.126.23.0 255.255.255.0 10.10.14.31',
+            'no ip route 192.128.0.0 255.255.0.0 10.10.14.3',
+            'no ip route 192.128.0.0 255.255.0.0 10.10.15.3',
+            'no ip route 192.128.0.0 255.255.0.0 10.10.15.31'
+        ]
+        self.assertEqual(result['commands'], expected_commands)
+
+    def test_icx_static_route_no_args_next_hop(self):
+        ''' Test without next_hop'''
+        set_module_args(dict(prefix='192.126.0.0/16', admin_distance=4))
+        result = self.execute_module(failed=True)
+
+    def test_icx_static_route_invalid_args_admin_distance(self):
+        ''' Test for invalid admin_distance'''
+        set_module_args(dict(prefix='192.126.0.0/16', next_hop='10.10.14.2', admin_distance='10.10.1.1'))
+        result = self.execute_module(failed=True)
+
+    def test_icx_static_route_invalid_args_prefix_mask(self):
+        ''' Test with mask and prefix-length of the mask '''
+        set_module_args(dict(prefix='192.126.0.0/16', mask='255.255.0.0', next_hop='10.10.14.2'))
+        result = self.execute_module(failed=True)

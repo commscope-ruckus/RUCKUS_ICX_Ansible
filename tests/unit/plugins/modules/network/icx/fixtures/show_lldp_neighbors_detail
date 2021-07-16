@@ -1,0 +1,358 @@
+Local port: 1/1/1
+  Neighbor: 609c.9f31.afe0, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.afe0
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/1"
+  + System description  : "Cisco IP Phone 9971, V1, sip9971.9-0-0-77"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 12.12.12.2
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 1/1/2
+  Neighbor: cc4e.248b.4d71, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.248b.4d70
+  + Port ID (MAC address): cc4e.248b.4d71
+  + Time to live: 120 seconds
+  + System name         : "ankit"
+  + Port description    : "GigabitEthernet2/1/2"
+  + System capabilities : bridge, router
+    Enabled capabilities: bridge, router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + 802.3 Power via MDI: PSE port, power enabled, class 0
+    Power Pair         : A (not controllable)
+  + Link aggregation: not capable
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 10.176.146.10
+
+Local port: 1/1/7
+  Neighbor: 609c.9f31.afe6, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.afe6
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/7"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 12.12.12.2
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 1/1/11
+  Neighbor: 609c.9f31.afea, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.afea
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/11"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 12.12.12.2
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 1/1/12
+  Neighbor: 609c.9f31.afeb, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.afeb
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/12"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 12.12.12.2
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 1/1/25
+  Neighbor: 609c.9f31.aff8, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.aff8
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/25"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 12.12.12.2
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 2/1/2
+  Neighbor: 609c.9f27.c561, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.248b.4d70
+  + Port ID (MAC address): 609c.9f27.c561
+  + Time to live: 120 seconds
+  + System name         : "ankit"
+  + Port description    : "GigabitEthernet1/1/2"
+  + System capabilities : bridge, router
+    Enabled capabilities: bridge, router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + 802.3 Power via MDI: PSE port, power enabled, class 0
+    Power Pair         : A (not controllable)
+  + Link aggregation: not capable
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 10.176.146.10
+
+Local port: 2/1/29
+  Neighbor: 609c.9f31.affc, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.affc
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/29"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 12.12.12.2
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 2/1/32
+  Neighbor: 609c.9f31.afff, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.afff
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/32"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 12.12.12.2
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 2/1/45
+  Neighbor: 609c.9f31.b00c, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.b00c
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/45"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: not capable
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 10.176.146.14
+
+Local port: 3/1/1
+  Neighbor: 609c.9f27.a920, TTL 120 seconds
+  + Chassis ID (MAC address): 609c.9f29.ce20
+  + Port ID (MAC address): 609c.9f27.a920
+  + Time to live: 120 seconds
+  + System name         : "USG-A1-ua-idf1"
+  + Port description    : "GigabitEthernet1/1/1"
+  + System capabilities : bridge, router
+    Enabled capabilities: bridge, router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + 802.3 Power via MDI: PSE port, power enabled, class 0
+    Power Pair         : A (not controllable)
+  + Link aggregation: not capable
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 200
+  + Management address (IPv4): 10.3.144.65
+
+Local port: 3/1/18
+  Neighbor: 609c.9f31.aff1, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.aff1
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/18"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 12.12.12.2
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 3/1/23
+  Neighbor: 609c.9f31.aff6, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.aff6
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/23"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 10.176.146.14
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 3/1/33
+  Neighbor: 609c.9f31.b000, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.b000
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/33"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 12.12.12.2
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 3/1/36
+  Neighbor: 609c.9f31.b003, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.b003
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/36"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 12.12.12.2
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 3/1/37
+  Neighbor: 609c.9f31.b004, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.b004
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/37"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 12.12.12.2
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 3/1/41
+  Neighbor: 609c.9f31.b008, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.246d.0db8
+  + Port ID (MAC address): 609c.9f31.b008
+  + Time to live: 120 seconds
+  + System name         : "ICX7450-48 Router"
+  + Port description    : "GigabitEthernet1/1/41"
+  + System capabilities : bridge, router
+    Enabled capabilities: router
+  + 802.3 MAC/PHY          : auto-negotiation enabled
+    Advertised capabilities: 10BaseT-HD, 10BaseT-FD, 100BaseTX-HD,
+                             100BaseTX-FD, fdxSPause, fdxBPause, 1000BaseT-HD,
+                             1000BaseT-FD
+    Operational MAU type   : 1000BaseT-FD
+  + Link aggregation: aggregated (aggregated port ifIndex: 3076)
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 12.12.12.2
+  + Management address (IPv6): 2001:12:12:12::2
+
+Local port: 3/2/1
+  Neighbor: cc4e.24d0.4180, TTL 120 seconds
+  + Chassis ID (MAC address): cc4e.24d0.4180
+  + Port ID (MAC address): cc4e.24d0.4180
+  + Time to live: 120 seconds
+  + System name         : "IKY-02-UD-01"
+  + Port description    : "10GigabitEthernet1/1/1"
+  + System capabilities : bridge, router
+    Enabled capabilities: bridge, router
+  + 802.3 MAC/PHY          : auto-negotiation supported, but disabled
+    Operational MAU type   : 10GigBaseSR
+  + Link aggregation: not capable
+  + Maximum frame size: 10200 octets
+  + Port VLAN ID: 1
+  + Management address (IPv4): 10.0.0.4

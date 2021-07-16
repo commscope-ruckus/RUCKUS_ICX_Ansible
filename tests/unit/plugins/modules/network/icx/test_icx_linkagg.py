@@ -35,7 +35,7 @@ class TestICXLinkaggModule(TestICXModule):
         def load_from_file(*args, **kwargs):
             module = args
             for arg in args:
-                if arg.params['check_running_config'] is True:
+                if arg.params['check_running_config'] is True or arg.params['purge'] is True:
                     return load_fixture('lag_running_config.txt').strip()
                 else:
                     return ''
@@ -45,79 +45,54 @@ class TestICXLinkaggModule(TestICXModule):
 
     def test_icx_linkage_create_new_LAG(self):
         set_module_args(dict(group=10, name="LAG3", mode='static', members=['ethernet 1/1/4 to ethernet 1/1/7']))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = ['lag LAG3 static id 10', 'ports ethernet 1/1/4 to ethernet 1/1/7', 'exit']
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = ['lag LAG3 static id 10', 'ports ethernet 1/1/4 to ethernet 1/1/7', 'exit']
-            self.execute_module(commands=commands, changed=True)
-
-    def test_icx_linkage_modify_LAG(self):
-        set_module_args(dict(group=100, name="LAG1", mode='dynamic', members=['ethernet 1/1/4 to 1/1/7']))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = [
-                'lag LAG1 dynamic id 100',
-                'no ports ethernet 1/1/3',
-                'no ports ethernet 1/1/8',
-                'ports ethernet 1/1/4',
-                'exit'
-            ]
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = [
-                'lag LAG1 dynamic id 100',
-                'ports ethernet 1/1/4 to 1/1/7',
-                'exit'
-            ]
-            self.execute_module(commands=commands, changed=True)
-
-    def test_icx_linkage_modify_LAG_compare(self):
-        set_module_args(dict(group=100, name="LAG1", mode='dynamic', members=['ethernet 1/1/4 to 1/1/7'], check_running_config=True))
-        if self.get_running_config(compare=True):
-            if not self.ENV_ICX_USE_DIFF:
-                commands = [
-                    'lag LAG1 dynamic id 100',
-                    'no ports ethernet 1/1/3',
-                    'no ports ethernet 1/1/8',
-                    'ports ethernet 1/1/4',
-                    'exit'
-                ]
-                self.execute_module(commands=commands, changed=True)
-            else:
-                commands = [
-                    'lag LAG1 dynamic id 100',
-                    'no ports ethernet 1/1/3',
-                    'no ports ethernet 1/1/8',
-                    'ports ethernet 1/1/4',
-                    'exit'
-                ]
-                self.execute_module(commands=commands, changed=True)
-
-    def test_icx_linkage_purge_LAG(self):
-        set_module_args(dict(aggregate=[dict(group=100, name="LAG1", mode='dynamic')], purge=True))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = [
-                'lag LAG1 dynamic id 100',
-                'exit',
-                'no lag LAG2 dynamic id 200'
-            ]
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = [
-                'lag LAG1 dynamic id 100',
-                'exit'
-            ]
-            self.execute_module(commands=commands, changed=True)
+        commands = [
+            'lag LAG3 static id 10',
+            'ports ethernet 1/1/4 to ethernet 1/1/7',
+            'exit']
+        self.execute_module(commands=commands, changed=True)
 
     def test_icx_linkage_remove_LAG(self):
-        set_module_args(dict(group=100, name="LAG1", mode='dynamic', members=['ethernet 1/1/4 to 1/1/7'], state='absent'))
-        if not self.ENV_ICX_USE_DIFF:
-            commands = [
-                'no lag LAG1 dynamic id 100'
-            ]
-            self.execute_module(commands=commands, changed=True)
-        else:
-            commands = [
-                'no lag LAG1 dynamic id 100'
-            ]
-            self.execute_module(commands=commands, changed=True)
+        set_module_args(dict(group=10, name="LAG3", mode='static', members=['ethernet 1/1/4 to 1/1/7'], state='absent'))
+        commands = [
+            'no lag LAG3 static id 10'
+        ]
+        self.execute_module(commands=commands, changed=True)
+
+    def test_icx_linkage_dynamic_LAG(self):
+        set_module_args(dict(group=100, name="LAG1", mode='dynamic', members=['ethernet 1/1/6 to 1/1/9']))
+        commands = [
+            'lag LAG1 dynamic id 100',
+            'ports ethernet 1/1/6 to 1/1/9',
+            'exit'
+        ]
+        self.execute_module(commands=commands, changed=True)
+
+    def test_icx_linkage_aggregate_LAG(self):
+        set_module_args(dict(aggregate=[dict(group=10, name="LAG3", mode='dynamic'),
+                                        dict(group=20, name="LAG4", mode='static', members=['ethernet 1/1/6 to 1/1/9'])]))
+        commands = [
+            'lag LAG3 dynamic id 10',
+            'exit',
+            'lag LAG4 static id 20',
+            'ports ethernet 1/1/6 to 1/1/9',
+            'exit'
+        ]
+        self.execute_module(commands=commands, changed=True)
+
+    def test_icx_linkage_purge_LAG(self):
+        set_module_args(dict(aggregate=[dict(group=10, name="LAG4", mode='dynamic')], purge=True))
+        commands = [
+            'lag LAG4 dynamic id 10',
+            'exit',
+            'no lag LAG1 dynamic id 100',
+            'no lag LAG2 dynamic id 200'
+        ]
+        self.execute_module(commands=commands, changed=True)
+
+    def test_icx_linkage_invalid_args_group(self):
+        set_module_args(dict(aggregate=[dict(group='lag', name="LAG1", mode='dynamic')]))
+        result = self.execute_module(failed=True)
+
+    def test_icx_linkage_no_args_name(self):
+        set_module_args(dict(aggregate=[dict(group=10, mode='static')]))
+        result = self.execute_module(failed=True)
