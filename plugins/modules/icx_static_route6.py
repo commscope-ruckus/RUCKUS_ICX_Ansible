@@ -265,7 +265,6 @@ def main():
 
     argument_spec.update(element_spec)
 
-
     module = AnsibleModule(argument_spec=argument_spec,
                            required_one_of=required_one_of,
                            required_together=required_together,
