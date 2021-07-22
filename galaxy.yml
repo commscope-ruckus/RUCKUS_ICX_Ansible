@@ -1,5 +1,4 @@
 # See https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
-​
 namespace: commscope
 name: icx
 version: 1.0.2
