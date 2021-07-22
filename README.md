@@ -1,5 +1,5 @@
 # Commscope ICX collection
-The Ansible Commscope ICX collection includes a variety of Ansible content to help automate the management of Commscope ICX network appliances.
+The Ansible Commscope ICX collection includes a variety of Ansible content to help automate the management of Commscope ICX network devices.
 
 This collection has been tested against Commscope ICX version 10.1
 
