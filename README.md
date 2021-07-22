@@ -1,41 +1,111 @@
-# collection_template
-You can build a new repository for an Ansible Collection using this template by following [Creating a repository from a template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template). This README.md contains recommended headings for your collection README.md, with comments describing what each section should contain. Once you have created your collection repository, delete this paragraph and the title above it from your README.md.
+# Commscope ICX collection
+The Ansible Commscope ICX collection includes a variety of Ansible content to help automate the management of Commscope ICX network appliances.
 
-# Foo Collection
-<!-- Add CI and code coverage badges here. Samples included below. -->
-[![CI](https://github.com/ansible-collections/REPONAMEHERE/workflows/CI/badge.svg?event=push)](https://github.com/ansible-collections/REPONAMEHERE/actions) [![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/REPONAMEHERE)](https://codecov.io/gh/ansible-collections/REPONAMEHERE)
+This collection has been tested against Commscope ICX version 10.1
 
-<!-- Describe the collection and why a user would want to use it. What does the collection do? -->
+## Ansible version compatability
+This collection has been tested against following Ansible versions: >=2.9.10.
 
-## Tested with Ansible
-
-<!-- List the versions of Ansible the collection has been tested with. Must match what is in galaxy.yml. -->
-
-## External requirements
-
-<!-- List any external resources the collection depends on, for example minimum versions of an OS, libraries, or utilities. Do not list other Ansible collections here. -->
+Plugins and modules within a collection may be tested with only specific Ansible versions. A collection may contain metadata that identifies these versions. PEP440 is the schema used to describe the versions of Ansible.
 
 ### Supported connections
-<!-- Optional. If your collection supports only specific connection types (such as HTTPAPI, netconf, or others), list them here. -->
+The Commscope ICX collection supports network_cli connections.
 
 ## Included content
 
-<!-- Galaxy will eventually list the module docs within the UI, but until that is ready, you may need to either describe your plugins etc here, or point to an external docsite to cover that information. -->
+<!--start collection content-->
+### Cliconf plugins
+Name | Description
+--- | ---
+commscope.icx.icx|Use icx cliconf to run command on Commscope ICX platform
 
+### Modules
+Name | Description
+--- | ---
+commscope.icx.icx_aaa_accounting_console|Configures AAA accounting in Ruckus ICX 7000 series switches.
+commscope.icx.icx_aaa_authentication|Configures AAA authentication in Ruckus ICX 7000 series switches.
+commscope.icx.icx_aaa_authorization|Configures AAA authorization in Ruckus ICX 7000 series switches.
+commscope.icx.icx_acl_assign|Configures ACL in Ruckus ICX 7000 series switches.
+commscope.icx.icx_acl_ip|Configures ACL in Ruckus ICX 7000 series switches.
+commscope.icx.icx_acl_ipv6|Configures ACL in Ruckus ICX 7000 series switches.
+commscope.icx.icx_acl_mac|Configures ACL in Ruckus ICX 7000 series switches.
+commscope.icx.icx_banner|Manage multiline banners on Ruckus ICX 7000 series switches.
+commscope.icx.icx_command|Run arbitrary commands on remote Ruckus ICX 7000 series switches.
+commscope.icx.icx_config|Manage configuration sections of Ruckus ICX 7000 series switches
+commscope.icx.icx_copy|Transfer files from or to remote Ruckus ICX 7000 series switches
+commscope.icx.icx_facts|Collect facts from remote Ruckus ICX 7000 series switches
+commscope.icx.icx_firmware_upgrade|Upgrades firmware of ICX switches
+commscope.icx.icx_interface|Manage Interface on Ruckus ICX 7000 series switches
+commscope.icx.icx_l3_interface|Manage Layer-3 interfaces on Ruckus ICX 7000 series switches
+commscope.icx.icx_linkagg|Manage link aggregation groups on Ruckus ICX 7000 series switches
+commscope.icx.icx_lldp|Manage LLDP configuration on Ruckus ICX 7000 series switches
+commscope.icx.icx_logging|Manage logging on Ruckus ICX 7000 series switches
+commscope.icx.icx_ping|Tests reachability using ping from Ruckus ICX 7000 series switches
+commscope.icx.icx_qos|Configures qos features on icx switch.
+commscope.icx.icx_rate_limit|Configures rate limit on icx switch.
+commscope.icx.icx_static_route|Manage static IP routes on Ruckus ICX 7000 series switches
+commscope.icx.icx_static_route6|Manage static IPV6 routes on Ruckus ICX 7000 series switches
+commscope.icx.icx_system|Manage the system attributes on Ruckus ICX 7000 series switches
+commscope.icx.icx_user|Manage the user accounts on Ruckus ICX 7000 series switches.
+commscope.icx.icx_vlan|Manage VLANs on Ruckus ICX 7000 series switches
+
+<!--end collection content-->
+## Installing this collection
+
+You can install the Commscope ICX collection with the Ansible Galaxy CLI:
+
+    ansible-galaxy collection install commscope.icx
+
+You can also include it in a `requirements.yml` file and install it with `ansible-galaxy collection install -r requirements.yml`, using the format:
+
+```yaml
+---
+collections:
+  - name: commscope.icx
+```
 ## Using this collection
 
-<!--Include some quick examples that cover the most common use cases for your collection content. -->
 
-See [Ansible Using collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) for more details.
+This collection includes [network resource modules](https://docs.ansible.com/ansible/latest/network/user_guide/network_resource_modules.html).
+
+### Using modules from the Commscope ICX collection in your playbooks
+
+You can call modules by their Fully Qualified Collection Namespace (FQCN), such as `commscope.icx.icx_vlan`.
+The following example task replaces configuration changes in the existing configuration on a Cisco IOS network device, using the FQCN:
+
+```yaml
+---
+  - name: Add a single ethernet 1/1/48 as access(untagged) port to vlan 20
+    commscope.icx.icx_vlan:
+      name: test-vlan
+      vlan_id: 20
+      interfaces:
+        name:
+          - ethernet 1/1/48
+
+```
+
+**NOTE**: For Ansible 2.9, you may not see deprecation warnings when you run your playbooks with this collection. Use this documentation to track when a module is deprecated.
+
+
+### See Also:
+
+* [Ansible Using collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) for more details.
 
 ## Contributing to this collection
 
-<!--Describe how the community can contribute to your collection. At a minimum, include how and where users can create issues to report problems or request features for this collection.  List contribution requirements, including preferred workflows and necessary testing, so you can benefit from community PRs. If you are following general Ansible contributor guidelines, you can link to - [Ansible Community Guide](https://docs.ansible.com/ansible/latest/community/index.html). -->
+If you find problems, please open an issue against the [Commscope ICX collection repository](https://github.com/commscope-ruckus/commscope.icx). 
 
+See the [Ansible Community Guide](https://docs.ansible.com/ansible/latest/community/index.html) for details on contributing to Ansible.
+
+### Code of Conduct
+This collection follows the Ansible project's
+[Code of Conduct](https://docs.ansible.com/ansible/devel/community/code_of_conduct.html).
+Please read and familiarize yourself with this document.
 
 ## Release notes
-
-See the [changelog](https://github.com/ansible-collections/REPONAMEHERE/tree/main/CHANGELOG.rst).
+<!--Add a link to a changelog.md file or an external docsite to cover this information. -->
+Release notes will be added soon.
 
 ## Roadmap
 
@@ -43,19 +113,13 @@ See the [changelog](https://github.com/ansible-collections/REPONAMEHERE/tree/mai
 
 ## More information
 
-<!-- List out where the user can find additional information, such as working group meeting times, slack/IRC channels, or documentation for the product this collection automates. At a minimum, link to: -->
-
+- [Ansible network resources](https://docs.ansible.com/ansible/latest/network/getting_started/network_resources.html)
 - [Ansible Collection overview](https://github.com/ansible-collections/overview)
 - [Ansible User guide](https://docs.ansible.com/ansible/latest/user_guide/index.html)
 - [Ansible Developer guide](https://docs.ansible.com/ansible/latest/dev_guide/index.html)
-- [Ansible Collections Checklist](https://github.com/ansible-collections/overview/blob/master/collection_requirements.rst)
 - [Ansible Community code of conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html)
-- [The Bullhorn (the Ansible Contributor newsletter)](https://us19.campaign-archive.com/home/?u=56d874e027110e35dea0e03c1&id=d6635f5420)
-- [Changes impacting Contributors](https://github.com/ansible-collections/overview/issues/45)
 
 ## Licensing
-
-<!-- Include the appropriate license information here and a pointer to the full licensing details. If the collection contains modules migrated from the ansible/ansible repo, you must use the same license that existed in the ansible/ansible repo. See the GNU license example below. -->
 
 GNU General Public License v3.0 or later.
 
