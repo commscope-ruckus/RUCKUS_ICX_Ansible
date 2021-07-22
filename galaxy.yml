@@ -1,6 +1,6 @@
 # See https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
 ​
-namespace: commscope.icx
+namespace: commscope
 name: icx
 version: 1.0.2
 readme: README.md
@@ -16,7 +16,7 @@ tags:
   - ruckus
   - networking
 dependencies:
-  ansible.netcommon: '>=1.0.0'
+  "ansible.netcommon": ">=1.0.0"
 repository: https://github.com/commscope-ruckus/commscope.icx
 #documentation: https://github.com/ansible-collection-migration/community.REPO_NAME/tree/main/docs
 homepage: https://www.commscope.com/
