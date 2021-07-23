@@ -8,7 +8,7 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 ---
-module: icx_dot1x
+module: icx_flex_dot1x
 author: "Ruckus Wireless (@Commscope)"
 short_description: Configures dot1x in Ruckus ICX 7000 series switches.
 description:
@@ -19,6 +19,7 @@ options:
   enable:
     description: Enables 802.1X authentication globally.
     type: dict
+    required: true
     suboptions:
       all:
         description: Enables 802.1x authentication on all interfaces.
@@ -40,15 +41,12 @@ options:
       vlan_id:
         description: Specifies the VLAN ID of the guest VLAN.
         type: int
+        required: true
       state:
         description: Enable/Disable this functionality
         type: str
         default: present
         choices: ['present', 'absent']
-  macauth_override:
-    description: Sets an override option so that MAC authentication is attempted when 802.1X authentication fails for the client.
-    type: str
-    choices: ['present', 'absent']
   max_reauth_req:
     description: Configure the maximum number of times (attempts) EAP-request/identity frames are sent for
                  reauthentication after the first authentication attempt.
@@ -57,6 +55,7 @@ options:
       count:
         description: Specifies the number of EAP frame re-transmissions. This is a number from 1 through 10. The default is 2.
         type: int
+        required: true
       state:
         description: Enable/Disable this functionality
         type: str
@@ -70,6 +69,7 @@ options:
       count:
         description: Specifies the number of EAP frame re-transmissions. Th range is from from 1 through 10. The default value is 2.
         type: int
+        required: true
       state:
         description: Enable/Disable this functionality
         type: str
@@ -78,6 +78,7 @@ options:
   port_control:
     description: Controls port-state authorization and configures the port control type to activate authentication on an 802.1X-enabled interface.
     type: dict
+    required: true
     suboptions:
       auto:
         description: Enables authentication on a port. It places the controlled port in the unauthorized state until
@@ -128,6 +129,35 @@ options:
         type: str
         default: present
         choices: ['present', 'absent']
+  radius_server_dead_time:
+    description: Configures the interval at which the test user message is sent to the server to
+                 check the status of non-responding servers that are marked as dead.
+    type: dict
+    suboptions:
+      time:
+        description: The time interval between successive server requests to check the availability of the RADIUS server in minutes.
+                     The valid values are from 1 through 5 minutes.
+        type: int
+        required: true
+      state:
+        description: Configure/Removes the dead time interval.
+        type: str
+        default: present
+        choices: ['present', 'absent']
+  radius_server_test:
+    description: Sets the user name to be used in the RADIUS request packets for RADIUS dead server detection.
+    type: dict
+    suboptions:
+      user_name:
+        description: The false user name used in the server test.
+        type: str
+        required: true
+      state:
+        description: Enable/Disable the configuration to send RADIUS request packets with false usernames for RADIUS dead server detection.
+        type: str
+        default: present
+        choices: ['present', 'absent']
+
 """
 
 EXAMPLES = """
@@ -141,9 +171,6 @@ EXAMPLES = """
     guest_vlan:
       vlan_id: 12
       state: present
-- name: Sets an override option
-  commscope.icx.icx_dot1x:
-    macauth_override: present
 - name: disables max-reauth-req
   commscope.icx.icx_dot1x:
     max_reauth_req:
@@ -157,8 +184,8 @@ from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx impo
 
 
 def build_command(
-        module, enable=None, guest_vlan=None, macauth_override=None, max_reauth_req=None, max_req=None,
-        port_control=None, timeout=None):
+        module, enable=None, guest_vlan=None, max_reauth_req=None, max_req=None,
+        port_control=None, timeout=None, radius_server_dead_time=None, radius_server_test=None):
     """
     Function to build the command to send to the terminal for the switch
     to execute. All args come from the module's unique params.
@@ -177,31 +204,6 @@ def build_command(
             for elements in enable['ethernet']:
                 cmd += " ethernet {0}".format(elements)
         cmds.append(cmd)
-    if guest_vlan is not None:
-        if guest_vlan['state'] == 'absent':
-            cmd = "no dot1x guest-vlan {0}".format(guest_vlan['vlan_id'])
-        else:
-            cmd = "dot1x guest-vlan {0}".format(guest_vlan['vlan_id'])
-        cmds.append(cmd)
-    if macauth_override is not None:
-        if macauth_override == 'present':
-            cmd = "dot1x macauth-override"
-        else:
-            cmd = "no dot1x macauth-override"
-        cmds.append(cmd)
-    if max_reauth_req is not None:
-        if max_reauth_req['state'] == 'absent':
-            cmd = "no dot1x max-reauth-req {0}".format(max_reauth_req['count'])
-        else:
-            cmd = "dot1x max-reauth-req {0}".format(max_reauth_req['count'])
-        cmds.append(cmd)
-    if max_req is not None:
-        if max_reauth_req['state'] == 'absent':
-            cmd = "no dot1x max-req {0}".format(max_req['count'])
-        else:
-            cmd = "dot1x max-req {0}".format(max_req['count'])
-        cmds.append(cmd)
-
     if port_control is not None:
         if port_control['state'] == 'absent':
             cmd = "no dot1x port-control"
@@ -219,6 +221,24 @@ def build_command(
             for elements in port_control['ethernet']:
                 cmd += " ethernet {0}".format(elements)
         cmds.append(cmd)
+    if guest_vlan is not None:
+        if guest_vlan['state'] == 'absent':
+            cmd = "no dot1x guest-vlan {0}".format(guest_vlan['vlan_id'])
+        else:
+            cmd = "dot1x guest-vlan {0}".format(guest_vlan['vlan_id'])
+        cmds.append(cmd)
+    if max_reauth_req is not None:
+        if max_reauth_req['state'] == 'absent':
+            cmd = "no dot1x max-reauth-req {0}".format(max_reauth_req['count'])
+        else:
+            cmd = "dot1x max-reauth-req {0}".format(max_reauth_req['count'])
+        cmds.append(cmd)
+    if max_req is not None:
+        if max_reauth_req['state'] == 'absent':
+            cmd = "no dot1x max-req {0}".format(max_req['count'])
+        else:
+            cmd = "dot1x max-req {0}".format(max_req['count'])
+        cmds.append(cmd)
 
     if timeout is not None:
         if timeout['state'] == 'absent':
@@ -231,6 +251,19 @@ def build_command(
             cmd += " supplicant {0}".format(timeout['supplicant'])
         elif timeout['tx_period'] is not None:
             cmd += " tx-period {0}".format(timeout['tx_period'])
+        cmds.append(cmd)
+    cmds.append('exit')
+    if radius_server_dead_time is not None:
+        if radius_server_dead_time['state'] == 'absent':
+            cmd = "no radius-server dead-time {0}".format(radius_server_dead_time['time'])
+        else:
+            cmd = "radius-server dead-time {0}".format(radius_server_dead_time['time'])
+        cmds.append(cmd)
+    if radius_server_test is not None:
+        if radius_server_test['state'] == 'absent':
+            cmd = "no radius-server test {0}".format(radius_server_test['user_name'])
+        else:
+            cmd = "radius-server test {0}".format(radius_server_test['user_name'])
         cmds.append(cmd)
 
     return cmds
@@ -245,15 +278,15 @@ def main():
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
     guest_vlan_spec = dict(
-        vlan_id=dict(type='int'),
+        vlan_id=dict(type='int', required=True),
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
     max_reauth_req_spec = dict(
-        count=dict(type='int'),
+        count=dict(type='int', required=True),
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
     max_req_spec = dict(
-        count=dict(type='int'),
+        count=dict(type='int', required=True),
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
     port_control_spec = dict(
@@ -270,17 +303,25 @@ def main():
         tx_period=dict(type='int'),
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
-
+    radius_server_dead_time_spec = dict(
+        time=dict(type='int', required=True),
+        state=dict(type='str', default='present', choices=['present', 'absent'])
+    )
+    radius_server_test_spec = dict(
+        user_name=dict(type='str', required=True),
+        state=dict(type='str', default='present', choices=['present', 'absent'])
+    )
     argument_spec = dict(
-        enable=dict(type='dict', options=enable_spec),
+        enable=dict(type='dict', options=enable_spec, required=True),
         guest_vlan=dict(type='dict', options=guest_vlan_spec),
-        macauth_override=dict(type='str', choices=['present', 'absent']),
         max_reauth_req=dict(type='dict', options=max_reauth_req_spec),
         max_req=dict(type='dict', options=max_req_spec),
-        port_control=dict(type='dict', options=port_control_spec),
+        port_control=dict(type='dict', options=port_control_spec, required=True, mutually_exclusive=[['auto', 'force_authorized', 'force_unauthorized']]),
         timeout=dict(type='dict', options=timeout_spec),
-    )
+        radius_server_dead_time=dict(type='dict', options=radius_server_dead_time_spec),
+        radius_server_test=dict(type='dict', options=radius_server_test_spec)
 
+    )
     module = AnsibleModule(argument_spec=argument_spec,
                            supports_check_mode=True)
 
@@ -288,17 +329,19 @@ def main():
     results = {'changed': False}
     enable = module.params["enable"]
     guest_vlan = module.params["guest_vlan"]
-    macauth_override = module.params["macauth_override"]
     max_reauth_req = module.params["max_reauth_req"]
     max_req = module.params["max_req"]
     port_control = module.params["port_control"]
     timeout = module.params["timeout"]
+    radius_server_dead_time = module.params["radius_server_dead_time"]
+    radius_server_test = module.params["radius_server_test"]
 
     if warnings:
         results['warnings'] = warnings
 
     commands = build_command(
-        module, enable, guest_vlan, macauth_override, max_reauth_req, max_req, port_control, timeout)
+        module, enable, guest_vlan, max_reauth_req, max_req, port_control,
+        timeout, radius_server_dead_time, radius_server_test)
     results['commands'] = commands
 
     if commands:
