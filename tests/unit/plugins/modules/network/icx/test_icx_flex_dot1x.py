@@ -34,6 +34,7 @@ class TestICXAclAssignModule(TestICXModule):
                              max_req=dict(count=3), port_control=dict(auto='yes', all=True), timeout=dict(supplicant=32)))
         expected_commands = [
             'authentication',
+            'dot1x enable',
             'dot1x enable all',
             'dot1x port-control auto all',
             'dot1x guest-vlan 12',
@@ -63,11 +64,11 @@ class TestICXAclAssignModule(TestICXModule):
 
     def test_icx_dot1x_enable_ethernet(self):
         ''' Test for enabling dot1x on the specified interface '''
-        set_module_args(dict(enable=dict(ethernet='1/1/9'), port_control=dict(auto='yes', ethernet='1/1/9')))
+        set_module_args(dict(enable=dict(ethernet='1/1/9')))
         expected_commands = [
             'authentication',
+            'dot1x enable',
             'dot1x enable ethernet 1/1/9',
-            'dot1x port-control auto ethernet 1/1/9',
             'exit']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], expected_commands)
@@ -77,6 +78,7 @@ class TestICXAclAssignModule(TestICXModule):
         set_module_args(dict(enable=dict(all=True), port_control=dict(force_unauthorized=True, ethernet='1/1/15')))
         expected_commands = [
             'authentication',
+            'dot1x enable',
             'dot1x enable all',
             'dot1x port-control force-unauthorized ethernet 1/1/15',
             'exit']
@@ -85,11 +87,9 @@ class TestICXAclAssignModule(TestICXModule):
 
     def test_icx_dot1x_timeout(self):
         ''' Test for enabling dot1x timout '''
-        set_module_args(dict(enable=dict(all=True), port_control=dict(auto='yes', all=True), timeout=dict(quiet_period=32, state='present')))
+        set_module_args(dict(timeout=dict(quiet_period=32, state='present')))
         expected_commands = [
             'authentication',
-            'dot1x enable all',
-            'dot1x port-control auto all',
             'dot1x timeout quiet-period 32',
             'exit']
         result = self.execute_module(changed=True)
@@ -97,58 +97,34 @@ class TestICXAclAssignModule(TestICXModule):
 
     def test_icx_dot1x_radius_server_dead_time(self):
         ''' Test for enabling dot1x radius_server_dead_time '''
-        set_module_args(dict(enable=dict(all=True), port_control=dict(auto='yes', all=True),
-                             radius_server_dead_time=dict(time=4)))
-        expected_commands = [
-            'authentication',
-            'dot1x enable all',
-            'dot1x port-control auto all',
-            'exit',
-            'radius-server dead-time 4']
+        set_module_args(dict(radius_server_dead_time=dict(time=4)))
+        expected_commands = ['radius-server dead-time 4']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], expected_commands)
 
     def test_icx_dot1x_radius_server_test(self):
         ''' Test for enabling dot1x radius_server_test '''
-        set_module_args(dict(enable=dict(all=True), port_control=dict(auto='yes', all=True),
-                             radius_server_test=dict(user_name='test_user')))
-        expected_commands = [
-            'authentication',
-            'dot1x enable all',
-            'dot1x port-control auto all',
-            'exit',
-            'radius-server test test_user']
+        set_module_args(dict(radius_server_test=dict(user_name='test_user')))
+        expected_commands = ['radius-server test test_user']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], expected_commands)
 
     def test_icx_dot1x_radius_server_dead_time_remove(self):
         ''' Test for enabling dot1x radius_server_dead_time '''
-        set_module_args(dict(enable=dict(all=True), port_control=dict(auto='yes', all=True),
-                             radius_server_dead_time=dict(time=4, state='absent')))
-        expected_commands = [
-            'authentication',
-            'dot1x enable all',
-            'dot1x port-control auto all',
-            'exit',
-            'no radius-server dead-time 4']
+        set_module_args(dict(radius_server_dead_time=dict(time=4, state='absent')))
+        expected_commands = ['no radius-server dead-time 4']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], expected_commands)
 
     def test_icx_dot1x_radius_server_test_remove(self):
         ''' Test for enabling dot1x radius_server_test '''
-        set_module_args(dict(enable=dict(all=True), port_control=dict(auto='yes', all=True),
-                             radius_server_test=dict(user_name='test_user', state='absent')))
-        expected_commands = [
-            'authentication',
-            'dot1x enable all',
-            'dot1x port-control auto all',
-            'exit',
-            'no radius-server test test_user']
+        set_module_args(dict(radius_server_test=dict(user_name='test_user', state='absent')))
+        expected_commands = ['no radius-server test test_user']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], expected_commands)
 
-    def test_icx_dot1x_no_arg_enable(self):
+    def test_icx_dot1x_no_arg_guest_vlan_id(self):
         ''' Test for enabling dot1x radius_server_dead_time '''
         set_module_args(dict(port_control=dict(auto='yes', all=True),
-                             guest_vlan=dict(vlan_id=12)))
+                             guest_vlan=dict(state='present')))
         result = self.execute_module(failed=True)

@@ -19,7 +19,6 @@ options:
   enable:
     description: Enables 802.1X authentication globally.
     type: dict
-    required: true
     suboptions:
       all:
         description: Enables 802.1x authentication on all interfaces.
@@ -77,26 +76,22 @@ options:
         choices: ['present', 'absent']
   port_control:
     description: Controls port-state authorization and configures the port control type to activate authentication on an 802.1X-enabled interface.
+                 Required when enable(state=present).
     type: dict
-    required: true
     suboptions:
       auto:
         description: Enables authentication on a port. It places the controlled port in the unauthorized state until
                      authentication takes place between the client and authentication server.
         type: bool
-        default: no
       force_authorized:
         description: Places the controlled port unconditionally in the authorized state, allowing all traffic to pass between the client and the authenticator.
         type: bool
-        default: no
       force_unauthorized:
         description: Places the controlled port unconditionally in the unauthorized state, denying any traffic to pass between the client and the authenticator.
         type: bool
-        default: no
       all:
         description: Enables 802.1x authentication on all interfaces.
         type: bool
-        default: no
       ethernet:
         description: Enables 802.1x authentication on the specified interface or range of interfaces. For eg - [ethernet 1/1/2, ethernet 1/1/20 to 1/1/30]
         type: list
@@ -191,19 +186,24 @@ def build_command(
     to execute. All args come from the module's unique params.
     """
     cmds = []
+    auth_cmds = []
     cmd = 'authentication'
     cmds.append(cmd)
     if enable is not None:
         if enable['state'] == 'absent':
             cmd = "no dot1x enable"
+            if not enable['all'] and enable['ethernet'] is None:
+                cmds.append(cmd)
         else:
             cmd = "dot1x enable"
+            cmds.append(cmd)
         if enable['all']:
             cmd += " all"
+            cmds.append(cmd)
         elif enable['ethernet'] is not None:
             for elements in enable['ethernet']:
                 cmd += " ethernet {0}".format(elements)
-        cmds.append(cmd)
+            cmds.append(cmd)
     if port_control is not None:
         if port_control['state'] == 'absent':
             cmd = "no dot1x port-control"
@@ -258,13 +258,18 @@ def build_command(
             cmd = "no radius-server dead-time {0}".format(radius_server_dead_time['time'])
         else:
             cmd = "radius-server dead-time {0}".format(radius_server_dead_time['time'])
-        cmds.append(cmd)
+        auth_cmds.append(cmd)
     if radius_server_test is not None:
         if radius_server_test['state'] == 'absent':
             cmd = "no radius-server test {0}".format(radius_server_test['user_name'])
         else:
             cmd = "radius-server test {0}".format(radius_server_test['user_name'])
-        cmds.append(cmd)
+        auth_cmds.append(cmd)
+    if len(cmds) == 2:
+        return auth_cmds
+    else:
+        cmds.extend(auth_cmds)
+        return cmds
 
     return cmds
 
@@ -290,13 +295,15 @@ def main():
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
     port_control_spec = dict(
-        auto=dict(type='bool', default=False),
-        force_authorized=dict(type='bool', default=False),
-        force_unauthorized=dict(type='bool', default=False),
-        all=dict(type='bool', default=False),
+        auto=dict(type='bool'),
+        force_authorized=dict(type='bool'),
+        force_unauthorized=dict(type='bool'),
+        all=dict(type='bool'),
         ethernet=dict(type='list', elements='str'),
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
+    required_one_of = [['auto', 'force_authorized', 'force_unauthorized'], ['all', 'ethernet']]
+    mutually_exclusive = [('auto', 'force_authorized', 'force_unauthorized'), ('all', 'ethernet')]
     timeout_spec = dict(
         quiet_period=dict(type='int'),
         supplicant=dict(type='int'),
@@ -312,15 +319,14 @@ def main():
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
     argument_spec = dict(
-        enable=dict(type='dict', options=enable_spec, required=True),
+        enable=dict(type='dict', options=enable_spec, mutually_exclusive=[('all', 'ethernet')]),
         guest_vlan=dict(type='dict', options=guest_vlan_spec),
         max_reauth_req=dict(type='dict', options=max_reauth_req_spec),
         max_req=dict(type='dict', options=max_req_spec),
-        port_control=dict(type='dict', options=port_control_spec, required=True, mutually_exclusive=[['auto', 'force_authorized', 'force_unauthorized']]),
-        timeout=dict(type='dict', options=timeout_spec),
+        port_control=dict(type='dict', options=port_control_spec, mutually_exclusive=mutually_exclusive, required_one_of=required_one_of),
+        timeout=dict(type='dict', options=timeout_spec, required_one_of=[['quiet_period', 'supplicant', 'tx_period']]),
         radius_server_dead_time=dict(type='dict', options=radius_server_dead_time_spec),
         radius_server_test=dict(type='dict', options=radius_server_test_spec)
-
     )
     module = AnsibleModule(argument_spec=argument_spec,
                            supports_check_mode=True)
