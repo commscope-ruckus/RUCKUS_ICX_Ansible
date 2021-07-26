@@ -271,8 +271,6 @@ def build_command(
         cmds.extend(auth_cmds)
         return cmds
 
-    return cmds
-
 
 def main():
     """entry point for module execution
