@@ -22,13 +22,6 @@ commscope.icx.icx|Use icx cliconf to run command on Commscope ICX platform
 ### Modules
 Name | Description
 --- | ---
-commscope.icx.icx_aaa_accounting_console|Configures AAA accounting in Ruckus ICX 7K series switches
-commscope.icx.icx_aaa_authentication|Configures AAA authentication in Ruckus ICX 7K series switches
-commscope.icx.icx_aaa_authorization|Configures AAA authorization in Ruckus ICX 7K series switches
-commscope.icx.icx_acl_assign|Configures ACL in Ruckus ICX 7K series switches
-commscope.icx.icx_acl_ip|Configures ACL in Ruckus ICX 7K series switches
-commscope.icx.icx_acl_ipv6|Configures ACL in Ruckus ICX 7K series switches
-commscope.icx.icx_acl_mac|Configures ACL in Ruckus ICX 7K series switches
 commscope.icx.icx_banner|Manage multiline banners on Ruckus ICX 7K series switches
 commscope.icx.icx_command|Run arbitrary commands on remote Ruckus ICX 7K series switches
 commscope.icx.icx_config|Manage configuration sections of Ruckus ICX 7K series switches
