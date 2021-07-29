@@ -52,8 +52,8 @@ class TestICXAclAssignModule(TestICXModule):
                              port_control=dict(auto='yes', all=True, state='absent'), timeout=dict(supplicant=32, state='absent')))
         expected_commands = [
             'authentication',
-            'no dot1x enable all',
             'no dot1x port-control auto all',
+            'no dot1x enable all',
             'no dot1x guest-vlan 12',
             'no dot1x max-reauth-req 4',
             'no dot1x max-req 3',

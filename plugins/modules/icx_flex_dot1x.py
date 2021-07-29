@@ -190,20 +190,16 @@ def build_command(
     cmd = 'authentication'
     cmds.append(cmd)
     if enable is not None:
-        if enable['state'] == 'absent':
-            cmd = "no dot1x enable"
-            if not enable['all'] and enable['ethernet'] is None:
-                cmds.append(cmd)
-        else:
+        if enable['state'] == 'present':
             cmd = "dot1x enable"
             cmds.append(cmd)
-        if enable['all']:
-            cmd += " all"
-            cmds.append(cmd)
-        elif enable['ethernet'] is not None:
-            for elements in enable['ethernet']:
-                cmd += " ethernet {0}".format(elements)
-            cmds.append(cmd)
+            if enable['all']:
+                cmd += " all"
+                cmds.append(cmd)
+            elif enable['ethernet'] is not None:
+                for elements in enable['ethernet']:
+                    cmd += " ethernet {0}".format(elements)
+                cmds.append(cmd)
     if port_control is not None:
         if port_control['state'] == 'absent':
             cmd = "no dot1x port-control"
@@ -221,6 +217,15 @@ def build_command(
             for elements in port_control['ethernet']:
                 cmd += " ethernet {0}".format(elements)
         cmds.append(cmd)
+    if enable is not None:
+        if enable['state'] == 'absent':
+            cmd = "no dot1x enable"
+            if enable['all']:
+                cmd += " all"
+            elif enable['ethernet'] is not None:
+                for elements in enable['ethernet']:
+                    cmd += " ethernet {0}".format(elements)
+            cmds.append(cmd)
     if guest_vlan is not None:
         if guest_vlan['state'] == 'absent':
             cmd = "no dot1x guest-vlan {0}".format(guest_vlan['vlan_id'])
