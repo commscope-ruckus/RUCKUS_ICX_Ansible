@@ -206,7 +206,7 @@ options:
 """
 EXAMPLES = """
 - name: configure flexible authentication globally
-  commscope.icx.icx_flex_auth:
+  commscope.icx.icx_flex_common:
     global_auth:
       auth_default_vlan:
         vlan_id: 2
@@ -218,7 +218,7 @@ EXAMPLES = """
         vlan_id: 10
         state: present
 - name: configure at a particular interface
-  commscope.icx.icx_flex_auth:
+  commscope.icx.icx_flex_common:
     interface_auth:
       interface:
         - 1/1/15
@@ -228,7 +228,7 @@ EXAMPLES = """
         ip_address: 10.10.10.1
         state: present
 - name: remove flex auth configurations
-  commscope.icx.icx_flex_auth:
+  commscope.icx.icx_flex_common:
     global_auth:
       auth_default_vlan:
         vlan_id: 2
