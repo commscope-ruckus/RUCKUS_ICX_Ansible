@@ -4,20 +4,20 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 from ansible_collections.commscope.icx.tests.unit.compat.mock import patch
-from ansible_collections.commscope.icx.plugins.modules import icx_flex_auth
+from ansible_collections.commscope.icx.plugins.modules import icx_flex_common
 from ansible_collections.commscope.icx.tests.unit.plugins.modules.utils import set_module_args
 from .icx_module import TestICXModule, load_fixture
 
 
 class TestICXAclAssignModule(TestICXModule):
-    ''' Class used for Unit Tests agains icx_flex_auth module '''
-    module = icx_flex_auth
+    ''' Class used for Unit Tests agains icx_flex_common module '''
+    module = icx_flex_common
 
     def setUp(self):
         super(TestICXAclAssignModule, self).setUp()
-        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_flex_auth.load_config')
+        self.mock_load_config = patch('ansible_collections.commscope.icx.plugins.modules.icx_flex_common.load_config')
         self.load_config = self.mock_load_config.start()
-        self.mock_exec_command = patch('ansible_collections.commscope.icx.plugins.modules.icx_flex_auth.exec_command')
+        self.mock_exec_command = patch('ansible_collections.commscope.icx.plugins.modules.icx_flex_common.exec_command')
         self.exec_command = self.mock_exec_command.start()
 
     def tearDown(self):

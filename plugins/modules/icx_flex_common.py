@@ -8,7 +8,7 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 ---
-module: icx_flex_auth
+module: icx_flex_common
 author: "Ruckus Wireless (@Commscope)"
 short_description: Configures flexible authentication in Ruckus ICX 7000 series switches.
 description:
