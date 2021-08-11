@@ -41,7 +41,7 @@ class TestICXAclIpv6Module(TestICXModule):
                                           rule_type='deny', ip_protocol_name='tcp', source=dict(host_ipv6_address='2001:DB8:e0ac::2'),
                                           destination=dict(host_ipv6_address='2001:DB8:e0aa:0::24'),
                                           source_comparison_operators=dict(operator='eq', port_num='22'),
-                                          destination_comparison_operators=dict(operator='range', port_name='ftp', high_port_name='http'), established='yes',
+                                          destination_comparison_operators=dict(operator='range', port_name='cadlock2', high_port_name='http'), established='yes',
                                           dscp_matching='32', dscp_marking='8', priority_matching='6', priority_marking='5', internal_priority_marking='4',
                                           log='yes', mirror='yes')),
                                     (dict(seq_num='40', rule_type='permit', ip_protocol_name='ahp', source=dict(any='yes'), destination=dict(any='yes'),
@@ -53,7 +53,7 @@ class TestICXAclIpv6Module(TestICXModule):
                              '802.1p-priority-marking 5 internal-priority-marking 4 log mirror',
                              'sequence 20 deny icmp 2001:DB8::/64 any 25 dscp-matching 21',
                              'remark Denies tcp traffic from host 2001:DB8:e0ac::2 to 2001:DB8:e0aa:0::24',
-                             'sequence 30 deny tcp host 2001:DB8:e0ac::2 eq 22 host 2001:DB8:e0aa:0::24 range ftp http established dscp-matching 32 '
+                             'sequence 30 deny tcp host 2001:DB8:e0ac::2 eq 22 host 2001:DB8:e0aa:0::24 range cadlock2 http established dscp-matching 32 '
                              '802.1p-priority-matching 6 dscp-marking 8 802.1p-priority-marking 5 internal-priority-marking 4 log mirror',
                              'sequence 40 permit ahp any any dscp-matching 21 802.1p-priority-matching 6 dscp-marking 8 802.1p-priority-marking 5 '
                              'internal-priority-marking 4 log mirror']
@@ -72,7 +72,7 @@ class TestICXAclIpv6Module(TestICXModule):
                                     (dict(remark=dict(comment_text='Denies tcp traffic from host 2001:DB8:e0ac::2 to 2001:DB8:e0aa:0::24', state='absent'),
                                           seq_num='30', rule_type='deny', ip_protocol_name='tcp', source=dict(host_ipv6_address='2001:DB8:e0ac::2'),
                                           destination=dict(host_ipv6_address='2001:DB8:e0aa:0::24'), source_comparison_operators=dict(operator='eq',
-                                          port_num='22'), destination_comparison_operators=dict(operator='range', port_name='ftp', high_port_name='http'),
+                                          port_num='22'), destination_comparison_operators=dict(operator='range', port_name='ftp', high_port_name='cadlock2'),
                                           established='yes', dscp_matching='32', dscp_marking='8', priority_matching='6', priority_marking='5',
                                           internal_priority_marking='4', log='yes', mirror='yes', state='absent')),
                                     (dict(seq_num='40', rule_type='permit', ip_protocol_name='ahp', source=dict(any='yes'), destination=dict(any='yes'),
@@ -84,7 +84,7 @@ class TestICXAclIpv6Module(TestICXModule):
                              '802.1p-priority-marking 5 internal-priority-marking 4 log mirror',
                              'no sequence 20 deny icmp 2001:DB8::/64 any 25 dscp-matching 21',
                              'no remark Denies tcp traffic from host 2001:DB8:e0ac::2 to 2001:DB8:e0aa:0::24',
-                             'no sequence 30 deny tcp host 2001:DB8:e0ac::2 eq 22 host 2001:DB8:e0aa:0::24 range ftp http established dscp-matching 32 '
+                             'no sequence 30 deny tcp host 2001:DB8:e0ac::2 eq 22 host 2001:DB8:e0aa:0::24 range ftp cadlock2 established dscp-matching 32 '
                              '802.1p-priority-matching 6 dscp-marking 8 802.1p-priority-marking 5 internal-priority-marking 4 log mirror',
                              'no sequence 40 permit ahp any any dscp-matching 21 802.1p-priority-matching 6 dscp-marking 8 802.1p-priority-marking 5 '
                              'internal-priority-marking 4 log mirror']
