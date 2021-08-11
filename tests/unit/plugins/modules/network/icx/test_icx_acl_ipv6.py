@@ -41,9 +41,9 @@ class TestICXAclIpv6Module(TestICXModule):
                                           rule_type='deny', ip_protocol_name='tcp', source=dict(host_ipv6_address='2001:DB8:e0ac::2'),
                                           destination=dict(host_ipv6_address='2001:DB8:e0aa:0::24'),
                                           source_comparison_operators=dict(operator='eq', port_num='22'),
-                                          destination_comparison_operators=dict(operator='range', port_name='cadlock2', high_port_name='http'), established='yes',
-                                          dscp_matching='32', dscp_marking='8', priority_matching='6', priority_marking='5', internal_priority_marking='4',
-                                          log='yes', mirror='yes')),
+                                          destination_comparison_operators=dict(operator='range', port_name='cadlock2', high_port_name='http'),
+                                          established='yes', dscp_matching='32', dscp_marking='8', priority_matching='6', priority_marking='5',
+                                          internal_priority_marking='4', log='yes', mirror='yes')),
                                     (dict(seq_num='40', rule_type='permit', ip_protocol_name='ahp', source=dict(any='yes'), destination=dict(any='yes'),
                                           dscp_matching='21', priority_matching='6', dscp_marking='8', priority_marking='5', internal_priority_marking='4',
                                           log='yes', mirror='yes'))]))
