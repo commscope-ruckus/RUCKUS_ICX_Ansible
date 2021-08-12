@@ -23,8 +23,6 @@ plugins/modules/icx_vlan.py validate-modules:doc-required-mismatch
 plugins/modules/icx_vlan.py validate-modules:parameter-list-no-elements
 plugins/modules/icx_firmware_upgrade.py validate-modules:doc-default-does-not-match-spec
 plugins/modules/icx_qos.py validate-modules:doc-default-does-not-match-spec
-plugins/modules/icx_acl_ipv6.py pep8:E501
-tests/unit/plugins/modules/network/icx/test_icx_acl_ipv6.py pep8:E501
 plugins/modules/icx_facts.py pep8:E501
 plugins/modules/icx_facts.py pep8:E722
 plugins/modules/icx_facts.py pylint:bare-except
