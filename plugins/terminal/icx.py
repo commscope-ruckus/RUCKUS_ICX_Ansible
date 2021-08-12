@@ -15,7 +15,7 @@ import json
 class TerminalModule(TerminalBase):
 
     terminal_stdout_re = [
-        re.compile(br".*[\r\n]?[\w\+\-\.:\/\[\]]+(?:\([^\)]+\)){0,3}(?:[>#]) ?.*"),
+        re.compile(br".*(SSH@.*[>#]).*"),
         # re.compile(br"[\r\n]?[\w\+\-\.:\/\[\]]+(?:\([^\)]+\)){0,3}(?:[>#]) ?$"),
         re.compile(br"Finished downloading public key file!")
     ]
@@ -52,7 +52,8 @@ class TerminalModule(TerminalBase):
         try:
             commands = ('{"command": "' + "en" + '", "prompt": "Password:", "answer": "' +
                         self._connection._play_context.password + '"}',
-                        '{"command": "skip"}')
+                        '{"command": "skip"}',
+                        '{"command": "exit"}')
             for cmd in commands:
                 self._exec_cli_command(cmd)
         except AnsibleConnectionFailure:
