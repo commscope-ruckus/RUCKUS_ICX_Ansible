@@ -282,34 +282,28 @@ def build_command(module, acl_name=None, accounting=None, rules=None, state=None
                         cmd += " {0}".format(rule['icmp_code'])
                 elif rule['icmp_type'] is not None:
                     cmd += " {0}".format(rule['icmp_type'])
-                if (rule['icmp_num'] is not None) or (rule['icmp_type'] is not None):
-                    if rule['dscp_matching'] is not None:
-                        cmd += " dscp-matching {0}".format(rule['dscp_matching'])
+
+                if rule['dscp_matching'] is not None:
+                    cmd += " dscp-matching {0}".format(rule['dscp_matching'])
                     if rule['dscp_marking'] is not None:
                         cmd += " dscp-marking {0}".format(rule['dscp_marking'])
                     elif rule['log']:
                         cmd += " log"
-                else:
-                    if rule['dscp_matching'] is not None:
-                        cmd += " dscp-matching {0}".format(rule['dscp_matching'])
-                        if rule['dscp_marking'] is not None:
-                            cmd += " dscp-marking {0}".format(rule['dscp_marking'])
-                        elif rule['log']:
-                            cmd += " log"
-                    elif rule['dscp_marking'] is not None:
-                        cmd += " dscp-marking {0}".format(rule['dscp_marking'])
+                elif rule['dscp_marking'] is not None:
+                    cmd += " dscp-marking {0}".format(rule['dscp_marking'])
 
-                    elif rule['traffic_policy_name'] is not None:
+                elif rule['traffic_policy_name'] is not None:
+                    if (rule['icmp_num'] is None) or (rule['icmp_type'] is None):
                         cmd += " traffic-policy {0}".format(rule['traffic_policy_name'])
                         if rule['log']:
                             cmd += " log"
                         elif rule['mirror']:
                             cmd += " mirror"
-                    else:
-                        if rule['log']:
-                            cmd += " log"
-                        if rule['mirror']:
-                            cmd += " mirror"
+                else:
+                    if rule['log']:
+                        cmd += " log"
+                    if rule['mirror']:
+                        cmd += " mirror"
 
             elif rule['ip_protocol_name'] == "ipv6":
                 if rule['destination']['host_ipv6_address'] is not None:
