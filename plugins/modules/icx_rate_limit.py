@@ -417,9 +417,9 @@ def map_obj_to_commands(updates, module):
             interface = ('interface ethernet %s' % (w['broadcast_limit']['port']))
             wcmds.append('interface ethernet %s' % (w['broadcast_limit']['port']))
             if w['broadcast_limit']['state'] == 'absent':
-                wcmd = 'no broadcast limit %s kbps'% (w['broadcast_limit']['kbps'])
+                wcmd = 'no broadcast limit %s kbps' % (w['broadcast_limit']['kbps'])
             else:
-                wcmd = 'broadcast limit %s kbps'% (w['broadcast_limit']['kbps'])
+                wcmd = 'broadcast limit %s kbps' % (w['broadcast_limit']['kbps'])
             if w['broadcast_limit']['log']:
                 wcmd += ' log'
             wcmds.append(wcmd)
@@ -428,9 +428,9 @@ def map_obj_to_commands(updates, module):
             interface = ('interface ethernet %s' % (w['unknown_unicast_limit']['port']))
             wcmds.append('interface ethernet %s' % (w['unknown_unicast_limit']['port']))
             if w['unknown_unicast_limit']['state'] == 'absent':
-                wcmd = 'no unknown-unicast limit %s kbps'% (w['unknown_unicast_limit']['kbps'])
+                wcmd = 'no unknown-unicast limit %s kbps' % (w['unknown_unicast_limit']['kbps'])
             else:
-                wcmd = 'unknown-unicast limit %s kbps'% (w['unknown_unicast_limit']['kbps'])
+                wcmd = 'unknown-unicast limit %s kbps' % (w['unknown_unicast_limit']['kbps'])
             if w['unknown_unicast_limit']['log']:
                 wcmd += ' log'
             wcmds.append(wcmd)
@@ -439,9 +439,9 @@ def map_obj_to_commands(updates, module):
             interface = ('interface ethernet %s' % (w['multicast_limit']['port']))
             wcmds.append('interface ethernet %s' % (w['multicast_limit']['port']))
             if w['multicast_limit']['state'] == 'absent':
-                wcmd = 'no multicast limit %s kbps'% (w['multicast_limit']['kbps'])
+                wcmd = 'no multicast limit %s kbps' % (w['multicast_limit']['kbps'])
             else:
-                wcmd = 'multicast limit %s kbps'% (w['multicast_limit']['kbps'])
+                wcmd = 'multicast limit %s kbps' % (w['multicast_limit']['kbps'])
             if w['multicast_limit']['log']:
                 wcmd += ' log'
             wcmds.append(wcmd)
