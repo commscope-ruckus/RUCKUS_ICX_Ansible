@@ -107,6 +107,11 @@ options:
       log:
         description: True enables Syslog logging when the broadcast limit exceeds kpbs. False will disable logging.
         type: bool
+      state:
+        description: Specifies whether to  set/unset broadcast limit.
+        type: str
+        default: present
+        choices: ['present', 'absent']
   unknown_unicast_limit:
     description: Configures the maximum number of unknown unicast packets allowed per second. Enables Syslog logging of unknown unicast packets.
     type: dict
@@ -122,6 +127,11 @@ options:
       log:
         description: Enables Syslog logging when the unknown unicast limit exceeds kpbs. False will disable logging.
         type: bool
+      state:
+        description: Specifies whether to  set/unset unknown unicast limit.
+        type: str
+        default: present
+        choices: ['present', 'absent']
   multicast_limit:
     description: Configures the maximum number of multicast packets allowed per second. Enables Syslog logging of multicast packets.
     type: dict
@@ -137,6 +147,11 @@ options:
       log:
         description: True enables Syslog logging when the multicast limit exceeds kpbs. False will disable logging.
         type: bool
+      state:
+        description: Specifies whether to  set/unset multicast limit.
+        type: str
+        default: present
+        choices: ['present', 'absent']
   aggregate:
     description: List of Interfaces definitions.
     type: list
@@ -227,6 +242,11 @@ options:
           log:
             description: True enables Syslog logging when the broadcast limit exceeds kpbs. False will disable logging.
             type: bool
+          state:
+            description: Specifies whether to  set/unset broadcast limit.
+            type: str
+            default: present
+            choices: ['present', 'absent']
       unknown_unicast_limit:
         description: Configures the maximum number of unknown unicast packets allowed per second. Enables Syslog logging of unknown unicast packets.
         type: dict
@@ -242,6 +262,11 @@ options:
           log:
             description: Enables Syslog logging when the unknown unicast limit exceeds kpbs. False will disable logging.
             type: bool
+          state:
+            description: Specifies whether to  set/unset unknown unicast limit.
+            type: str
+            default: present
+            choices: ['present', 'absent']
       multicast_limit:
         description: Configures the maximum number of multicast packets allowed per second. Enables Syslog logging of multicast packets.
         type: dict
@@ -257,6 +282,11 @@ options:
           log:
             description: True enables Syslog logging when the multicast limit exceeds kpbs. False will disable logging.
             type: bool
+          state:
+            description: Specifies whether to  set/unset multicast limit.
+            type: str
+            default: present
+            choices: ['present', 'absent']
   check_running_config:
     description: Check running configuration. This can be set as environment variable.
       Module will use environment variable value, unless it is overridden, by specifying it as module parameter.
@@ -386,41 +416,35 @@ def map_obj_to_commands(updates, module):
         elif w.get('broadcast_limit'):
             interface = ('interface ethernet %s' % (w['broadcast_limit']['port']))
             wcmds.append('interface ethernet %s' % (w['broadcast_limit']['port']))
+            if w['broadcast_limit']['state'] == 'absent':
+                wcmd = 'no broadcast limit %s kbps'% (w['broadcast_limit']['kbps'])
+            else:
+                wcmd = 'broadcast limit %s kbps'% (w['broadcast_limit']['kbps'])
             if w['broadcast_limit']['log']:
-                wcmd = 'broadcast limit %s kbps log' % (w['broadcast_limit']['kbps'])
-                wcmds.append(wcmd)
-            elif not w['broadcast_limit']['log']:
-                wcmd = 'no broadcast limit %s kbps log' % (w['broadcast_limit']['kbps'])
-                wcmds.append(wcmd)
-            elif w['broadcast_limit']['log'] is None:
-                wcmd = 'broadcast limit %s kbps' % (w['broadcast_limit']['kbps'])
-                wcmds.append(wcmd)
+                wcmd += ' log'
+            wcmds.append(wcmd)
 
         elif w.get('unknown_unicast_limit'):
             interface = ('interface ethernet %s' % (w['unknown_unicast_limit']['port']))
             wcmds.append('interface ethernet %s' % (w['unknown_unicast_limit']['port']))
+            if w['unknown_unicast_limit']['state'] == 'absent':
+                wcmd = 'no unknown-unicast limit %s kbps'% (w['unknown_unicast_limit']['kbps'])
+            else:
+                wcmd = 'unknown-unicast limit %s kbps'% (w['unknown_unicast_limit']['kbps'])
             if w['unknown_unicast_limit']['log']:
-                wcmd = 'unknown-unicast limit %s kbps log' % (w['unknown_unicast_limit']['kbps'])
-                wcmds.append(wcmd)
-            elif not w['unknown_unicast_limit']['log']:
-                wcmd = 'no unknown-unicast limit %s kbps log' % (w['unknown_unicast_limit']['kbps'])
-                wcmds.append(wcmd)
-            elif w['unknown_unicast_limit']['log'] is None:
-                wcmd = 'unknown-unicast limit %s kbps' % (w['unknown_unicast_limit']['kbps'])
-                wcmds.append(wcmd)
+                wcmd += ' log'
+            wcmds.append(wcmd)
 
         elif w.get('multicast_limit'):
             interface = ('interface ethernet %s' % (w['multicast_limit']['port']))
             wcmds.append('interface ethernet %s' % (w['multicast_limit']['port']))
+            if w['multicast_limit']['state'] == 'absent':
+                wcmd = 'no multicast limit %s kbps'% (w['multicast_limit']['kbps'])
+            else:
+                wcmd = 'multicast limit %s kbps'% (w['multicast_limit']['kbps'])
             if w['multicast_limit']['log']:
-                wcmd = 'multicast limit %s kbps log' % (w['multicast_limit']['kbps'])
-                wcmds.append(wcmd)
-            elif not w['multicast_limit']['log']:
-                wcmd = 'no multicast limit %s kbps log' % (w['multicast_limit']['kbps'])
-                wcmds.append(wcmd)
-            elif w['multicast_limit']['log'] is None:
-                wcmd = 'multicast limit %s kbps' % (w['multicast_limit']['kbps'])
-                wcmds.append(wcmd)
+                wcmd += ' log'
+            wcmds.append(wcmd)
 
         elif w.get('rate_limit_arp'):
             if w['rate_limit_arp']['state'] == 'present':
@@ -548,19 +572,22 @@ def main():
     broadcast_spec = dict(
         port=dict(type='str', required=True),
         kbps=dict(type='int', required=True),
-        log=dict(type='bool')
+        log=dict(type='bool'),
+        state=dict(default='present', choices=['present', 'absent'])
     )
 
     unknown_unicast_spec = dict(
         port=dict(type='str', required=True),
         kbps=dict(type='int', required=True),
-        log=dict(type='bool')
+        log=dict(type='bool'),
+        state=dict(default='present', choices=['present', 'absent'])
     )
 
     multicast_spec = dict(
         port=dict(type='str', required=True),
         kbps=dict(type='int', required=True),
-        log=dict(type='bool')
+        log=dict(type='bool'),
+        state=dict(default='present', choices=['present', 'absent'])
     )
 
     arp_spec = dict(
