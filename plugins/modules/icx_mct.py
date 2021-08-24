@@ -191,7 +191,8 @@ options:
     choices: ['present', 'absent']
   client:
     description: Define to configure the cluster client properties.
-    type: dict
+    type: list
+    elements: dict
     suboptions:
       name:
         description: Specifies the name of the client. The client name can be up to 64 characters in length.
@@ -388,6 +389,9 @@ def build_command(
                     cmd = "client-auto-detect config"
                 if client_auto_detect['config']['deploy_all']:
                     cmd += " deploy-all"
+                cmds.append(cmd)                
+            if client_auto_detect['stop']:
+                cmd = "client-auto-detect stop"
                 cmds.append(cmd)
             if client_auto_detect['ethernet'] is not None:
                 if client_auto_detect['ethernet']['state'] == 'absent':
@@ -401,42 +405,40 @@ def build_command(
                     if client_auto_detect['start']['config_deploy_all']:
                         cmd += " config-deploy-all"
                     cmds.append(cmd)
-            if client_auto_detect['stop']:
-                cmd = "client-auto-detect stop"
-                cmds.append(cmd)
         if deploy == 'present':
             cmd = "deploy"
             cmds.append(cmd)
         if client is not None:
-            if client['name'] is not None:
-                if client['state'] == 'absent':
-                    cmd = "no client {0}".format(client['name'])
-                else:
-                    cmd = "client {0}".format(client['name'])
-                cmds.append(cmd)
-            if client['state'] == 'present':
-                if client['deploy'] == 'absent':
-                    cmd = "no deploy"
-                    cmds.append(cmd)
-                if client['rbridge_id'] is not None:
-                    if client['rbridge_id']['state'] == 'absent':
-                        cmd = "no rbridge-id {0}".format(client['rbridge_id']['id'])
+            for clients in client:
+                if clients['name'] is not None:
+                    if clients['state'] == 'absent':
+                        cmd = "no client {0}".format(clients['name'])
                     else:
-                        cmd = "rbridge-id {0}".format(client['rbridge_id']['id'])
+                        cmd = "client {0}".format(clients['name'])
                     cmds.append(cmd)
-                if client['client_interface'] is not None:
-                    if client['client_interface']['state'] == 'absent':
-                        cmd = "no client-interface"
-                    else:
-                        cmd = "client-interface"
-                    if client['client_interface']['ethernet'] is not None:
-                        cmd += " ethernet {0}".format(client['client_interface']['ethernet'])
-                    elif client['client_interface']['lag'] is not None:
-                        cmd += " lag {0}".format(client['client_interface']['lag'])
+                if clients['state'] == 'present':
+                    if clients['deploy'] == 'absent':
+                        cmd = "no deploy"
+                        cmds.append(cmd)
+                    if clients['rbridge_id'] is not None:
+                        if clients['rbridge_id']['state'] == 'absent':
+                            cmd = "no rbridge-id {0}".format(clients['rbridge_id']['id'])
+                        else:
+                            cmd = "rbridge-id {0}".format(clients['rbridge_id']['id'])
+                        cmds.append(cmd)
+                    if clients['client_interface'] is not None:
+                        if clients['client_interface']['state'] == 'absent':
+                            cmd = "no client-interface"
+                        else:
+                            cmd = "client-interface"
+                        if clients['client_interface']['ethernet'] is not None:
+                            cmd += " ethernet {0}".format(clients['client_interface']['ethernet'])
+                        elif clients['client_interface']['lag'] is not None:
+                            cmd += " lag {0}".format(clients['client_interface']['lag'])
+                        cmds.append(cmd)
+                if clients['deploy'] == 'present':
+                    cmd = "deploy"
                     cmds.append(cmd)
-            if client['deploy'] == 'present':
-                cmd = "deploy"
-                cmds.append(cmd)
 
     return cmds
 
@@ -527,9 +529,11 @@ def main():
         client_isolation=dict(type='str', choices=['present', 'absent']),
         client_auto_detect=dict(type='dict', options=client_auto_detect_spec, required_one_of=[['config', 'ethernet', 'start', 'stop']]),
         deploy=dict(type='str', choices=['present', 'absent']),
-        client=dict(type='dict', options=client_spec)
+        client=dict(type='list', elements='dict', options=client_spec)
     )
+    mutually_exclusive=[['keep_alive_vlan', 'client_isolation']]
     module = AnsibleModule(argument_spec=argument_spec,
+                           mutually_exclusive=mutually_exclusive,
                            supports_check_mode=True)
 
     warnings = list()

@@ -34,7 +34,7 @@ class TestICXAclAssignModule(TestICXModule):
                              keep_alive_vlan=dict(vlan_id=3001), icl=dict(name='ICL', ethernet='1/1/2'), peer=dict(ip='1.1.1.1', disable_fast_failover=True,
                              rbridge=dict(id=2, icl_name='ICL'), timers=dict(keep_alive=20, hold_time=30)), client_interfaces='present',
                              client_auto_detect=dict(config=dict(deploy_all=True), ethernet=dict(port='1/1/1'), start=dict(config_deploy_all=True)),
-                             deploy='present', client=dict(name='client_1', rbridge_id=dict(id=2), client_interface=dict(lag=10), deploy='present')))
+                             deploy='present', client=[dict(name='client_1', rbridge_id=dict(id=2), client_interface=dict(lag=10), deploy='present')]))
         expected_commands = [
             'cluster test 100',
             'rbridge-id 10',
@@ -63,8 +63,8 @@ class TestICXAclAssignModule(TestICXModule):
                              peer=dict(ip='1.1.1.1', disable_fast_failover=False, rbridge=dict(id=2, icl_name='ICL', state='absent'),
                              timers=dict(keep_alive=20, hold_time=30, state='absent')), client_interfaces='absent',
                              client_auto_detect=dict(config=dict(deploy_all=True, state='absent'), ethernet=dict(port='1/1/1', state='absent'),
-                             start=dict(config_deploy_all=False, state='absent'), stop=False), deploy='absent', client=dict(name='client_1',
-                             rbridge_id=dict(id=2, state='absent'), client_interface=dict(lag=10, state='absent'), deploy='absent')))
+                             start=dict(config_deploy_all=False, state='absent'), stop=False), deploy='absent', client=[dict(name='client_1',
+                             rbridge_id=dict(id=2, state='absent'), client_interface=dict(lag=10, state='absent'), deploy='absent')]))
         expected_commands = [
             'cluster test 100',
             'no deploy',
@@ -87,8 +87,8 @@ class TestICXAclAssignModule(TestICXModule):
 
     def test_icx_mct_remove_client(self):
         ''' Test for removing client'''
-        set_module_args(dict(cluster_id=100, client=dict(name='client_1', rbridge_id=dict(id=2, state='absent'),
-                             state='absent')))
+        set_module_args(dict(cluster_id=100, client=[dict(name='client_1', rbridge_id=dict(id=2, state='absent'),
+                             state='absent')]))
         expected_commands = [
             'cluster 100',
             'no client client_1']
@@ -97,7 +97,7 @@ class TestICXAclAssignModule(TestICXModule):
 
     def test_icx_mct_remove_cluster(self):
         ''' Test for removing mct cluster'''
-        set_module_args(dict(cluster_name='test', cluster_id=100, state='absent', rbridge_id=dict(id=10), client=dict(name='client_1')))
+        set_module_args(dict(cluster_name='test', cluster_id=100, state='absent', rbridge_id=dict(id=10), client=[dict(name='client_1')]))
         expected_commands = [
             'no cluster test 100']
         result = self.execute_module(changed=True)
