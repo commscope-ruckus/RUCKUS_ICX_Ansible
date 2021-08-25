@@ -389,7 +389,7 @@ def build_command(
                     cmd = "client-auto-detect config"
                 if client_auto_detect['config']['deploy_all']:
                     cmd += " deploy-all"
-                cmds.append(cmd)                
+                cmds.append(cmd)
             if client_auto_detect['stop']:
                 cmd = "client-auto-detect stop"
                 cmds.append(cmd)
@@ -531,7 +531,7 @@ def main():
         deploy=dict(type='str', choices=['present', 'absent']),
         client=dict(type='list', elements='dict', options=client_spec)
     )
-    mutually_exclusive=[['keep_alive_vlan', 'client_isolation']]
+    mutually_exclusive = [['keep_alive_vlan', 'client_isolation']]
     module = AnsibleModule(argument_spec=argument_spec,
                            mutually_exclusive=mutually_exclusive,
                            supports_check_mode=True)

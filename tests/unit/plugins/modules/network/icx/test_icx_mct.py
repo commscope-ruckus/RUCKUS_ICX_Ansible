@@ -63,8 +63,9 @@ class TestICXAclAssignModule(TestICXModule):
                              peer=dict(ip='1.1.1.1', disable_fast_failover=False, rbridge=dict(id=2, icl_name='ICL', state='absent'),
                              timers=dict(keep_alive=20, hold_time=30, state='absent')), client_interfaces='absent',
                              client_auto_detect=dict(config=dict(deploy_all=True, state='absent'), ethernet=dict(port='1/1/1', state='absent'),
-                             start=dict(config_deploy_all=False, state='absent'), stop=False), deploy='absent', client=[dict(name='client_1',
-                             rbridge_id=dict(id=2, state='absent'), client_interface=dict(lag=10, state='absent'), deploy='absent')]))
+                             start=dict(config_deploy_all=False, state='absent'), stop=False), deploy='absent',
+                             client=[dict(name='client_1', rbridge_id=dict(id=2, state='absent'), client_interface=dict(lag=10, state='absent'),
+                                          deploy='absent')]))
         expected_commands = [
             'cluster test 100',
             'no deploy',
