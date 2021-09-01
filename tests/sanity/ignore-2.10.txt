@@ -26,6 +26,3 @@ plugins/modules/icx_qos.py validate-modules:doc-default-does-not-match-spec
 plugins/modules/icx_facts.py pep8:E501
 plugins/modules/icx_facts.py pep8:E722
 plugins/modules/icx_facts.py pylint:bare-except
-plugins/modules/icx_qos.py pylint:simplifiable-condition
-tests/unit/mock/loader.py pylint:arguments-renamed
-tests/unit/plugins/modules/network/icx/test_icx_ping.py pylint:use-maxsplit-arg
