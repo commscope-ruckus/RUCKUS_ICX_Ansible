@@ -34,7 +34,7 @@ class TestICXAclAssignModule(TestICXModule):
                              keep_alive_vlan=dict(vlan_id=3001), icl=dict(name='ICL', ethernet='1/1/2'), peer=dict(ip='1.1.1.1', disable_fast_failover=True,
                              rbridge=dict(id=2, icl_name='ICL'), timers=dict(keep_alive=20, hold_time=30)), client_interfaces='present',
                              client_auto_detect=dict(config=dict(deploy_all=True), ethernet=dict(port='1/1/1'), start=dict(config_deploy_all=True)),
-                             deploy='present', client=[dict(name='client_1', rbridge_id=dict(id=2), client_interface=dict(lag=10), deploy='present')]))
+                             deploy=True, client=[dict(name='client_1', rbridge_id=dict(id=2), client_interface=dict(lag=10), deploy=True)]))
         expected_commands = [
             'cluster test 100',
             'rbridge-id 10',
@@ -63,9 +63,9 @@ class TestICXAclAssignModule(TestICXModule):
                              peer=dict(ip='1.1.1.1', disable_fast_failover=False, rbridge=dict(id=2, icl_name='ICL', state='absent'),
                              timers=dict(keep_alive=20, hold_time=30, state='absent')), client_interfaces='absent',
                              client_auto_detect=dict(config=dict(deploy_all=True, state='absent'), ethernet=dict(port='1/1/1', state='absent'),
-                             start=dict(config_deploy_all=False, state='absent'), stop=False), deploy='absent',
+                             start=dict(config_deploy_all=False, state='absent'), stop=False), deploy=False,
                              client=[dict(name='client_1', rbridge_id=dict(id=2, state='absent'), client_interface=dict(lag=10, state='absent'),
-                                          deploy='absent')]))
+                                          deploy=False)]))
         expected_commands = [
             'cluster test 100',
             'no deploy',
@@ -108,7 +108,7 @@ class TestICXAclAssignModule(TestICXModule):
         ''' Test for successful mct client_isolation'''
         set_module_args(dict(cluster_id=100, rbridge_id=dict(id=10), session_vlan=dict(vlan_id=3000),
                              icl=dict(name='ICL', ethernet='1/1/2'), peer=dict(ip='1.1.1.1', rbridge=dict(id=2, icl_name='ICL')),
-                             client_isolation='present', deploy='present'))
+                             client_isolation='present', deploy=True))
         expected_commands = [
             'cluster 100',
             'rbridge-id 10',
@@ -124,7 +124,7 @@ class TestICXAclAssignModule(TestICXModule):
         ''' Test for removing client_isolation and other configured options '''
         set_module_args(dict(cluster_id=100, rbridge_id=dict(id=10, state='absent'), session_vlan=dict(vlan_id=3000,
                              state='absent'), icl=dict(name='ICL', ethernet='1/1/2', state='absent'), peer=dict(ip='1.1.1.1',
-                             rbridge=dict(id=2, icl_name='ICL', state='absent')), client_isolation='absent', deploy='absent'))
+                             rbridge=dict(id=2, icl_name='ICL', state='absent')), client_isolation='absent', deploy=False))
         expected_commands = [
             'cluster 100',
             'no deploy',
