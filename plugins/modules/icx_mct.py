@@ -187,7 +187,8 @@ options:
         type: bool
   deploy:
     description: specify to  deploy the cluster client.
-    type: bool
+    type: str
+    choices: ['present', 'absent']
   client:
     description: Define to configure the cluster client properties.
     type: list
@@ -227,7 +228,8 @@ options:
             choices: ['present', 'absent']
       deploy:
         description: specify to  deploy the cluster client.
-        type: bool
+        type: str
+        choices: ['present', 'absent']
       state:
         description: Specifies whether to Configure/removes the cluster client.
         type: str
@@ -297,7 +299,7 @@ def build_command(
         cmd += " {0}".format(cluster_id)
     cmds.append(cmd)
     if state == 'present':
-        if deploy is False:
+        if deploy == 'absent':
             cmd = "no deploy"
             cmds.append(cmd)
         if rbridge_id is not None:
@@ -403,7 +405,7 @@ def build_command(
                     if client_auto_detect['start']['config_deploy_all']:
                         cmd += " config-deploy-all"
                     cmds.append(cmd)
-        if deploy:
+        if deploy == 'present':
             cmd = "deploy"
             cmds.append(cmd)
         if client is not None:
@@ -415,7 +417,7 @@ def build_command(
                         cmd = "client {0}".format(clients['name'])
                     cmds.append(cmd)
                 if clients['state'] == 'present':
-                    if clients['deploy'] is False:
+                    if clients['deploy'] == 'absent':
                         cmd = "no deploy"
                         cmds.append(cmd)
                     if clients['rbridge_id'] is not None:
@@ -434,7 +436,7 @@ def build_command(
                         elif clients['client_interface']['lag'] is not None:
                             cmd += " lag {0}".format(clients['client_interface']['lag'])
                         cmds.append(cmd)
-                if clients['deploy']:
+                if clients['deploy'] == 'present':
                     cmd = "deploy"
                     cmds.append(cmd)
 
@@ -511,7 +513,7 @@ def main():
         rbridge_id=dict(type='dict', options=client_rbridge_id_spec),
         client_interface=dict(type='dict', options=client_interface_spec, required_one_of=[['ethernet', 'lag']],
                               mutually_exclusive=[['ethernet', 'lag']]),
-        deploy=dict(type='bool'),
+        deploy=dict(type='str', choices=['present', 'absent']),
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
     argument_spec = dict(
@@ -526,7 +528,7 @@ def main():
         client_interfaces=dict(type='str', choices=['present', 'absent']),
         client_isolation=dict(type='str', choices=['present', 'absent']),
         client_auto_detect=dict(type='dict', options=client_auto_detect_spec, required_one_of=[['config', 'ethernet', 'start', 'stop']]),
-        deploy=dict(type='bool'),
+        deploy=dict(type='str', choices=['present', 'absent']),
         client=dict(type='list', elements='dict', options=client_spec)
     )
     mutually_exclusive = [['keep_alive_vlan', 'client_isolation']]
