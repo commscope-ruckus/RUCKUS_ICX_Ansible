@@ -32,7 +32,6 @@ options:
         and I(newline).Common answers are 'y' or "\\r" (carriage return,
         must be double quotes). See examples.
     type: list
-    elements: str
     required: true
   wait_for:
     description:
@@ -42,7 +41,6 @@ options:
         within the configured number of retries, the task fails.
         See examples.
     type: list
-    elements: str
     aliases: ['waitfor']
   match:
     description:
@@ -165,9 +163,9 @@ def main():
     """main entry point for module execution
     """
     argument_spec = dict(
-        commands=dict(type='list', required=True, elements='str'),
+        commands=dict(type='list', required=True),
 
-        wait_for=dict(type='list', elements='str', aliases=['waitfor']),
+        wait_for=dict(type='list', aliases=['waitfor']),
         match=dict(default='all', choices=['all', 'any']),
 
         retries=dict(default=10, type='int'),

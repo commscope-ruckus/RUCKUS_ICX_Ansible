@@ -1,3 +1,4 @@
+plugins/modules/icx_command.py validate-modules:parameter-list-no-elements
 plugins/modules/icx_facts.py pep8:E501
 plugins/modules/icx_facts.py pep8:E722
 plugins/modules/icx_facts.py pylint:bare-except
