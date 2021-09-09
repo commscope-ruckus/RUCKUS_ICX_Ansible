@@ -17,7 +17,8 @@ class TerminalModule(TerminalBase):
     terminal_stdout_re = [
         re.compile(br".*(SSH@.*[>#]).*"),
         # re.compile(br"[\r\n]?[\w\+\-\.:\/\[\]]+(?:\([^\)]+\)){0,3}(?:[>#]) ?$"),
-        re.compile(br"Finished downloading public key file!")
+        re.compile(br"Finished downloading public key file!"),
+        re.compile(br"boot system flash")
     ]
 
     terminal_stderr_re = [
