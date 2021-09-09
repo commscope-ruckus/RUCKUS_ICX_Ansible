@@ -28,6 +28,7 @@ options:
         exclusive with the C(name) argument.
     aliases: ['users', 'collection']
     type: list
+    elements: dict
     suboptions:
       name:
         description:
@@ -79,7 +80,6 @@ options:
   name:
     description:
       - The username to be configured on the ICX device.
-    required: true
     type: str
   configured_password:
     description: The password to be configured on the ICX device.
@@ -105,6 +105,7 @@ options:
         a password. This will allow the user to login to the system
         without being authenticated by a password.
     type: bool
+    default: no
   purge:
     description:
       - If set to true module will remove any previously
