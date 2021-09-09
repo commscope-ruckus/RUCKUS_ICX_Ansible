@@ -128,3 +128,18 @@ class TestICXAclAssignModule(TestICXModule):
         set_module_args(dict(port_control=dict(auto='yes', all=True),
                              guest_vlan=dict(state='present')))
         result = self.execute_module(failed=True)
+
+    def test_icx_dot1x_no_required_arg_timeout(self):
+        ''' Test for enabling dot1x timout without required parameter '''
+        set_module_args(dict(timeout=dict(state='present')))
+        result = self.execute_module(failed=True)
+
+    def test_icx_dot1x_no_required_arg_port_control(self):
+        ''' Test for enabling port control dot1x without required parameter'''
+        set_module_args(dict(port_control=dict(ethernet='1/1/1')))
+        result = self.execute_module(failed=True)
+
+    def test_icx_dot1x_mutually_exclusive_arg_port_control(self):
+        ''' Test for enabling port control dot1x with mutually exclusive arguments'''
+        set_module_args(dict(port_control=dict(force_unauthorized=True, auto=True, ethernet='1/1/1')))
+        result = self.execute_module(failed=True)
