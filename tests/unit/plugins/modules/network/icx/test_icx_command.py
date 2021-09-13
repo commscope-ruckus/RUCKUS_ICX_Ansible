@@ -49,13 +49,13 @@ class TestICXCommandModule(TestICXModule):
         set_module_args(dict(commands=['show version']))
         result = self.execute_module()
         self.assertEqual(len(result['stdout']), 1)
-        self.assertTrue(result['stdout'][0].startswith('Copyright (c) 1996-2017 Brocade Communications Systems'))
+        self.assertTrue(result['stdout'][0].startswith('Copyright (c) Ruckus Networks'))
 
     def test_icx_command_multiple(self):
         set_module_args(dict(commands=['show version', 'show version']))
         result = self.execute_module()
         self.assertEqual(len(result['stdout']), 2)
-        self.assertTrue(result['stdout'][0].startswith('Copyright (c) 1996-2017 Brocade Communications Systems'))
+        self.assertTrue(result['stdout'][0].startswith('Copyright (c) Ruckus Networks'))
 
     def test_icx_command_wait_for(self):
         wait_for = 'result[0] contains "ICX"'
@@ -83,7 +83,7 @@ class TestICXCommandModule(TestICXModule):
 
     def test_icx_command_match_all(self):
         wait_for = ['result[0] contains "ICX"',
-                    'result[0] contains "Version:10.1.09T225"']
+                    'result[0] contains "Version:10.1.18T225"']
         set_module_args(dict(commands=['show version'], wait_for=wait_for, match='all'))
         self.execute_module()
 

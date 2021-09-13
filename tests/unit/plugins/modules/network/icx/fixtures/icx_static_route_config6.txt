@@ -1,1 +1,4 @@
-ipv6 route 6666:1:1::/64 6666:1:1:: distance 1
+IPv6 Static Routing Table - 2 entries:
+IPv6 Prefix                     Interface  Next Hop Router                      Met/Dis/Tag     Name      
+ 6666:1:2::/64                  -          6666:1:2::                           1/1/0                    
+ 6666:1:14::/64                 -          6666:1:4::                           1/6/0                    

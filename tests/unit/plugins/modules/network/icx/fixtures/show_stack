@@ -1,0 +1,11 @@
+T=58d2h54m40.4: alone: standalone, D: dynamic cfg, S: static
+ID   Type          Role    Mac Address    Pri State   Comment                   
+1  S ICX7150-24P   standby 00e0.5200.0100   0 remote  Ready
+2  S ICX7150-48P   member  609c.9fbc.8214   0 remote  Ready
+3  S ICX7150-C12P  active  609c.9fbc.c07c   0 local   Ready
+    standby                   active                                           
+     +---+        +---+        +---+                                           
+  3/1| 1 |3/3--3/1| 2 |3/3--3/1| 3 |3/2                                        
+     +---+        +---+        +---+                                           
+Standby u1 - protocols ready, can failover or manually switch over
+Current stack management MAC is 00e0.5200.0100
