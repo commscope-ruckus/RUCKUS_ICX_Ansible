@@ -47,7 +47,7 @@ class TestICXBannerModule(TestICXModule):
         self.load_config.return_value = dict(diff=None, session='session')
 
     def test_icx_banner_create(self):
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             set_module_args(dict(banner='motd', text='welcome\nnew user'))
             commands = ['banner motd $\nwelcome\nnew user\n$']
             self.execute_module(changed=True, commands=commands)
@@ -59,7 +59,7 @@ class TestICXBannerModule(TestICXModule):
 
     def test_icx_banner_remove(self):
         set_module_args(dict(banner='motd', state='absent'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['no banner motd']
             self.execute_module(changed=True, commands=commands)
         else:
@@ -69,7 +69,7 @@ class TestICXBannerModule(TestICXModule):
     def test_icx_banner_motd_enter_set(self):
         set_module_args(dict(banner='motd', enterkey=True))
 
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             self.execute_module(changed=False)
         else:
             commands = ['banner motd require-enter-key']
@@ -77,7 +77,7 @@ class TestICXBannerModule(TestICXModule):
 
     def test_icx_banner_motd_enter_remove(self):
         set_module_args(dict(banner='motd', state='absent', enterkey=False))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = ['no banner motd', 'no banner motd require-enter-key']
             self.execute_module(changed=True, commands=commands)
 
@@ -88,7 +88,7 @@ class TestICXBannerModule(TestICXModule):
     def test_icx_banner_remove_compare(self):
         set_module_args(dict(banner='incoming', state='absent', check_running_config='True'))
         if self.get_running_config(compare=True):
-            if not self.ENV_ICX_USE_DIFF:
+            if self.CHECK_RUNNING_CONFIG:
                 commands = []
                 self.execute_module(changed=False, commands=commands)
             else:

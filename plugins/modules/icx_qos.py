@@ -337,6 +337,7 @@ options:
     description: Check running configuration. This can be set as environment variable.
        Module will use environment variable value(default:False), unless it is overridden, by specifying it as module parameter.
     type: bool
+    default: no
 """
 
 EXAMPLES = """
@@ -635,7 +636,7 @@ def map_params_to_obj(module):
 
 def check_fail(module, output):
     error = [
-        re.compile(br"^error", re.I)
+        re.compile(r"^error", re.I)
     ]
     for x in output:
         for regex in error:

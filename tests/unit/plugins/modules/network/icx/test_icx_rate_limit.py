@@ -182,7 +182,7 @@ class TestICXRateLimitModule(TestICXModule):
             ))
 
         if self.get_running_config(compare=False):
-            if not self.ENV_ICX_USE_DIFF:
+            if self.CHECK_RUNNING_CONFIG:
                 result = self.execute_module(changed=False)
                 expected_commands = []
                 self.assertEqual(result['commands'], expected_commands)
@@ -270,7 +270,8 @@ class TestICXRateLimitModule(TestICXModule):
                 broadcast_limit=dict(
                     port='1/1/2',
                     kbps=50,
-                    log=False)
+                    log=True,
+                    state='absent')
             ))
         commands = ['interface ethernet 1/1/2', 'no broadcast limit 50 kbps log']
         result = self.execute_module(changed=True, failed=False)
@@ -294,7 +295,8 @@ class TestICXRateLimitModule(TestICXModule):
                 unknown_unicast_limit=dict(
                     port='1/1/2',
                     kbps=50,
-                    log=False)
+                    log=True,
+                    state='absent')
             ))
         commands = ['interface ethernet 1/1/2', 'no unknown-unicast limit 50 kbps log']
         result = self.execute_module(changed=True, failed=False)
@@ -318,7 +320,8 @@ class TestICXRateLimitModule(TestICXModule):
                 multicast_limit=dict(
                     port='1/1/2',
                     kbps=50,
-                    log=False)
+                    log=True,
+                    state='absent')
             ))
         commands = ['interface ethernet 1/1/2', 'no multicast limit 50 kbps log']
         result = self.execute_module(changed=True, failed=False)

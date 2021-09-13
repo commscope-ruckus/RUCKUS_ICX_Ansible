@@ -98,14 +98,12 @@ options:
           port_name:
             description: Specifies port numbers that satisfy the operation with the numeric equivalent of the port name.
             type: str
-            choices: ['ftp-data','ftp','ssh','telnet','smtp','dns','http','gppitnp','pop2','pop3','sftp','sqlserv','bgp','ldap','ssl','tftp','snmp']
           high_port_num:
             description: For range operator, specifies high port number.
             type: int
           high_port_name:
             description: For range operator, specifies higher port name.
             type: str
-            choices: ['ftp-data','ftp','ssh','telnet','smtp','dns','http','gppitnp','pop2','pop3','sftp','sqlserv','bgp','ldap','ssl','tftp','snmp']
       destination_comparison_operators:
         description: If you specified tcp or udp, the following optional operators are available. Specify either port number or name for the operation.
         type: dict
@@ -120,14 +118,12 @@ options:
           port_name:
             description: Specifies port numbers that satisfy the operation with the numeric equivalent of the port name.
             type: str
-            choices: ['ftp-data','ftp','ssh','telnet','smtp','dns','http','gppitnp','pop2','pop3','sftp','sqlserv','bgp','ldap','ssl','tftp','snmp']
           high_port_num:
             description: For range operator, specifies high port number.
             type: int
           high_port_name:
             description: For range operator, specifies higher port name.
             type: str
-            choices: ['ftp-data','ftp','ssh','telnet','smtp','dns','http','gppitnp','pop2','pop3','sftp','sqlserv','bgp','ldap','ssl','tftp','snmp']
       established:
         description: (For TCP rules only) Filter packets that have the Acknowledgment (ACK) or Reset (RST) flag set.
         type: bool
@@ -142,6 +138,9 @@ options:
                   'nd-na','nd-ns','next-header','no-admin','no-route','packet-too-big','parameter-option','parameter-problem',
                   'port-unreachable','reassembly-timeout','renum-command','renum-result','renum-seq-number',
                   'router-advertisement','router-renumbering','router-solicitation','time-exceeded','unreachable']
+      icmp_code:
+        description: Specifies ICMP message code (from 0 to 255).
+        type: int
       fragments:
         description: Filters on IPv6 fragments with a non-zero fragment offset. Available only in IPv6 ACLs.
         type: bool
@@ -279,36 +278,32 @@ def build_command(module, acl_name=None, accounting=None, rules=None, state=None
                     cmd += " any"
                 if rule['icmp_num'] is not None:
                     cmd += " {0}".format(rule['icmp_num'])
+                    if rule['icmp_code'] is not None:
+                        cmd += " {0}".format(rule['icmp_code'])
                 elif rule['icmp_type'] is not None:
                     cmd += " {0}".format(rule['icmp_type'])
-                if (rule['icmp_num'] is not None) or (rule['icmp_type'] is not None):
-                    if rule['dscp_matching'] is not None:
-                        cmd += " dscp-matching {0}".format(rule['dscp_matching'])
+
+                if rule['dscp_matching'] is not None:
+                    cmd += " dscp-matching {0}".format(rule['dscp_matching'])
                     if rule['dscp_marking'] is not None:
                         cmd += " dscp-marking {0}".format(rule['dscp_marking'])
                     elif rule['log']:
                         cmd += " log"
-                else:
-                    if rule['dscp_matching'] is not None:
-                        cmd += " dscp-matching {0}".format(rule['dscp_matching'])
-                        if rule['dscp_marking'] is not None:
-                            cmd += " dscp-marking {0}".format(rule['dscp_marking'])
-                        elif rule['log']:
-                            cmd += " log"
-                    elif rule['dscp_marking'] is not None:
-                        cmd += " dscp-marking {0}".format(rule['dscp_marking'])
+                elif rule['dscp_marking'] is not None:
+                    cmd += " dscp-marking {0}".format(rule['dscp_marking'])
 
-                    elif rule['traffic_policy_name'] is not None:
+                elif rule['traffic_policy_name'] is not None:
+                    if (rule['icmp_num'] is None) or (rule['icmp_type'] is None):
                         cmd += " traffic-policy {0}".format(rule['traffic_policy_name'])
                         if rule['log']:
                             cmd += " log"
                         elif rule['mirror']:
                             cmd += " mirror"
-                    else:
-                        if rule['log']:
-                            cmd += " log"
-                        if rule['mirror']:
-                            cmd += " mirror"
+                else:
+                    if rule['log']:
+                        cmd += " log"
+                    if rule['mirror']:
+                        cmd += " mirror"
 
             elif rule['ip_protocol_name'] == "ipv6":
                 if rule['destination']['host_ipv6_address'] is not None:
@@ -368,22 +363,12 @@ def build_command(module, acl_name=None, accounting=None, rules=None, state=None
                         if rule['source_comparison_operators']['port_num'] is not None:
                             cmd += " {0} {1}".format(rule['source_comparison_operators']['operator'], rule['source_comparison_operators']['port_num'])
                         elif rule['source_comparison_operators']['port_name'] is not None:
-                            if rule['ip_protocol_name'] == "udp":
-                                if rule['source_comparison_operators']['port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap', 'ssl', 'tftp', 'snmp']:
-                                    cmd += " {0} {1}".format(rule['source_comparison_operators']['operator'], rule['source_comparison_operators']['port_name'])
-                            elif rule['ip_protocol_name'] == "tcp":
-                                if rule['source_comparison_operators']['port_name'] not in ['tftp', 'snmp']:
-                                    cmd += " {0} {1}".format(rule['source_comparison_operators']['operator'], rule['source_comparison_operators']['port_name'])
+                            cmd += " {0} {1}".format(rule['source_comparison_operators']['operator'], rule['source_comparison_operators']['port_name'])
                         if rule['source_comparison_operators']['operator'] == 'range':
                             if rule['source_comparison_operators']['high_port_num'] is not None:
                                 cmd += " {0}".format(rule['source_comparison_operators']['high_port_num'])
                             elif rule['source_comparison_operators']['high_port_name'] is not None:
-                                if rule['ip_protocol_name'] == "udp":
-                                    if rule['source_comparison_operators']['high_port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap', 'ssl', 'tftp', 'snmp']:
-                                        cmd += " {0}".format(rule['source_comparison_operators']['high_port_name'])
-                                elif rule['ip_protocol_name'] == "tcp":
-                                    if rule['source_comparison_operators']['high_port_name'] not in ['tftp', 'snmp']:
-                                        cmd += " {0}".format(rule['source_comparison_operators']['high_port_name'])
+                                cmd += " {0}".format(rule['source_comparison_operators']['high_port_name'])
                 if rule['destination']['host_ipv6_address'] is not None:
                     cmd += " host {0}".format(rule['destination']['host_ipv6_address'])
                 elif rule['destination']['ipv6_prefix_prefix_length'] is not None:
@@ -395,22 +380,13 @@ def build_command(module, acl_name=None, accounting=None, rules=None, state=None
                         if rule['destination_comparison_operators']['port_num'] is not None:
                             cmd += " {0} {1}".format(rule['destination_comparison_operators']['operator'], rule['destination_comparison_operators']['port_num'])
                         elif rule['destination_comparison_operators']['port_name'] is not None:
-                            if rule['ip_protocol_name'] == "udp":
-                                if rule['destination_comparison_operators']['port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap', 'ssl', 'tftp', 'snmp']:
-                                    cmd += " {0} {1}".format(rule['destination_comparison_operators']['operator'], rule['destination_comparison_operators']['port_name'])
-                            elif rule['ip_protocol_name'] == "tcp":
-                                if rule['destination_comparison_operators']['port_name'] not in ['tftp', 'snmp']:
-                                    cmd += " {0} {1}".format(rule['destination_comparison_operators']['operator'], rule['destination_comparison_operators']['port_name'])
+                            cmd += " {0} {1}".format(rule['destination_comparison_operators']['operator'],
+                                                     rule['destination_comparison_operators']['port_name'])
                         if rule['destination_comparison_operators']['operator'] == 'range':
                             if rule['destination_comparison_operators']['high_port_num'] is not None:
                                 cmd += " {0}".format(rule['destination_comparison_operators']['high_port_num'])
                             elif rule['destination_comparison_operators']['high_port_name'] is not None:
-                                if rule['ip_protocol_name'] == "udp":
-                                    if rule['destination_comparison_operators']['high_port_name'] in ['dns', 'gppitnp', 'sftp', 'sqlserv', 'ldap', 'ssl', 'tftp', 'snmp']:
-                                        cmd += " {0}".format(rule['destination_comparison_operators']['high_port_name'])
-                                elif rule['ip_protocol_name'] == "tcp":
-                                    if rule['destination_comparison_operators']['high_port_name'] not in ['tftp', 'snmp']:
-                                        cmd += " {0}".format(rule['destination_comparison_operators']['high_port_name'])
+                                cmd += " {0}".format(rule['destination_comparison_operators']['high_port_name'])
                 if rule['ip_protocol_name'] == "tcp":
                     if rule['established']:
                         cmd += " established"
@@ -534,9 +510,9 @@ def main():
     source_comparison_operators_spec = dict(
         operator=dict(type='str', choices=['eq', 'gt', 'lt', 'neq', 'range']),
         port_num=dict(type='int'),
-        port_name=dict(type='str', choices=['ftp-data', 'ftp', 'ssh', 'telnet', 'smtp', 'dns', 'http', 'gppitnp', 'pop2', 'pop3', 'sftp', 'sqlserv', 'bgp', 'ldap', 'ssl', 'tftp', 'snmp']),
+        port_name=dict(type='str'),
         high_port_num=dict(type='int'),
-        high_port_name=dict(type='str', choices=['ftp-data', 'ftp', 'ssh', 'telnet', 'smtp', 'dns', 'http', 'gppitnp', 'pop2', 'pop3', 'sftp', 'sqlserv', 'bgp', 'ldap', 'ssl', 'tftp', 'snmp'])
+        high_port_name=dict(type='str')
     )
     destination_spec = dict(
         host_ipv6_address=dict(type='str'),
@@ -546,9 +522,9 @@ def main():
     destination_comparison_operators_spec = dict(
         operator=dict(type='str', choices=['eq', 'gt', 'lt', 'neq', 'range']),
         port_num=dict(type='int'),
-        port_name=dict(type='str', choices=['ftp-data', 'ftp', 'ssh', 'telnet', 'smtp', 'dns', 'http', 'gppitnp', 'pop2', 'pop3', 'sftp', 'sqlserv', 'bgp', 'ldap', 'ssl', 'tftp', 'snmp']),
+        port_name=dict(type='str'),
         high_port_num=dict(type='int'),
-        high_port_name=dict(type='str', choices=['ftp-data', 'ftp', 'ssh', 'telnet', 'smtp', 'dns', 'http', 'gppitnp', 'pop2', 'pop3', 'sftp', 'sqlserv', 'bgp', 'ldap', 'ssl', 'tftp', 'snmp'])
+        high_port_name=dict(type='str')
     )
     rules_spec = dict(
         remark=dict(type='dict', options=remark_spec),
@@ -556,13 +532,20 @@ def main():
         rule_type=dict(type='str', choices=['deny', 'permit'], required=True),
         ip_protocol_name=dict(type='str', choices=['ahp', 'esp', 'icmp', 'ipv6', 'sctp', 'tcp', 'udp']),
         ip_protocol_num=dict(type='int'),
-        source=dict(type='dict', required=True, options=source_spec, required_one_of=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']], mutually_exclusive=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']]),
+        source=dict(type='dict', required=True, options=source_spec, required_one_of=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']],
+                    mutually_exclusive=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']]),
         source_comparison_operators=dict(type='dict', options=source_comparison_operators_spec),
-        destination=dict(type='dict', required=True, options=destination_spec, required_one_of=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']], mutually_exclusive=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']]),
+        destination=dict(type='dict', required=True, options=destination_spec, required_one_of=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']],
+                         mutually_exclusive=[['host_ipv6_address', 'ipv6_prefix_prefix_length', 'any']]),
         established=dict(type='bool', default='no'),
         destination_comparison_operators=dict(type='dict', options=destination_comparison_operators_spec),
         icmp_num=dict(type='int'),
-        icmp_type=dict(type='str', choices=['beyond-scope', 'destination-unreachable', 'echo-reply', 'echo-request', 'header', 'hop-limit', 'mld-query', 'mld-reduction', 'mld-report', 'nd-na', 'nd-ns', 'next-header', 'no-admin', 'no-route', 'packet-too-big', 'parameter-option', 'parameter-problem', 'port-unreachable', 'reassembly-timeout', 'renum-command', 'renum-result', 'renum-seq-number', 'router-advertisement', 'router-renumbering', 'router-solicitation', 'time-exceeded', 'unreachable']),
+        icmp_type=dict(type='str', choices=['beyond-scope', 'destination-unreachable', 'echo-reply', 'echo-request', 'header', 'hop-limit', 'mld-query',
+                                            'mld-reduction', 'mld-report', 'nd-na', 'nd-ns', 'next-header', 'no-admin', 'no-route', 'packet-too-big',
+                                            'parameter-option', 'parameter-problem', 'port-unreachable', 'reassembly-timeout', 'renum-command', 'renum-result',
+                                            'renum-seq-number', 'router-advertisement', 'router-renumbering', 'router-solicitation',
+                                            'time-exceeded', 'unreachable']),
+        icmp_code=dict(type='int'),
         fragments=dict(type='bool', default='no'),
         routing=dict(type='bool', default='no'),
         dscp_matching=dict(type='int'),

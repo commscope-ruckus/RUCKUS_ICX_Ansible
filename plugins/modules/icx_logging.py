@@ -41,12 +41,14 @@ options:
     description:
       - Specifies the message level.
     type: list
+    elements: str
     choices: ['alerts', 'critical', 'debugging', 'emergencies', 'errors', 'informational',
                 'notifications', 'warnings']
   aggregate:
     description:
       - List of logging definitions.
     type: list
+    elements: dict
     suboptions:
       dest:
         description:
@@ -71,6 +73,7 @@ options:
         description:
           - Specifies the message level.
         type: list
+        elements: str
         choices: ['alerts', 'critical', 'debugging', 'emergencies', 'errors', 'informational',
                     'notifications', 'warnings']
       state:
@@ -492,6 +495,7 @@ def main():
         udp_port=dict(),
         level=dict(
             type='list',
+            elements='str',
             choices=[
                 'alerts',
                 'critical',

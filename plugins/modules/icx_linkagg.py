@@ -36,6 +36,7 @@ options:
     description:
       - List of port members or ranges of the link aggregation group.
     type: list
+    elements: str
   state:
     description:
       - State of the link aggregation group.
@@ -52,12 +53,14 @@ options:
     description:
       - List of link aggregation definitions.
     type: list
+    elements: dict
     suboptions:
      group:
        description:
          - Channel-group number for the port-channel
            Link aggregation group. Range 1-255 or set to 'auto' to auto-generates a LAG ID
        type: int
+       required: true
      name:
        description:
          - Name of the LAG
@@ -71,6 +74,7 @@ options:
        description:
          - List of port members or ranges of the link aggregation group.
        type: list
+       elements: str
      state:
        description:
          - State of the link aggregation group.
@@ -267,7 +271,7 @@ def main():
         group=dict(type='int'),
         name=dict(type='str'),
         mode=dict(choices=['dynamic', 'static']),
-        members=dict(type='list'),
+        members=dict(type='list', elements='str'),
         state=dict(default='present',
                    choices=['present', 'absent']),
         check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
