@@ -38,11 +38,13 @@ options:
   aggregate:
     description: List of static route definitions.
     type: list
+    elements: dict
     suboptions:
       prefix:
         description:
           - Network prefix of the static route.
         type: str
+        required: true
       mask:
         description:
           - Network prefix mask of the static route.

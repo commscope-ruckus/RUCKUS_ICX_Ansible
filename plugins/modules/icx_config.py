@@ -27,6 +27,7 @@ options:
         command syntax as some commands are automatically modified by the
         device config parser.
     type: list
+    elements: str
     aliases: ['commands']
   parents:
     description:
@@ -35,6 +36,7 @@ options:
         is omitted, the commands are checked against the set of top
         level or global commands.
     type: list
+    elements: str
   src:
     description:
       - Specifies the source path to the file that contains the configuration
@@ -51,6 +53,7 @@ options:
         any changes without affecting how the set of commands are matched
         against the system.
     type: list
+    elements: str
   after:
     description:
       - The ordered set of commands to append to the end of the command
@@ -58,6 +61,7 @@ options:
         allows the playbook designer to append a set of commands to be
         executed after the command set.
     type: list
+    elements: str
   match:
     description:
       - Instructs the module on the way to perform the matching of
@@ -156,6 +160,7 @@ options:
         that are automatically updated by the system.  This argument takes
         a list of regular expressions or exact line matches.
     type: list
+    elements: str
   intended_config:
     description:
       - The C(intended_config) provides the master configuration that
@@ -312,11 +317,11 @@ def main():
     """
     argument_spec = dict(
         src=dict(),
-        lines=dict(aliases=['commands'], type='list'),
-        parents=dict(type='list'),
+        lines=dict(aliases=['commands'], type='list', elements='str'),
+        parents=dict(type='list', elements='str'),
 
-        before=dict(type='list'),
-        after=dict(type='list'),
+        before=dict(type='list', elements='str'),
+        after=dict(type='list', elements='str'),
 
         match=dict(default='line', choices=['line', 'strict', 'exact', 'none']),
         replace=dict(default='line', choices=['line', 'block']),
@@ -331,7 +336,7 @@ def main():
         save_when=dict(choices=['always', 'never', 'modified', 'changed'], default='never'),
 
         diff_against=dict(choices=['startup', 'intended', 'running']),
-        diff_ignore_lines=dict(type='list'),
+        diff_ignore_lines=dict(type='list', elements='str'),
 
     )
 

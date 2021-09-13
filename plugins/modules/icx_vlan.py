@@ -25,7 +25,6 @@ options:
   vlan_id:
     description:
       - ID of the VLAN. Range 1-4094.
-    required: true
     type: int
   interfaces:
     description:
@@ -36,6 +35,7 @@ options:
         description:
           - Name of the interface or lag
         type: list
+        elements: str
       purge:
         description:
           - Purge interfaces not defined in the I(name)
@@ -50,6 +50,7 @@ options:
         description:
           - Name of the interface or lag
         type: list
+        elements: str
       purge:
         description:
           - Purge interfaces not defined in the I(name)
@@ -69,12 +70,14 @@ options:
         for associated interfaces. If the value in the C(associated_interfaces) does not match with
         the operational state of vlan interfaces on device it will result in failure.
     type: list
+    elements: str
   associated_tagged:
     description:
       - This is a intent option and checks the operational state of  given vlan C(name)
         for associated tagged ports and lags. If the value in the C(associated_tagged) does not match with
         the operational state of vlan interfaces on device it will result in failure.
     type: list
+    elements: str
   delay:
     description:
       - Delay the play should wait to check for declarative intent params values.
@@ -86,7 +89,7 @@ options:
     suboptions:
       type:
         description:
-          - Specify the type of spanning-tree
+          - Specify the type of spanning-tree.'rstp' is not supported from 9.0.0
         type: str
         default: 802-1w
         choices: ['802-1w','rstp']
@@ -105,6 +108,7 @@ options:
     description:
       - List of VLANs definitions.
     type: list
+    elements: dict
     suboptions:
       name:
         description:
@@ -132,6 +136,7 @@ options:
             description:
               - Name of the interface or lag
             type: list
+            elements: str
           purge:
             description:
               - Purge interfaces not defined in the I(name)
@@ -146,6 +151,7 @@ options:
             description:
               - Name of the interface or lag
             type: list
+            elements: str
           purge:
             description:
               - Purge interfaces not defined in the I(name)
@@ -161,7 +167,7 @@ options:
         suboptions:
           type:
             description:
-              - Specify the type of spanning-tree
+              - Specify the type of spanning-tree.'rstp' is not supported from 9.0.0
             type: str
             default: 802-1w
             choices: ['802-1w','rstp']
@@ -192,12 +198,14 @@ options:
             for associated interfaces. If the value in the C(associated_interfaces) does not match with
             the operational state of vlan interfaces on device it will result in failure.
         type: list
+        elements: str
       associated_tagged:
         description:
           - This is a intent option and checks the operational state of  given vlan C(name)
             for associated tagged ports and lags. If the value in the C(associated_tagged) does not match with
             the operational state of vlan interfaces on device it will result in failure.
         type: list
+        elements: str
   purge:
     description:
       - Purge VLANs not defined in the I(aggregate) parameter.
@@ -697,11 +705,11 @@ def main():
         enabled=dict(type='bool'),
     )
     inter_spec = dict(
-        name=dict(type='list'),
+        name=dict(type='list', elements='str'),
         purge=dict(type='bool')
     )
     tagged_spec = dict(
-        name=dict(type='list'),
+        name=dict(type='list', elements='str'),
         purge=dict(type='bool')
     )
     element_spec = dict(
@@ -711,8 +719,8 @@ def main():
         tagged=dict(type='dict', options=tagged_spec),
         ip_dhcp_snooping=dict(type='bool'),
         ip_arp_inspection=dict(type='bool'),
-        associated_interfaces=dict(type='list'),
-        associated_tagged=dict(type='list'),
+        associated_interfaces=dict(type='list', elements='str'),
+        associated_tagged=dict(type='list', elements='str'),
         delay=dict(default=10, type='int'),
         stp=dict(type='dict', options=stp_spec),
         state=dict(default='present', choices=['present', 'absent']),
