@@ -49,7 +49,7 @@ class TestICXInterfaceModule(TestICXModule):
     def test_icx_interface_set_config(self):
         power = dict(dict(enabled='True'))
         set_module_args(dict(name='ethernet 1/1/1', description='welcome port', speed='1000-full', power=power))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             expected_commands = [
                 'interface ethernet 1/1/1',
@@ -71,7 +71,7 @@ class TestICXInterfaceModule(TestICXModule):
 
     def test_icx_interface_remove(self):
         set_module_args(dict(name='ethernet 1/1/1', state='absent'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             self.assertEqual(result['commands'], ['no interface ethernet 1/1/1'])
         else:
@@ -80,7 +80,7 @@ class TestICXInterfaceModule(TestICXModule):
 
     def test_icx_interface_disable(self):
         set_module_args(dict(name='ethernet 1/1/1', enabled=False))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             self.assertEqual(result['commands'], ['interface ethernet 1/1/1', 'disable'])
         else:
@@ -90,7 +90,7 @@ class TestICXInterfaceModule(TestICXModule):
     def test_icx_interface_set_power(self):
         power = dict(by_class='2')
         set_module_args(dict(name='ethernet 1/1/2', power=dict(power)))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             expected_commands = [
                 'interface ethernet 1/1/2',
@@ -113,7 +113,7 @@ class TestICXInterfaceModule(TestICXModule):
             dict(name='ethernet 1/1/10', description='welcome port10', speed='1000-full', power=power)
         ]
         set_module_args(dict(aggregate=aggregate))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             expected_commands = [
                 'interface ethernet 1/1/9',
@@ -146,7 +146,7 @@ class TestICXInterfaceModule(TestICXModule):
 
     def test_icx_interface_lag_config(self):
         set_module_args(dict(name='lag 11', description='lag ports of id 11', speed='auto'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             expected_commands = [
                 'interface lag 11',
@@ -166,7 +166,7 @@ class TestICXInterfaceModule(TestICXModule):
 
     def test_icx_interface_loopback_config(self):
         set_module_args(dict(name='loopback 10', description='loopback ports', enabled=True))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             result = self.execute_module(changed=True)
             expected_commands = [
                 'interface loopback 10',
@@ -185,14 +185,14 @@ class TestICXInterfaceModule(TestICXModule):
 
     def test_icx_interface_state_up_cndt(self):
         set_module_args(dict(name='ethernet 1/1/1', state='up', tx_rate='ge(0)'))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             self.assertTrue(self.execute_module(failed=False))
         else:
             self.assertTrue(self.execute_module(failed=True))
 
     def test_icx_interface_lldp_neighbors_cndt(self):
         set_module_args(dict(name='ethernet 1/1/48', neighbors=[dict(port='GigabitEthernet1/1/48', host='ICX7150-48 Router')]))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             self.assertTrue(self.execute_module(changed=False, failed=False))
         else:
             self.assertTrue(self.execute_module(changed=False, failed=True))
@@ -200,7 +200,7 @@ class TestICXInterfaceModule(TestICXModule):
     def test_icx_interface_disable_compare(self):
         set_module_args(dict(name='ethernet 1/1/1', enabled=True, check_running_config='True'))
         if self.get_running_config(compare=True):
-            if not self.ENV_ICX_USE_DIFF:
+            if self.CHECK_RUNNING_CONFIG:
                 result = self.execute_module(changed=False)
                 self.assertEqual(result['commands'], [])
             else:

@@ -48,7 +48,7 @@ class TestICXFactsModule(TestICXModule):
 
     def test_icx_l3_interface_set_ipv4(self):
         set_module_args(dict(name="ethernet 1/1/1", ipv4="192.168.1.1/24"))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 "interface ethernet 1/1/1",
                 "ip address 192.168.1.1 255.255.255.0",
@@ -65,7 +65,7 @@ class TestICXFactsModule(TestICXModule):
 
     def test_icx_l3_interface_set_ipv6(self):
         set_module_args(dict(name="ethernet 1/1/1", ipv6="2001:db8:85a3:0:0:0:0:1/64"))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 "interface ethernet 1/1/1",
                 "ipv6 address 2001:db8:85a3:0:0:0:0:1/64",
@@ -82,7 +82,7 @@ class TestICXFactsModule(TestICXModule):
 
     def test_icx_l3_interface_remove_ipv6(self):
         set_module_args(dict(name="ethernet 1/1/1", ipv6="2001:db8:85a3:0:0:0:0:0/64", ipv4="192.168.1.1/24", state="absent"))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 "interface ethernet 1/1/1",
                 "no ip address 192.168.1.1 255.255.255.0",
@@ -103,7 +103,7 @@ class TestICXFactsModule(TestICXModule):
         set_module_args(dict(aggregate=[
             dict(name="ve 1", ipv6="2001:db8:85a3:0:0:0:0:0/64", ipv4="192.168.1.1/24")
         ]))
-        if not self.ENV_ICX_USE_DIFF:
+        if self.CHECK_RUNNING_CONFIG:
             commands = [
                 "interface ve 1",
                 "ipv6 address 2001:db8:85a3:0:0:0:0:0/64",
