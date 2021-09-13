@@ -16,15 +16,10 @@ description:
 notes:
   - Tested against ICX 10.1
 options:
-  overlay_gateway:
+  overlay_gateway_name:
     description: Configures an overlay-gateway name and enters gateway configuration mode. name can be up to 64 characters in length.
     type: str
     required: true
-  state:
-    description: Specifies whether to Configure/remove overlay-gateway configuration.
-    type: str
-    default: present
-    choices: ['present', 'absent']
   overlay_gateway_type:
     description: Set the overlay-gateway type (layer2-extension).
     type: str
@@ -68,15 +63,10 @@ options:
     type: list
     elements: dict
     suboptions:
-      site_name:
+      name:
         description: Specifies the name of the remote site. name can be up to 64 characters in length.
         type: str
         required: true
-      state:
-        description: Specifies whether to Configure/remove the remote site.
-        type: str
-        default: present
-        choices: ['present', 'absent']
       ip:
         description: Configure remote site IP address.
         type: dict
@@ -104,13 +94,23 @@ options:
             type: str
             default: present
             choices: ['present', 'absent']
+      state:
+        description: Specifies whether to Configure/remove the remote site.
+        type: str
+        default: present
+        choices: ['present', 'absent']
+  state:
+    description: Specifies whether to Configure/remove overlay-gateway configuration.
+    type: str
+    default: present
+    choices: ['present', 'absent']
 """
 
 EXAMPLES = """
 - name: configure VxLAN overlay-gateway
   commscope.icx.icx_vxlan:
-    overlay_gateway: gate1
-    type: present
+    overlay_gateway_name: gate1
+    overlay_gateway_type: present
     ip_interface:
       interface_id: 1
       state: present
@@ -121,7 +121,7 @@ EXAMPLES = """
       - vlan_id: 23
         vni_id: 300
     site:
-      - site_name: site1
+      - name: site1
         ip:
           address: 1.1.1.1
           state: present
@@ -132,7 +132,7 @@ EXAMPLES = """
 
 - name: remove overlay-gateway configuration.
   commscope.icx.icx_vxlan:
-    overlay_gateway: gate1
+    overlay_gateway_name: gate1
     state: present
 
 """
@@ -142,12 +142,12 @@ from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx impo
 
 
 def build_command(
-        module, overlay_gateway=None, state=None, overlay_gateway_type=None, ip_interface=None, map_vlan=None, site=None):
+        module, overlay_gateway_name=None, state=None, overlay_gateway_type=None, ip_interface=None, map_vlan=None, site=None):
     cmds = []
     if state == 'absent':
-        cmd = "no overlay-gateway {0}".format(overlay_gateway)
+        cmd = "no overlay-gateway {0}".format(overlay_gateway_name)
     else:
-        cmd = "overlay-gateway {0}".format(overlay_gateway)
+        cmd = "overlay-gateway {0}".format(overlay_gateway_name)
     cmds.append(cmd)
     if state == 'present':
         if overlay_gateway_type is not None:
@@ -168,7 +168,7 @@ def build_command(
         if site is not None:
             for sites in site:
                 if sites['state'] == 'present':
-                    cmd = "site {0}".format(sites['site_name'])
+                    cmd = "site {0}".format(sites['name'])
                     cmds.append(cmd)
                     if sites['ip'] is not None:
                         if sites['ip']['state'] == 'absent':
@@ -185,7 +185,7 @@ def build_command(
                             cmds.append(cmd)
                     cmds.append('exit')
                 else:
-                    cmd = "no site {0}".format(sites['site_name'])
+                    cmd = "no site {0}".format(sites['name'])
                     cmds.append(cmd)
         if map_vlan is not None:
             for vlan in map_vlan:
@@ -221,13 +221,13 @@ def main():
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
     site_spec = dict(
-        site_name=dict(type='str', required=True),
+        name=dict(type='str', required=True),
         state=dict(type='str', default='present', choices=['present', 'absent']),
         ip=dict(type='dict', options=ip_spec),
         extend_vlan=dict(type='list', elements='dict', options=extend_vlan_spec)
     )
     argument_spec = dict(
-        overlay_gateway=dict(type='str', required=True),
+        overlay_gateway_name=dict(type='str', required=True),
         state=dict(type='str', default='present', choices=['present', 'absent']),
         overlay_gateway_type=dict(type='str', choices=['present', 'absent']),
         ip_interface=dict(type='dict', options=ip_interface_spec),
@@ -239,7 +239,7 @@ def main():
 
     warnings = list()
     results = {'changed': False}
-    overlay_gateway = module.params["overlay_gateway"]
+    overlay_gateway_name = module.params["overlay_gateway_name"]
     state = module.params["state"]
     overlay_gateway_type = module.params["overlay_gateway_type"]
     ip_interface = module.params["ip_interface"]
@@ -250,7 +250,7 @@ def main():
         results['warnings'] = warnings
 
     commands = build_command(
-        module, overlay_gateway, state, overlay_gateway_type, ip_interface, map_vlan, site)
+        module, overlay_gateway_name, state, overlay_gateway_type, ip_interface, map_vlan, site)
     results['commands'] = commands
 
     if commands:

@@ -30,10 +30,10 @@ class TestICXAclAssignModule(TestICXModule):
 
     def test_icx_vxlan_all_options(self):
         ''' Test for successful vxlan with all options'''
-        set_module_args(dict(overlay_gateway='gate1', overlay_gateway_type='present', ip_interface=dict(interface_id=1),
+        set_module_args(dict(overlay_gateway_name='gate1', overlay_gateway_type='present', ip_interface=dict(interface_id=1),
                              map_vlan=[dict(vlan_id=30, vni_id=100), dict(vlan_id=40, vni_id=200)],
-                             site=[dict(site_name='site1', ip=dict(address='1.1.1.1'), extend_vlan=[dict(vlan_id=30), dict(vlan_id=40)]),
-                                   dict(site_name='site2', ip=dict(address='2.2.2.2'), extend_vlan=[dict(vlan_id=30), dict(vlan_id=40)])]))
+                             site=[dict(name='site1', ip=dict(address='1.1.1.1'), extend_vlan=[dict(vlan_id=30), dict(vlan_id=40)]),
+                                   dict(name='site2', ip=dict(address='2.2.2.2'), extend_vlan=[dict(vlan_id=30), dict(vlan_id=40)])]))
         expected_commands = [
             'overlay-gateway gate1',
             'type layer2-extension',
@@ -55,10 +55,10 @@ class TestICXAclAssignModule(TestICXModule):
 
     def test_icx_vxlan_all_options_remove(self):
         ''' Test for removing vxlan with all options'''
-        set_module_args(dict(overlay_gateway='gate1', overlay_gateway_type='absent', ip_interface=dict(interface_id=1, state='absent'),
+        set_module_args(dict(overlay_gateway_name='gate1', overlay_gateway_type='absent', ip_interface=dict(interface_id=1, state='absent'),
                              map_vlan=[dict(vlan_id=30, vni_id=100, state='absent'), dict(vlan_id=40, vni_id=200, state='absent')],
-                             site=[dict(site_name='site1', state='absent', ip=dict(address='1.1.1.1'), extend_vlan=[dict(vlan_id=30), dict(vlan_id=40)]),
-                                   dict(site_name='site2', ip=dict(address='2.2.2.2'), state='absent', extend_vlan=[dict(vlan_id=30), dict(vlan_id=40)])]))
+                             site=[dict(name='site1', state='absent', ip=dict(address='1.1.1.1'), extend_vlan=[dict(vlan_id=30), dict(vlan_id=40)]),
+                                   dict(name='site2', ip=dict(address='2.2.2.2'), state='absent', extend_vlan=[dict(vlan_id=30), dict(vlan_id=40)])]))
         expected_commands = [
             'overlay-gateway gate1',
             'no ip interface loopback 1',
@@ -72,7 +72,7 @@ class TestICXAclAssignModule(TestICXModule):
 
     def test_icx_vxlan_config_overlay_gateway(self):
         ''' Test for configuring overlay_gateway with some options'''
-        set_module_args(dict(overlay_gateway='gate1', overlay_gateway_type='present', ip_interface=dict(interface_id=1),
+        set_module_args(dict(overlay_gateway_name='gate1', overlay_gateway_type='present', ip_interface=dict(interface_id=1),
                              map_vlan=[dict(vlan_id=40, vni_id=200)]))
         expected_commands = [
             'overlay-gateway gate1',
@@ -84,7 +84,7 @@ class TestICXAclAssignModule(TestICXModule):
 
     def test_icx_vxlan_remove_overlay_gateway(self):
         ''' Test for removing  overlay_gateway'''
-        set_module_args(dict(overlay_gateway='gate1', state='absent', overlay_gateway_type='present'))
+        set_module_args(dict(overlay_gateway_name='gate1', state='absent', overlay_gateway_type='present'))
         expected_commands = [
             'no overlay-gateway gate1']
         result = self.execute_module(changed=True)
@@ -92,7 +92,7 @@ class TestICXAclAssignModule(TestICXModule):
 
     def test_icx_vxlan_config_site_remove(self):
         ''' Test for removing remote site configurations'''
-        set_module_args(dict(overlay_gateway='gate1', site=[dict(site_name='site1', ip=dict(address='1.1.1.1', state='absent'),
+        set_module_args(dict(overlay_gateway_name='gate1', site=[dict(name='site1', ip=dict(address='1.1.1.1', state='absent'),
                              extend_vlan=[dict(vlan_id=30, state='absent')])]))
         expected_commands = [
             'overlay-gateway gate1',
