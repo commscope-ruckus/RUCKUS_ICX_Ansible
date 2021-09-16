@@ -30,7 +30,7 @@ options:
         description:
           - State of lldp configuration for interfaces
         type: str
-        choices: ['present', 'absent', 'enabled', 'disabled']
+        choices: ['present', 'absent']
     type: list
     elements: dict
   check_running_config:
@@ -43,7 +43,7 @@ options:
     description:
       - Enables the receipt and transmission of Link Layer Discovery Protocol (LLDP) globally.
     type: str
-    choices: ['present', 'absent', 'enabled', 'disabled']
+    choices: ['present', 'absent']
 '''
 
 EXAMPLES = """
