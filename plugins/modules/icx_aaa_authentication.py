@@ -56,7 +56,6 @@ options:
         description: Configures the device to prompt only for a password when a user attempts to
                      gain Super User access to the Privileged EXEC and global configuration levels of the CLI.
         type: bool
-        default: false
       state:
         description: Specifies whether to configure or remove the authentication method.
         type: str
@@ -237,7 +236,7 @@ def main():
     enable_spec = dict(
         primary_method=dict(type='str', choices=['enable', 'line', 'local', 'radius', 'tacacs', 'tacacs+', 'none']),
         backup_method_list=dict(type='list', elements='str', choices=['enable', 'line', 'local', 'radius', 'tacacs', 'tacacs+', 'none']),
-        implicit_user=dict(type='bool', default=False),
+        implicit_user=dict(type='bool'),
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
     login_spec = dict(
