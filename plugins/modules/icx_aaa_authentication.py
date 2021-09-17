@@ -17,7 +17,7 @@ notes:
   - Tested against ICX 10.1
 options:
   dot1x:
-    description: Enables 802.1X and MAC authentication.'none' method is not supported in 9.0.0 and 9.0.10
+    description: Enables 802.1X and MAC authentication."none" is not supported from 9.0.0
     default: null
     type: dict
     suboptions:
@@ -39,7 +39,7 @@ options:
     description: Configures the AAA authentication method for securing access to the Privileged EXEC level and global configuration levels of the CLI.
                  Only one of method-list or implicit-user should be provided. If the configured primary authentication fails due to an error,
                  the device tries the backup authentication methods in the order they appear in the list.
-                 Only local, radius and tacacs+ methods are supported in 9.0.10 and 9.0.0
+                 Only local, radius and tacacs+ methods are supported from 9.0.0
     default: null
     type: dict
     suboptions:
@@ -65,7 +65,7 @@ options:
   login:
     description: Configures the AAA authentication method for securing access to the Privileged EXEC level and global configuration levels of the CLI.
                  Only one of metod-list or implicit-user should be provided.
-                 Only local, radius, tacacs+ methods are supported in 9.0.10 and 9.0.0.
+                 Only local, radius, tacacs+ methods are supported from 9.0.0
     default: null
     type: dict
     suboptions:
@@ -89,7 +89,7 @@ options:
         choices: ['present', 'absent']
   snmp_server:
     description: Configures the AAA authentication method for SNMP server access.
-                 Only local, radius, tacacs+ methods are supported in 9.0.10 and 9.0.0.
+                 Only local, radius, tacacs+ methods are supported from 9.0.0
     default: null
     type: dict
     suboptions:
@@ -110,7 +110,7 @@ options:
         choices: ['present', 'absent']
   web_server:
     description: Configures the AAA authentication method to access the device through the Web Management Interface.
-                 Only local, radius, tacacs+ methods are supported in 9.0.10 and 9.0.0.
+                 Only local, radius, tacacs+ methods are supported from 9.0.0
     default: null
     type: dict
     suboptions:
