@@ -30,7 +30,7 @@ options:
         description:
           - State of lldp configuration for interfaces
         type: str
-        choices: ['present', 'absent', 'enabled', 'disabled']
+        choices: ['present', 'absent']
     type: list
     elements: dict
   check_running_config:
@@ -43,7 +43,7 @@ options:
     description:
       - Enables the receipt and transmission of Link Layer Discovery Protocol (LLDP) globally.
     type: str
-    choices: ['present', 'absent', 'enabled', 'disabled']
+    choices: ['present', 'absent']
 '''
 
 EXAMPLES = """
@@ -115,14 +115,12 @@ def main():
     """
     interfaces_spec = dict(
         name=dict(type='list', elements='str'),
-        state=dict(choices=['present', 'absent',
-                            'enabled', 'disabled'])
+        state=dict(choices=['present', 'absent'])
     )
 
     argument_spec = dict(
         interfaces=dict(type='list', elements='dict', options=interfaces_spec),
-        state=dict(choices=['present', 'absent',
-                            'enabled', 'disabled']),
+        state=dict(choices=['present', 'absent']),
         check_running_config=dict(default=False, type='bool', fallback=(env_fallback, ['ANSIBLE_CHECK_ICX_RUNNING_CONFIG']))
     )
 
