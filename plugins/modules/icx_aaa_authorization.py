@@ -18,13 +18,8 @@ notes:
 options:
   coa_enable:
     description: Enables RADIUS Change of Authorization (CoA).
-    type: dict
-    suboptions:
-      state:
-        description: Specifies whether to configure or remove authorization.
-        type: str
-        default: present
-        choices: ['present', 'absent']
+    type: str
+    choices: ['present', 'absent']
   coa_ignore:
     description: Discards the specified RADIUS Change of Authorization (CoA) messages.
     type: dict
@@ -32,7 +27,8 @@ options:
       request:
         description: Specifies which message request to ignore.
         required: true
-        type: str
+        type: list
+        elements: str
         choices: ['disable-port', 'dm-request', 'flip-port', 'modify-acl', 'reauth-host']
       state:
         description: Specifies whether to configure or remove authorization.
@@ -119,7 +115,7 @@ def build_command(module, coa_enable=None, coa_ignore=None, commands=None, exec_
     cmds = []
 
     if coa_enable is not None:
-        if coa_enable['state'] == 'absent':
+        if coa_enable == 'absent':
             cmd = "no aaa authorization coa enable"
         else:
             cmd = "aaa authorization coa enable"
@@ -127,9 +123,9 @@ def build_command(module, coa_enable=None, coa_ignore=None, commands=None, exec_
 
     if coa_ignore is not None:
         if coa_ignore['state'] == 'absent':
-            cmd = "no aaa authorization coa ignore {0}".format(coa_ignore['request'])
+            cmd = "no aaa authorization coa ignore " + " ".join(coa_ignore['request'])
         else:
-            cmd = "aaa authorization coa ignore {0}".format(coa_ignore['request'])
+            cmd = "aaa authorization coa ignore " + " ".join(coa_ignore['request'])
         cmds.append(cmd)
 
     if commands is not None:
@@ -167,12 +163,9 @@ def main():
     """entry point for module execution
     """
 
-    coa_enable_spec = dict(
-        state=dict(type='str', default='present', choices=['present', 'absent'])
-    )
     coa_ignore_spec = dict(
         state=dict(type='str', default='present', choices=['present', 'absent']),
-        request=dict(type='str', required=True, choices=['disable-port', 'dm-request', 'flip-port', 'modify-acl', 'reauth-host'])
+        request=dict(type='list', elements='str', required=True, choices=['disable-port', 'dm-request', 'flip-port', 'modify-acl', 'reauth-host'])
     )
     commands_spec = dict(
         privilege_level=dict(type='int', required=True, choices=[0, 4, 5]),
@@ -189,7 +182,7 @@ def main():
     )
     argument_spec = dict(
         coa_ignore=dict(type='dict', options=coa_ignore_spec),
-        coa_enable=dict(type='dict', options=coa_enable_spec),
+        coa_enable=dict(type='str', choices=['present', 'absent']),
         commands=dict(type='dict', options=commands_spec),
         exec_=dict(type='dict', options=exec_spec)
     )

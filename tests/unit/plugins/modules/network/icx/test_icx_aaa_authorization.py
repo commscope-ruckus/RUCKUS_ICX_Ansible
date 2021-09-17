@@ -31,12 +31,12 @@ class TestICXAaaAuthorizationModule(TestICXModule):
 
     def test_icx_aaa_authorization_all_options(self):
         ''' Test for successful aaa authorization with all options'''
-        set_module_args(dict(coa_enable=dict(state='present'),
-                             coa_ignore=dict(request='dm-request'),
+        set_module_args(dict(coa_enable='present',
+                             coa_ignore=dict(request=['dm-request', 'disable-port', 'flip-port', 'modify-acl', 'reauth-host']),
                              commands=dict(privilege_level=0, primary_method='radius', backup_method1='tacacs+', backup_method2='none'),
                              exec_=dict(primary_method='radius', backup_method1='tacacs+', backup_method2='none')))
         expected_commands = ['aaa authorization coa enable',
-                             'aaa authorization coa ignore dm-request',
+                             'aaa authorization coa ignore dm-request disable-port flip-port modify-acl reauth-host',
                              'aaa authorization commands 0 default radius tacacs+ none',
                              'aaa authorization exec default radius tacacs+ none']
         result = self.execute_module(changed=True)
@@ -44,7 +44,7 @@ class TestICXAaaAuthorizationModule(TestICXModule):
 
     def test_icx_aaa_authorization_all_options_no_backup(self):
         ''' Test for successful aaa authorization without backup_method options'''
-        set_module_args(dict(coa_enable=dict(state='present'),
+        set_module_args(dict(coa_enable='present',
                              coa_ignore=dict(request='dm-request'),
                              commands=dict(privilege_level=0, primary_method='radius'),
                              exec_=dict(primary_method='radius')))
@@ -57,12 +57,12 @@ class TestICXAaaAuthorizationModule(TestICXModule):
 
     def test_icx_aaa_authorization_all_options_remove(self):
         ''' Test for removiong aaa authorization with all options'''
-        set_module_args(dict(coa_enable=dict(state='absent'),
-                             coa_ignore=dict(request='dm-request', state='absent'),
+        set_module_args(dict(coa_enable='absent',
+                             coa_ignore=dict(request=['dm-request', 'disable-port', 'flip-port', 'modify-acl', 'reauth-host'], state='absent'),
                              commands=dict(privilege_level=0, primary_method='radius', backup_method1='tacacs+', backup_method2='none', state='absent'),
                              exec_=dict(primary_method='radius', backup_method1='tacacs+', backup_method2='none', state='absent')))
         expected_commands = ['no aaa authorization coa enable',
-                             'no aaa authorization coa ignore dm-request',
+                             'no aaa authorization coa ignore dm-request disable-port flip-port modify-acl reauth-host',
                              'no aaa authorization commands 0 default radius tacacs+ none',
                              'no aaa authorization exec default radius tacacs+ none']
         result = self.execute_module(changed=True)
@@ -70,7 +70,7 @@ class TestICXAaaAuthorizationModule(TestICXModule):
 
     def test_icx_aaa_authorization_all_options_no_backup_remove(self):
         ''' Test for removing aaa authorization without backup_method options'''
-        set_module_args(dict(coa_enable=dict(state='absent'),
+        set_module_args(dict(coa_enable='absent',
                              coa_ignore=dict(request='dm-request', state='absent'),
                              commands=dict(privilege_level=0, primary_method='radius', state='absent'),
                              exec_=dict(primary_method='radius', state='absent')))
@@ -83,7 +83,7 @@ class TestICXAaaAuthorizationModule(TestICXModule):
 
     def test_icx_aaa_authorization_coa_enable_coa_ignore(self):
         ''' Test for successful aaa authorization for coa_ignore and commands'''
-        set_module_args(dict(coa_enable=dict(state='present'), coa_ignore=dict(request='dm-request', state='present')))
+        set_module_args(dict(coa_enable='present', coa_ignore=dict(request='dm-request', state='present')))
         expected_commands = ['aaa authorization coa enable', 'aaa authorization coa ignore dm-request']
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], expected_commands)
