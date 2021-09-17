@@ -105,6 +105,20 @@ class TestICXAaaAuthenticationModule(TestICXModule):
         result = self.execute_module(changed=True)
         self.assertEqual(result['commands'], expected_commands)
 
+    def test_icx_aaa_authentication_enable_implicit_user(self):
+        ''' Test for successful aaa authentication for enable implicit-user'''
+        set_module_args(dict(enable=dict(implicit_user=True)))
+        expected_commands = ['aaa authentication enable implicit-user']
+        result = self.execute_module(changed=True)
+        self.assertEqual(result['commands'], expected_commands)
+
+    def test_icx_aaa_authentication_remove_enable_implicit_user(self):
+        ''' Test for removing aaa authentication for enable implicit-user'''
+        set_module_args(dict(enable=dict(implicit_user=False)))
+        expected_commands = ['no aaa authentication enable implicit-user']
+        result = self.execute_module(changed=True)
+        self.assertEqual(result['commands'], expected_commands)
+
     def test_icx_aaa_authentication_web_server(self):
         ''' Test for successful aaa authentication for web_server'''
         set_module_args(dict(web_server=dict(primary_method='tacacs', state='present')))

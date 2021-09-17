@@ -17,7 +17,7 @@ notes:
   - Tested against ICX 10.1
 options:
   dot1x:
-    description: Enables 802.1X and MAC authentication.
+    description: Enables 802.1X and MAC authentication."none" is not supported from 9.0.0
     default: null
     type: dict
     suboptions:
@@ -39,6 +39,7 @@ options:
     description: Configures the AAA authentication method for securing access to the Privileged EXEC level and global configuration levels of the CLI.
                  Only one of method-list or implicit-user should be provided. If the configured primary authentication fails due to an error,
                  the device tries the backup authentication methods in the order they appear in the list.
+                 Only local, radius and tacacs+ methods are supported from 9.0.0
     default: null
     type: dict
     suboptions:
@@ -55,7 +56,6 @@ options:
         description: Configures the device to prompt only for a password when a user attempts to
                      gain Super User access to the Privileged EXEC and global configuration levels of the CLI.
         type: bool
-        default: false
       state:
         description: Specifies whether to configure or remove the authentication method.
         type: str
@@ -64,6 +64,7 @@ options:
   login:
     description: Configures the AAA authentication method for securing access to the Privileged EXEC level and global configuration levels of the CLI.
                  Only one of metod-list or implicit-user should be provided.
+                 Only local, radius, tacacs+ methods are supported from 9.0.0
     default: null
     type: dict
     suboptions:
@@ -87,6 +88,7 @@ options:
         choices: ['present', 'absent']
   snmp_server:
     description: Configures the AAA authentication method for SNMP server access.
+                 Only local, radius, tacacs+ methods are supported from 9.0.0
     default: null
     type: dict
     suboptions:
@@ -107,6 +109,7 @@ options:
         choices: ['present', 'absent']
   web_server:
     description: Configures the AAA authentication method to access the device through the Web Management Interface.
+                 Only local, radius, tacacs+ methods are supported from 9.0.0
     default: null
     type: dict
     suboptions:
@@ -179,10 +182,10 @@ def build_command(module, dot1x=None, enable=None, login=None, snmp_server=None,
                 cmd += " " + " ".join(enable['backup_method_list'])
             cmds.append(cmd)
         elif enable['implicit_user'] is not None:
-            if enable['state'] == 'absent':
-                cmd = "no aaa authentication enable implicit-user"
-            else:
+            if enable['implicit_user']:
                 cmd = "aaa authentication enable implicit-user"
+            else:
+                cmd = "no aaa authentication enable implicit-user"
             cmds.append(cmd)
 
     if login is not None:
@@ -233,7 +236,7 @@ def main():
     enable_spec = dict(
         primary_method=dict(type='str', choices=['enable', 'line', 'local', 'radius', 'tacacs', 'tacacs+', 'none']),
         backup_method_list=dict(type='list', elements='str', choices=['enable', 'line', 'local', 'radius', 'tacacs', 'tacacs+', 'none']),
-        implicit_user=dict(type='bool', default=False),
+        implicit_user=dict(type='bool'),
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
     login_spec = dict(
