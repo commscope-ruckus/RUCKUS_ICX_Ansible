@@ -64,7 +64,7 @@ This collection includes [network resource modules](https://docs.ansible.com/ans
 ### Using modules from the Commscope ICX collection in your playbooks
 
 You can call modules by their Fully Qualified Collection Namespace (FQCN), such as `commscope.icx.icx_vlan`.
-The following example task replaces configuration changes in the existing configuration on a Cisco IOS network device, using the FQCN:
+The following example task replaces configuration changes in the existing configuration on a RUCKUS ICX switch, using the FQCN:
 
 ```yaml
 ---
