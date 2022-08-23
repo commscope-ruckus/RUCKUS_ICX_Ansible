@@ -261,64 +261,74 @@ def build_command(
     cmds = []
 
     if global_auth is not None:
-        cmd = 'authentication'
-        cmds.append(cmd)
-        if global_auth['auth_default_vlan'] is not None:
-            if global_auth['auth_default_vlan']['state'] == 'absent':
-                cmd = "no auth-default-vlan {0}".format(global_auth['auth_default_vlan']['vlan_id'])
-            else:
-                cmd = "auth-default-vlan {0}".format(global_auth['auth_default_vlan']['vlan_id'])
+        if global_auth['state'] is None or  global_auth['state'] == 'present':
+            cmd = 'authentication'
             cmds.append(cmd)
-        if global_auth['re_authentication'] is not None:
-            if global_auth['re_authentication'] == 'absent':
-                cmd = "no re-authentication"
-            else:
-                cmd = "re-authentication"
-            cmds.append(cmd)
-        if global_auth['restricted_vlan'] is not None:
-            if global_auth['restricted_vlan']['state'] == 'absent':
-                cmd = "no restricted-vlan {0}".format(global_auth['restricted_vlan']['vlan_id'])
-            else:
-                cmd = "restricted-vlan {0}".format(global_auth['restricted_vlan']['vlan_id'])
-            cmds.append(cmd)
-        if global_auth['voice_vlan'] is not None:
-            if global_auth['voice_vlan']['state'] == 'absent':
-                cmd = "no voice-vlan {0}".format(global_auth['voice_vlan']['vlan_id'])
-            else:
-                cmd = "voice-vlan {0}".format(global_auth['voice_vlan']['vlan_id'])
-            cmds.append(cmd)
-        if global_auth['critical_vlan'] is not None:
-            if global_auth['critical_vlan']['state'] == 'absent':
-                cmd = "no critical-vlan {0}".format(global_auth['critical_vlan']['vlan_id'])
-            else:
-                cmd = "critical-vlan {0}".format(global_auth['critical_vlan']['vlan_id'])
-            cmds.append(cmd)
-        if global_auth['auth_fail_action'] is not None:
-            if global_auth['auth_fail_action']['state'] == 'absent':
-                cmd = "no auth-fail-action"
-            else:
-                cmd = "auth-fail-action"
-            if global_auth['auth_fail_action']['restricted_vlan']:
-                cmd += " restricted-vlan"
-                if global_auth['auth_fail_action']['voice_vlan']:
-                    cmd += " voice voice-vlan"
-            cmds.append(cmd)
-        if global_auth['auth_timeout_action'] is not None:
-            if global_auth['auth_timeout_action']['state'] == 'absent':
-                cmd = "no auth-timeout-action"
-            else:
-                cmd = "auth-timeout-action"
-            if global_auth['auth_timeout_action']['critical_vlan']:
-                cmd += " critical-vlan"
-                if global_auth['auth_timeout_action']['voice_vlan']:
-                    cmd += " voice voice-vlan"
-            elif global_auth['auth_timeout_action']['failure']:
-                cmd += " failure"
-            elif global_auth['auth_timeout_action']['success']:
-                cmd += " success"
-            cmds.append(cmd)
-        cmds.append('exit')
+            if global_auth['auth_default_vlan'] is not None:
+                if global_auth['auth_default_vlan']['state'] == 'absent':
+                    cmd = "no auth-default-vlan {0}".format(global_auth['auth_default_vlan']['vlan_id'])
+                else:
+                    cmd = "auth-default-vlan {0}".format(global_auth['auth_default_vlan']['vlan_id'])
+                cmds.append(cmd)
+            if global_auth['re_authentication'] is not None:
+                if global_auth['re_authentication'] == 'absent':
+                    cmd = "no re-authentication"
+                else:
+                    cmd = "re-authentication"
+                cmds.append(cmd)
+            if global_auth['restricted_vlan'] is not None:
+                if global_auth['restricted_vlan']['state'] == 'present':
+                    cmd = "restricted-vlan {0}".format(global_auth['restricted_vlan']['vlan_id'])
+                    cmds.append(cmd)
+            if global_auth['voice_vlan'] is not None:
+                if global_auth['voice_vlan']['state'] == 'present':
+                    cmd = "voice-vlan {0}".format(global_auth['voice_vlan']['vlan_id'])
+                    cmds.append(cmd)
 
+            if global_auth['auth_fail_action'] is not None:
+                if global_auth['auth_fail_action']['state'] == 'absent':
+                    cmd = "no auth-fail-action"
+                else:
+                    cmd = "auth-fail-action"
+                if global_auth['auth_fail_action']['restricted_vlan']:
+                    cmd += " restricted-vlan"
+                    if global_auth['auth_fail_action']['voice_vlan']:
+                        cmd += " voice voice-vlan"
+                cmds.append(cmd)
+
+            if global_auth['restricted_vlan'] is not None:
+                if global_auth['restricted_vlan']['state'] == 'absent':
+                    cmd = "no restricted-vlan {0}".format(global_auth['restricted_vlan']['vlan_id'])
+                    cmds.append(cmd)
+            if global_auth['voice_vlan'] is not None:
+                if global_auth['voice_vlan']['state'] == 'absent':
+                     cmd = "no voice-vlan {0}".format(global_auth['voice_vlan']['vlan_id'])
+                     cmds.append(cmd)
+            if global_auth['critical_vlan'] is not None:
+                if global_auth['critical_vlan']['state'] == 'present':
+                    cmd = "critical-vlan {0}".format(global_auth['critical_vlan']['vlan_id'])
+                    cmds.append(cmd)
+            if global_auth['auth_timeout_action'] is not None:
+                if global_auth['auth_timeout_action']['state'] == 'absent':
+                    cmd = "no auth-timeout-action"
+                else:
+                    cmd = "auth-timeout-action"
+                if global_auth['auth_timeout_action']['critical_vlan']:
+                    cmd += " critical-vlan"
+                    if global_auth['auth_timeout_action']['voice_vlan']:
+                        cmd += " voice voice-vlan"
+                elif global_auth['auth_timeout_action']['failure']:
+                    cmd += " failure"
+                elif global_auth['auth_timeout_action']['success']:
+                    cmd += " success"
+                cmds.append(cmd)
+            if global_auth['critical_vlan'] is not None:
+                if global_auth['critical_vlan']['state'] == 'absent':
+                    cmd = "no critical-vlan {0}".format(global_auth['critical_vlan']['vlan_id'])
+                    cmds.append(cmd)
+        else:
+            cmd = "no authentication"
+            cmds.append(cmd)
     if interface_auth is not None:
         cmd = "interface"
         for ethernet in interface_auth['interface']:
@@ -404,8 +414,9 @@ def main():
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
     required_one_of = [['critical_vlan', 'failure', 'success']]
-    mutually_exclusive = [('critical_vlan', 'failure', 'success')]
+    mutually_exclusive = [('critical_vlan', 'failure', 'success'),('voice_vlan','failure','success')]
     global_auth_spec = dict(
+        state=dict(type='str', choices=['present', 'absent']),
         auth_default_vlan=dict(type='dict', options=auth_default_vlan_spec),
         re_authentication=dict(type='str', choices=['present', 'absent']),
         restricted_vlan=dict(type='dict', options=restricted_vlan_spec),
@@ -428,7 +439,7 @@ def main():
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
     required_one_of = [['critical_vlan', 'failure', 'success']]
-    mutually_exclusive = [('critical_vlan', 'failure', 'success')]
+    mutually_exclusive = [('critical_vlan', 'failure', 'success'),('voice_vlan','failure','success')]
     use_radius_server_spec = dict(
         ip_address=dict(type='str', required=True),
         state=dict(type='str', default='present', choices=['present', 'absent'])
