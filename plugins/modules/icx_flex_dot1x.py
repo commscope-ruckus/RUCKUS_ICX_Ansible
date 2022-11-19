@@ -251,12 +251,14 @@ def build_command(
         else:
             cmd = "dot1x timeout"
         if timeout['quiet_period'] is not None:
-            cmd += " quiet-period {0}".format(timeout['quiet_period'])
-        elif timeout['supplicant'] is not None:
-            cmd += " supplicant {0}".format(timeout['supplicant'])
-        elif timeout['tx_period'] is not None:
-            cmd += " tx-period {0}".format(timeout['tx_period'])
-        cmds.append(cmd)
+            cmd1 =cmd+ " quiet-period {0}".format(timeout['quiet_period'])
+            cmds.append(cmd1)
+        if timeout['supplicant'] is not None:
+            cmd2 =cmd+ " supplicant {0}".format(timeout['supplicant'])
+            cmds.append(cmd2)
+        if timeout['tx_period'] is not None:
+            cmd3 =cmd+ " tx-period {0}".format(timeout['tx_period'])
+            cmds.append(cmd3)
     cmds.append('exit')
     if radius_server_dead_time is not None:
         if radius_server_dead_time['state'] == 'absent':
