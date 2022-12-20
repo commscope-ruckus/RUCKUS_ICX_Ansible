@@ -268,7 +268,7 @@ def map_obj_to_commands(updates, module):
 
 def main():
     element_spec = dict(
-        group=dict(type='int'),
+        group=dict(),
         name=dict(type='str'),
         mode=dict(choices=['dynamic', 'static']),
         members=dict(type='list', elements='str'),
@@ -278,7 +278,7 @@ def main():
     )
 
     aggregate_spec = deepcopy(element_spec)
-    aggregate_spec['group'] = dict(required=True, type='int')
+    aggregate_spec['group'] = dict(required=True)
 
     required_one_of = [['group', 'aggregate']]
     required_together = [['name', 'group']]
