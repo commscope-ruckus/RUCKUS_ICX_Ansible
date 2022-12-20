@@ -138,19 +138,19 @@ options:
 
 EXAMPLES = """
 - name: Create a new user without password
-  community.network.icx_user:
+  commscope.icx.icx_user:
     name: user1
     nopassword: true
 - name: Create a new user with password
-  community.network.icx_user:
+  commscope.icx.icx_user:
     name: user1
     configured_password: 'newpassword'
 - name: Remove users
-  community.network.icx_user:
+  commscope.icx.icx_user:
     name: user1
     state: absent
 - name: Set user privilege level to 5
-  community.network.icx_user:
+  commscope.icx.icx_user:
     name: user1
     privilege: 5
 """

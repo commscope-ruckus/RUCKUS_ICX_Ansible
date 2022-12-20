@@ -54,7 +54,7 @@ options:
 
 EXAMPLES = """
 - name: Configure the motd banner
-  community.network.icx_banner:
+  commscope.icx.icx_banner:
     banner: motd
     text: |
         this is my motd banner
@@ -62,15 +62,15 @@ EXAMPLES = """
         string
     state: present
 - name: Remove the motd banner
-  community.network.icx_banner:
+  commscope.icx.icx_banner:
     banner: motd
     state: absent
 - name: Configure require-enter-key for motd
-  community.network.icx_banner:
+  commscope.icx.icx_banner:
     banner: motd
     enterkey: True
 - name: Remove require-enter-key for motd
-  community.network.icx_banner:
+  commscope.icx.icx_banner:
     banner: motd
     enterkey: False
 """

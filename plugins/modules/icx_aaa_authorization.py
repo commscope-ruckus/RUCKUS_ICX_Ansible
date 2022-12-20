@@ -87,14 +87,14 @@ options:
 """
 EXAMPLES = """
 - name: configure aaa authorization coa_enable and coa_ignore
-  community.network.icx_aaa_authorization:
+  commscope.icx.icx_aaa_authorization:
     coa_enable:
       state: present
     coa_ignore:
       request: flip-port
       state: present
 - name: disable aaa authorization for commands
-  community.network.icx_aaa_authorization:
+  commscope.icx.icx_aaa_authorization:
     commands:
       privilege_level: 0
       primary_method: radius

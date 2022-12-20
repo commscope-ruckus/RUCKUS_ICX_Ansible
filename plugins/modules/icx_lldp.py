@@ -48,13 +48,13 @@ options:
 
 EXAMPLES = """
 - name: Disable LLDP
-  community.network.icx_lldp:
+  commscope.icx.icx_lldp:
     state: absent
 - name: Enable LLDP
-  community.network.icx_lldp:
+  commscope.icx.icx_lldp:
     state: present
 - name: Disable LLDP on ports 1/1/1 - 1/1/10, 1/1/20
-  community.network.icx_lldp:
+  commscope.icx.icx_lldp:
     interfaces:
      - name:
         - ethernet 1/1/1 to 1/1/10
@@ -62,7 +62,7 @@ EXAMPLES = """
        state: absent
     state: present
 - name: Enable LLDP on ports 1/1/5 - 1/1/10
-  community.network.icx_lldp:
+  commscope.icx.icx_lldp:
     interfaces:
       - name:
         - ethernet 1/1/1 to 1/1/10

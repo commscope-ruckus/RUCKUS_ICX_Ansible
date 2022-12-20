@@ -135,7 +135,7 @@ options:
 """
 EXAMPLES = """
 - name: configure aaa accounting mac_auth and commands
-  community.network.icx_aaa_accounting_console:
+  commscope.icx.icx_aaa_accounting_console:
     mac_auth:
       primary_method: none
       state: present
@@ -145,7 +145,7 @@ EXAMPLES = """
       backup_method1: none
       state: present
 - name: disable aaa accounting for system
-  community.network.icx_aaa_accounting_console:
+  commscope.icx.icx_aaa_accounting_console:
     system:
       primary_method: tacacs+
       backup_method1: radius

@@ -222,67 +222,67 @@ options:
 
 EXAMPLES = """
 - name: Enable ethernet port and set name
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
     name: ethernet 1/1/1
     description: interface-1
     stp: true
     enabled: true
 - name: Disable ethernet port 1/1/1
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
       name: ethernet 1/1/1
       enabled: false
 - name: Enable ethernet port range, set name and speed
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
       name: ethernet 1/1/1 to 1/1/10
       description: interface-1
       speed: 100-full
       enabled: true
 - name: Enable poe. Set class
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
       name: ethernet 1/1/1
       power:
        by_class: 2
 - name: Configure poe limit of interface
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
       name: ethernet 1/1/1
       power:
        limit: 10000
 - name: Disable poe of interface
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
       name: ethernet 1/1/1
       power:
        enabled: false
 - name: Set lag name for a range of lags
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
       name: lag 1 to 10
       description: test lags
 - name: Disable lag
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
       name: lag 1
       enabled: false
 - name: Enable management interface
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
       name: management 1
       enabled: true
 - name: Enable loopback interface
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
       name: loopback 10
       enabled: true
 - name: Add interface using aggregate
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
       aggregate:
       - { name: ethernet 1/1/1, description: test-interface-1, power: { by_class: 2 } }
       - { name: ethernet 1/1/3, description: test-interface-3}
       speed: 10-full
       enabled: true
 - name: Check tx_rate, rx_rate intent arguments
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
     name: ethernet 1/1/10
     state: up
     tx_rate: ge(0)
     rx_rate: le(0)
 - name: Check neighbors intent arguments
-  community.network.icx_interface:
+  commscope.icx.icx_interface:
     name: ethernet 1/1/10
     neighbors:
     - port: 1/1/5

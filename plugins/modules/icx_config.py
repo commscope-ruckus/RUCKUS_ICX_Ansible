@@ -175,16 +175,16 @@ options:
 
 EXAMPLES = """
 - name: Configure top level configuration
-  community.network.icx_config:
+  commscope.icx.icx_config:
     lines: hostname {{ inventory_hostname }}
 - name: Configure interface settings
-  community.network.icx_config:
+  commscope.icx.icx_config:
     lines:
       - port-name test string
       - ip address 172.31.1.1 255.255.255.0
     parents: interface ethernet 1/1/2
 - name: Configure ip helpers on multiple interfaces
-  community.network.icx_config:
+  commscope.icx.icx_config:
     lines:
       - ip helper-address 172.26.1.10
       - ip helper-address 172.26.3.8
@@ -193,7 +193,7 @@ EXAMPLES = """
     - interface ethernet 1/1/2
     - interface ethernet 1/1/3
 - name: Load new acl into device
-  community.network.icx_config:
+  commscope.icx.icx_config:
     lines:
       - permit ip host 192.0.2.1 any log
       - permit ip host 192.0.2.2 any log
@@ -203,16 +203,16 @@ EXAMPLES = """
     before: no ip access-list extended test
     match: exact
 - name: Check the running-config against master config
-  community.network.icx_config:
+  commscope.icx.icx_config:
     diff_against: intended
     intended_config: "{{ lookup('file', 'master.cfg') }}"
 - name: Check the configuration against the running-config
-  community.network.icx_config:
+  commscope.icx.icx_config:
     diff_against: startup
     diff_ignore_lines:
       - ntp clock .*
 - name: For idempotency, use full-form commands
-  community.network.icx_config:
+  commscope.icx.icx_config:
     lines:
       # - en
       - enable
@@ -221,14 +221,14 @@ EXAMPLES = """
 # Set boot image based on comparison to a group_var (version) and the version
 # that is returned from the `icx_facts` module
 - name: SETTING BOOT IMAGE
-  community.network.icx_config:
+  commscope.icx.icx_config:
     lines:
       - no boot system
       - boot system flash bootflash:{{new_image}}
     host: "{{ inventory_hostname }}"
   when: ansible_net_version != version
 - name: Render template onto an ICX device
-  community.network.icx_config:
+  commscope.icx.icx_config:
     backup: yes
     src: "{{ lookup('file', 'config.j2') }}"
 """

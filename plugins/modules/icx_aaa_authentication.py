@@ -131,7 +131,7 @@ options:
 """
 EXAMPLES = """
 - name: configure aaa authentication dot1x and enable
-  community.network.icx_aaa_authentication:
+  commscope.icx.icx_aaa_authentication:
     dot1x:
       primary_method: none
       state: present
@@ -142,7 +142,7 @@ EXAMPLES = """
         - line
       state: present
 - name: disable aaa authentication for web-server
-  community.network.icx_aaa_authentication:
+  commscope.icx.icx_aaa_authentication:
     web-server:
       primary_method: tacacs+
       backup_method_list:

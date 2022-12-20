@@ -278,7 +278,7 @@ options:
 """
 EXAMPLES = """
 - name: create ipv4 acl and add rules
-  community.network.icx_acl_ip:
+  commscope.icx.icx_acl_ip:
     acl_type: standard
     acl_name: acl1
     standard_rules:
@@ -287,7 +287,7 @@ EXAMPLES = """
         any: yes
         log: yes
 - name: create ipv4 acl and add rules
-  community.network.icx_acl_ip:
+  commscope.icx.icx_acl_ip:
     acl_type: extended
     acl_id: 112
     extended_rules:
@@ -301,7 +301,7 @@ EXAMPLES = """
         precedence: routine
         state: absent
 - name: remove ipv4 acl
-  community.network.icx_acl_ip:
+  commscope.icx.icx_acl_ip:
     acl_type: standard
     acl_name: acl1
     state: absent

@@ -88,7 +88,7 @@ options:
 """
 EXAMPLES = """
 - name: create mac acl and add rules
-  community.network.icx_acl_mac:
+  commscope.icx.icx_acl_mac:
     acl_name: mac123
     rule:
       - rule_type: permit

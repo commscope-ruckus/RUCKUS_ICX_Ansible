@@ -62,7 +62,7 @@ options:
 
 EXAMPLES = """
 - name: upgrade firmware using scp
-  community.network.icx_firmware_upgrade:
+  commscope.icx.icx_firmware_upgrade:
     server_type: scp
     server_address: 10.20.1.1
     partition: secondary
@@ -72,7 +72,7 @@ EXAMPLES = """
     scp_user: alethea
     scp_pass: alethea123
 - name: upgrade firmware using tftp
-  community.network.icx_firmware_upgrade:
+  commscope.icx.icx_firmware_upgrade:
     server_type: tftp
     server_address: 2001:db8::1
     partition: fips-ufi-primary-sig
@@ -80,7 +80,7 @@ EXAMPLES = """
     boot_only: False
     save_running_config: False
 - name: upgrade firmware using https
-  community.network.icx_firmware_upgrade:
+  commscope.icx.icx_firmware_upgrade:
     server_type: https
     server_address: 10.20.1.8
     partition: primary
@@ -88,7 +88,7 @@ EXAMPLES = """
     boot_only: False
     save_running_config: False
 - name: run only boot command
-  community.network.icx_firmware_upgrade:
+  commscope.icx.icx_firmware_upgrade:
     boot_only: True
     save_running_config: True
 """
