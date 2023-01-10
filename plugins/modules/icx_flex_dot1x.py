@@ -276,7 +276,7 @@ def main():
         max_reauth_req=dict(type='dict', options=max_reauth_req_spec),
         max_req=dict(type='dict', options=max_req_spec),
         port_control=dict(type='dict', options=port_control_spec, mutually_exclusive=mutually_exclusive, required_one_of=required_one_of),
-        timeout=dict(type='dict', options=timeout_spec, required_one_of=[['quiet_period', 'supplicant', 'tx_period']]),
+        timeout=dict(type='dict', options=timeout_spec, required_one_of=[['quiet_period', 'supplicant', 'tx_period']])
     )
     module = AnsibleModule(argument_spec=argument_spec,
                            supports_check_mode=True)
