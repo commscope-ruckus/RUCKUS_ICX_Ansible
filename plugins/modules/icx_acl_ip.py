@@ -13,8 +13,6 @@ author: "Ruckus Wireless (@Commscope)"
 short_description: Configures ACL in Ruckus ICX 7000 series switches.
 description:
   - Configures ACL in Ruckus ICX 7000 series switches.
-notes:
-  - Tested against ICX 10.1
 options:
   acl_type:
     description: Specifies standard/extended access control list.

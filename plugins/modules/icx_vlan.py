@@ -15,7 +15,6 @@ description:
   - This module provides declarative management of vlans
     on ICX switches.
 Notes:
-  - Tested against RUCKUS ICX 7000 software 9.0.00
   - For information on using ICX switches, please consult the documentation at https://support.ruckuswireless.com/documents
   - The ICX running configuration is not checked by default. To enable checking in a task, use check_running_config: True. If the running config is not checked, the playbook will always make changes
   - The tasks to remove a vlan entirely, to configure spanning tree, dhcp snooping and arp inspection never check the ICX running configuration, so the commands are executed every time

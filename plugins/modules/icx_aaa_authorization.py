@@ -13,8 +13,6 @@ author: "Ruckus Wireless (@Commscope)"
 short_description: Configures AAA authorization in Ruckus ICX 7000 series switches.
 description:
  - Configures AAA authorization in Ruckus ICX 7000 series switches.
-notes:
- - Tested against ICX 10.1
 options:
   coa_enable:
     description: Enables RADIUS Change of Authorization (CoA).

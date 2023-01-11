@@ -13,8 +13,6 @@ author: "Ruckus Wireless (@Commscope)"
 short_description: Configures mct in Ruckus ICX 7000 series switches.
 description:
   - Configures mct in Ruckus ICX 7000 series switches.
-notes:
-  - Tested against ICX 10.1
 options:
   cluster_name:
     description: Specifies the cluster name as an ASCII string. The cluster name can be up to 64 characters in length.

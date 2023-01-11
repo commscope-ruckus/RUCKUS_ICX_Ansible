@@ -19,8 +19,6 @@ author: "Ruckus Wireless (@Commscope)"
 short_description: Tests reachability using ping from Ruckus ICX 7000 series switches
 description:
   - Tests reachability using ping from switch to a remote destination.
-notes:
-  - Tested against ICX 10.1
 options:
     count:
       description:

@@ -15,8 +15,6 @@ description:
   - This will configure both login and motd banners on remote
     ruckus ICX 7000 series switches. It allows playbooks to add or remove
     banner text from the active running configuration.
-notes:
-  - Tested against ICX 10.1
 options:
   banner:
     description:

@@ -13,8 +13,6 @@ author: "Ruckus Wireless (@Commscope)"
 short_description: Configures ACL in Ruckus ICX 7000 series switches.
 description:
   - Configures ACL Assign in Ruckus ICX 7000 series switches.
-notes:
-  - Tested against ICX 10.1
 options:
   ip_access_group:
     description: Applies IPv4 access control lists (ACLs) to traffic entering or exiting an interface.

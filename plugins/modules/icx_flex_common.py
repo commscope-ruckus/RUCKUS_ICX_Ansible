@@ -13,8 +13,6 @@ author: "Ruckus Wireless (@Commscope)"
 short_description: Configures flexible authentication in Ruckus ICX 7000 series switches.
 description:
   - Configures flexible authentication in Ruckus ICX 7000 series switches.
-notes:
-  - Tested against ICX 10.1
 options:
   global_auth:
     description: Configure flexible authentication globally.

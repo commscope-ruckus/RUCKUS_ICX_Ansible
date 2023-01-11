@@ -19,7 +19,6 @@ short_description: Configures qos features on icx switch.
 description:
   - This module configures qos profiles.
 notes:
-  - Tested against ICX 10.1.
   - For information on using ICX platform, see L(the ICX OS Platform Options guide,../network/user_guide/platform_icx.html).
 options:
   egress_buffer_profile_7150:

@@ -13,8 +13,6 @@ author: "Ruckus Wireless (@Commscope)"
 short_description: Configures AAA authentication in Ruckus ICX 7000 series switches
 description:
   - Configures AAA authentication in Ruckus ICX 7000 series switches.
-notes:
-  - Tested against ICX 10.1
 options:
   dot1x:
     description: Enables 802.1X and MAC authentication."none" is not supported from 9.0.0
