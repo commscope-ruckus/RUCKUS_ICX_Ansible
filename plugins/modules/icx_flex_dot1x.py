@@ -151,7 +151,7 @@ from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx impo
 
 def build_command(
         module, enable=None, guest_vlan=None, max_reauth_req=None, max_req=None,
-        port_control=None, timeout=None, radius_server_dead_time=None, radius_server_test=None):
+        port_control=None, timeout=None):
     """
     Function to build the command to send to the terminal for the switch
     to execute. All args come from the module's unique params.
