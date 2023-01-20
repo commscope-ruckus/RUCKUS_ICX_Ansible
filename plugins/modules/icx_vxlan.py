@@ -145,9 +145,15 @@ def build_command(
         module, overlay_gateway_name=None, state=None, overlay_gateway_type=None, ip_interface=None, map_vlan=None, site=None):
     cmds = []
     if state == 'absent':
-        cmd = "no overlay-gateway {0}".format(overlay_gateway_name)
+        if(len(overlay_gateway_name)>64):
+            module.fail_json(msg='max allowed overlay gateway site name is 64 characters')
+        else:
+            cmd = "no overlay-gateway {0}".format(overlay_gateway_name)
     else:
-        cmd = "overlay-gateway {0}".format(overlay_gateway_name)
+        if(len(overlay_gateway_name)>64):
+            module.fail_json(msg='max allowed overlay gateway site name is 64 characters')
+        else:
+            cmd = "overlay-gateway {0}".format(overlay_gateway_name)
     cmds.append(cmd)
     if state == 'present':
         if overlay_gateway_type is not None:
@@ -197,6 +203,15 @@ def build_command(
                 cmd = "no type layer2-extension"
                 cmds.append(cmd)
     return cmds
+
+def check_fail(module, output):
+    error = [
+        re.compile(r"^error", re.I)
+    ]
+    for x in output:
+        for regex in error:
+            if regex.search(x):
+                module.fail_json(msg=x)
 
 
 def main():
