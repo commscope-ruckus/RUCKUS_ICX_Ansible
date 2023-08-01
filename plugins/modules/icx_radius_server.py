@@ -15,8 +15,6 @@ author: "Ruckus Wireless (@Commscope)"
 short_description: Configures radius server in Ruckus ICX 7000 series switches.
 description:
   - Configures radius server in Ruckus ICX 7000 series switches.
-notes:
-  - Tested against ICX 10.1
 options:
 radius_server_dead_time:
     description: Configures the interval at which the test user message is sent to the server to
@@ -99,11 +97,9 @@ def build_command(
    
     return cmds
 
-
-
-
 def main():
-    """entry point for module execution
+    """
+    entry point for module execution
     """
     radius_server_dead_time_spec = dict(
         time=dict(type='int', required=True),
