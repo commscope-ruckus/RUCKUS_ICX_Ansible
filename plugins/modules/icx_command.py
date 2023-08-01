@@ -16,8 +16,6 @@ description:
     read from the device. This module includes an
     argument that will cause the module to wait for a specific condition
     before returning or timing out if the condition is not met.
-notes:
-  - Tested against ICX 10.1
 options:
   commands:
     description:

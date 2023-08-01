@@ -13,8 +13,6 @@ author: "Ruckus Wireless (@Commscope)"
 short_description: Configures dot1x in Ruckus ICX 7000 series switches.
 description:
   - Configures dot1x in Ruckus ICX 7000 series switches.
-notes:
-  - Tested against ICX 10.1
 options:
   enable:
     description: Enables 802.1X authentication globally.

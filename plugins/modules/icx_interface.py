@@ -15,7 +15,6 @@ description:
   - This module provides declarative management of Interfaces
     on ruckus icx devices.
 notes:
-  - Tested against ICX 10.1.
   - For information on using ICX platform, see L(the ICX OS Platform Options guide,../network/user_guide/platform_icx.html).
 options:
   name:

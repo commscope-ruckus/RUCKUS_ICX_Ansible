@@ -17,7 +17,6 @@ description:
     current running config. It also supports purging usernames from the
     configuration that are not explicitly defined.
 notes:
-  - Tested against ICX 10.1.
   - For information on using ICX platform, see L(the ICX OS Platform Options guide,../network/user_guide/platform_icx.html).
 options:
   aggregate:

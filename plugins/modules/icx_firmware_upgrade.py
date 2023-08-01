@@ -14,8 +14,6 @@ author: "Ruckus Wireless (@Commscope)"
 short_description: Upgrades firmware of ICX switches
 description:
   - This module copies new firmware to switch, flashes it to primary/secondary and reboots the switch.
-notes:
-  - Tested against ICX 10.1.
 options:
   server_type:
     description:

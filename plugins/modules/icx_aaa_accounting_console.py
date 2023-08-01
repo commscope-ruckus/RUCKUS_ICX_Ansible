@@ -13,8 +13,6 @@ author: "Ruckus Wireless (@Commscope)"
 short_description: Configures AAA accounting in Ruckus ICX 7000 series switches.
 description:
   - Configures AAA accounting in Ruckus ICX 7000 series switches.
-notes:
-  - Tested against ICX 10.1
 options:
   commands:
     description: Configures the AAA accounting configuration parameters for EXEC commands.

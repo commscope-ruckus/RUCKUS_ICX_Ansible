@@ -13,8 +13,6 @@ author: "Ruckus Wireless (@Commscope)"
 short_description: Configures all aspects of VxLAN  implementation in Ruckus ICX 7000 series switches.
 description:
   - Configures all aspects of VxLAN implementation in Ruckus ICX 7000 series switches.
-notes:
-  - Tested against ICX 10.1
 options:
   overlay_gateway_name:
     description: Configures an overlay-gateway name and enters gateway configuration mode. name can be up to 64 characters in length.
