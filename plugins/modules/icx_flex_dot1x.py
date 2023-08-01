@@ -122,36 +122,7 @@ options:
         type: str
         default: present
         choices: ['present', 'absent']
-  radius_server_dead_time:
-    description: Configures the interval at which the test user message is sent to the server to
-                 check the status of non-responding servers that are marked as dead.
-    type: dict
-    suboptions:
-      time:
-        description: The time interval between successive server requests to check the availability of the RADIUS server in minutes.
-                     The valid values are from 1 through 5 minutes.
-        type: int
-        required: true
-      state:
-        description: Configure/Removes the dead time interval.
-        type: str
-        default: present
-        choices: ['present', 'absent']
-  radius_server_test:
-    description: Sets the user name to be used in the RADIUS request packets for RADIUS dead server detection.
-    type: dict
-    suboptions:
-      user_name:
-        description: The false user name used in the server test.
-        type: str
-        required: true
-      state:
-        description: Enable/Disable the configuration to send RADIUS request packets with false usernames for RADIUS dead server detection.
-        type: str
-        default: present
-        choices: ['present', 'absent']
-
-"""
+  """
 
 EXAMPLES = """
 - name: Enables dot1x on the specified interface
@@ -178,13 +149,12 @@ from ansible_collections.commscope.icx.plugins.module_utils.network.icx.icx impo
 
 def build_command(
         module, enable=None, guest_vlan=None, max_reauth_req=None, max_req=None,
-        port_control=None, timeout=None, radius_server_dead_time=None, radius_server_test=None):
+        port_control=None, timeout=None):
     """
     Function to build the command to send to the terminal for the switch
     to execute. All args come from the module's unique params.
     """
     cmds = []
-    auth_cmds = []
     cmd = 'authentication'
     cmds.append(cmd)
     if enable is not None:
@@ -258,23 +228,7 @@ def build_command(
             cmd3 =cmd+ " tx-period {0}".format(timeout['tx_period'])
             cmds.append(cmd3)
     cmds.append('exit')
-    if radius_server_dead_time is not None:
-        if radius_server_dead_time['state'] == 'absent':
-            cmd = "no radius-server dead-time {0}".format(radius_server_dead_time['time'])
-        else:
-            cmd = "radius-server dead-time {0}".format(radius_server_dead_time['time'])
-        auth_cmds.append(cmd)
-    if radius_server_test is not None:
-        if radius_server_test['state'] == 'absent':
-            cmd = "no radius-server test {0}".format(radius_server_test['user_name'])
-        else:
-            cmd = "radius-server test {0}".format(radius_server_test['user_name'])
-        auth_cmds.append(cmd)
-    if len(cmds) == 2:
-        return auth_cmds
-    else:
-        cmds.extend(auth_cmds)
-        return cmds
+    return cmds
 
 
 def main():
@@ -313,23 +267,14 @@ def main():
         tx_period=dict(type='int'),
         state=dict(type='str', default='present', choices=['present', 'absent'])
     )
-    radius_server_dead_time_spec = dict(
-        time=dict(type='int', required=True),
-        state=dict(type='str', default='present', choices=['present', 'absent'])
-    )
-    radius_server_test_spec = dict(
-        user_name=dict(type='str', required=True),
-        state=dict(type='str', default='present', choices=['present', 'absent'])
-    )
+    
     argument_spec = dict(
         enable=dict(type='dict', options=enable_spec, mutually_exclusive=[('all', 'ethernet')]),
         guest_vlan=dict(type='dict', options=guest_vlan_spec),
         max_reauth_req=dict(type='dict', options=max_reauth_req_spec),
         max_req=dict(type='dict', options=max_req_spec),
         port_control=dict(type='dict', options=port_control_spec, mutually_exclusive=mutually_exclusive, required_one_of=required_one_of),
-        timeout=dict(type='dict', options=timeout_spec, required_one_of=[['quiet_period', 'supplicant', 'tx_period']]),
-        radius_server_dead_time=dict(type='dict', options=radius_server_dead_time_spec),
-        radius_server_test=dict(type='dict', options=radius_server_test_spec)
+        timeout=dict(type='dict', options=timeout_spec, required_one_of=[['quiet_period', 'supplicant', 'tx_period']])
     )
     module = AnsibleModule(argument_spec=argument_spec,
                            supports_check_mode=True)
@@ -342,15 +287,13 @@ def main():
     max_req = module.params["max_req"]
     port_control = module.params["port_control"]
     timeout = module.params["timeout"]
-    radius_server_dead_time = module.params["radius_server_dead_time"]
-    radius_server_test = module.params["radius_server_test"]
 
     if warnings:
         results['warnings'] = warnings
 
     commands = build_command(
         module, enable, guest_vlan, max_reauth_req, max_req, port_control,
-        timeout, radius_server_dead_time, radius_server_test)
+        timeout)
     results['commands'] = commands
 
     if commands:
