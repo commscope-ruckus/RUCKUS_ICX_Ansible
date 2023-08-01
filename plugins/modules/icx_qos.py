@@ -341,19 +341,19 @@ options:
 
 EXAMPLES = """
   - name: Modifies the dynamic buffer-share
-    community.network.icx_qos:
+    commscope.icx.icx_qos:
       internal_trunk_queue:
         level: level5-1/5
         queue: 4
         state: present
   - name: update dscp-priority
-    community.network.icx_qos:
+    commscope.icx.icx_qos:
       dscp_priority:
          dscp_value: 0 1 3 4
          priority: '2'
          state: absent
   - name: update cpu rate limit
-    community.network.icx_qos:
+    commscope.icx.icx_qos:
       sflow_set_cpu_rate_limit:
         burst_size: 5000
         packet_rate: 1000

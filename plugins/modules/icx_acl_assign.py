@@ -198,7 +198,7 @@ options:
 """
 EXAMPLES = """
 - name: ipv4,ipv6,MAC ACLs assign to same ethernet interface
-  community.network.icx_acl_assign:
+  commscope.icx.icx_acl_assign:
     ip_access_group:
       acl_name: scale12
       in_out: in
@@ -214,7 +214,7 @@ EXAMPLES = """
   register: output
 
 - name: ipv4,ipv6,MAC ACLs assign to same lag interface
-  community.network.icx_acl_assign:
+  commscope.icx.icx_acl_assign:
     ip_access_group:
       acl_name: scale12
       in_out: in
@@ -231,7 +231,7 @@ EXAMPLES = """
   register: output
 
 - name: ipv4,ipv6,MAC ACLs assign to vlan interfaces
-  community.network.icx_acl_assign:
+  commscope.icx.icx_acl_assign:
     ip_access_group:
       acl_name: scale12
       in_out: in
@@ -250,7 +250,7 @@ EXAMPLES = """
   register: output
 
 - name: Each acl assigned to same vlan, but different ethernet and lag of the vlan
-  community.network.icx_acl_assign:
+  commscope.icx.icx_acl_assign:
     ip_access_group:
       acl_name: scale12
       in_out: in

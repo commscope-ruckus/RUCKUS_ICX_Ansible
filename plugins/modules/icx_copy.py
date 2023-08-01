@@ -63,7 +63,7 @@ options:
 
 EXAMPLES = """
 - name: Upload running-config to the remote scp server
-  community.network.icx_copy:
+  commscope.icx.icx_copy:
     upload: running-config
     protocol: scp
     remote_server: 172.16.10.49
@@ -71,7 +71,7 @@ EXAMPLES = """
     remote_user: user1
     remote_pass: pass123
 - name: Download running-config from the remote scp server
-  community.network.icx_copy:
+  commscope.icx.icx_copy:
     download: running-config
     protocol: scp
     remote_server: 172.16.10.49
@@ -79,7 +79,7 @@ EXAMPLES = """
     remote_user: user1
     remote_pass: pass123
 - name: Download running-config from the remote scp server using rsa public key
-  community.network.icx_copy:
+  commscope.icx.icx_copy:
     download: running-config
     protocol: scp
     remote_server: 172.16.10.49
@@ -88,7 +88,7 @@ EXAMPLES = """
     remote_pass: pass123
     public_key: rsa
 - name: Upload startup-config to the remote https server
-  community.network.icx_copy:
+  commscope.icx.icx_copy:
     upload: startup-config
     protocol: https
     remote_server: 172.16.10.49
@@ -96,7 +96,7 @@ EXAMPLES = """
     remote_user: user1
     remote_pass: pass123
 - name: Upload startup-config to the remote https server
-  community.network.icx_copy:
+  commscope.icx.icx_copy:
     upload: startup-config
     protocol: https
     remote_server: 172.16.10.49
@@ -104,7 +104,7 @@ EXAMPLES = """
     remote_user: user1
     remote_pass: pass123
 - name: Download OS image into the flash from remote scp ipv6 server
-  community.network.icx_copy:
+  commscope.icx.icx_copy:
     download: startup-config
     protocol: scp
     remote_server: ipv6 FE80:CD00:0000:0CDE:1257:0000:211E:729C
@@ -112,7 +112,7 @@ EXAMPLES = """
     remote_user: user1
     remote_pass: pass123
 - name: Download OS image into the secondary flash from remote scp ipv6 server
-  community.network.icx_copy:
+  commscope.icx.icx_copy:
     Download: flash_secondary
     protocol: scp
     remote_server: ipv6 FE80:CD00:0000:0CDE:1257:0000:211E:729C
@@ -120,7 +120,7 @@ EXAMPLES = """
     remote_user: user1
     remote_pass: pass123
 - name: Download OS image into the secondary flash from remote scp ipv6 server on port 5000
-  community.network.icx_copy:
+  commscope.icx.icx_copy:
     Download: flash_secondary
     protocol: scp
     remote_server: ipv6 FE80:CD00:0000:0CDE:1257:0000:211E:729C
@@ -129,7 +129,7 @@ EXAMPLES = """
     remote_user: user1
     remote_pass: pass123
 - name: Download OS image into the primary flash from remote https ipv6 server
-  community.network.icx_copy:
+  commscope.icx.icx_copy:
     Download: flash_primary
     protocol: https
     remote_server: ipv6 FE80:CD00:0000:0CDE:1257:0000:211E:729C
@@ -137,7 +137,7 @@ EXAMPLES = """
     remote_user: user1
     remote_pass: pass123
 - name: Download OS image into the primary flash from remote https ipv6 server on port 8080
-  community.network.icx_copy:
+  commscope.icx.icx_copy:
     Download: flash_primary
     protocol: https
     remote_server: ipv6 FE80:CD00:0000:0CDE:1257:0000:211E:729C
