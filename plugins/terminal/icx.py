@@ -48,18 +48,13 @@ class TerminalModule(TerminalBase):
         re.compile(br"Errno")
     ]
 
+
     def on_open_shell(self):
+        self.on_become(passwd=self._connection._play_context.password)
         try:
-            commands = ('{"command": "' + "en" + '", "prompt": "Password:", "answer": "' +
-                        self._connection._play_context.password + '"}',
-                        '{"command": "skip"}')
-            for cmd in commands:
-                self._exec_cli_command(cmd)
+            self._exec_cli_command(b'skip')
         except AnsibleConnectionFailure:
-            try:
-                self._exec_cli_command(b'skip')
-            except AnsibleConnectionFailure:
-                raise AnsibleConnectionFailure('unable to set terminal parameters')
+            raise AnsibleConnectionFailure('unable to set terminal parameters')
 
     def __del__(self):
         try:
