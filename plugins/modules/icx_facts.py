@@ -498,7 +498,7 @@ class Interfaces(FactsBase):
             return match.group(1)
 
     def parse_lldp_system_name(self, data):
-        match = re.search(r'System name *: *"(.+)"$', data, re.M | re.I)
+        match = re.search(r'System name\s*:\s*\"?(.*?)\"?$', data, re.M | re.I)
         if match:
             return match.group(1)
 
