@@ -164,20 +164,15 @@ class Default(FactsBase):
             self.facts['model'] = self.parse_model(data)
             self.facts['image'] = self.parse_image(data)
             self.facts['hostname'] = self.parse_hostname(self.responses[0])
-            self.facts['info'] = 'Unit' + det['Unit'] + ':' + det['model'] + ', ' + self.parse_serialnum(data, det['Unit'])
+            self.facts['info'] = 'Unit' + det['Unit'] + ':' + det['model'] + ', ' + self.parse_serialnum(data)
             self.parse_stacks(data)
 
-    def parse_serialnum(self, data, unit):
+    def parse_serialnum(self, data):
         try:
-            match1 = re.search("UNIT " + unit + ": SL .*?. Software", data, re.DOTALL)
-            if match1:
-                line = match1.group(0)
-                match2 = re.search(r'Serial  #:(\S+)', line)
-                if match2:
-                    serial_num = match2.group(1)
-                    return serial_num
+            return re.search(r'Serial  #:(.+)', data).group(1).strip()
         except:
-            return ""
+            return "UNKNOWN"
+
 
     def parse_version(self, data):
         match = re.search(r'SW: Version ([0-9]+.[0-9]+.[0-9a-zA-Z]+)', data)
