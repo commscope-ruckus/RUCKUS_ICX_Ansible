@@ -200,12 +200,11 @@ class Default(FactsBase):
             return match.group(1)
 
     def parse_unit(self, data):
-        match = re.search(r'.*  (active|alone)  .*', data)
+        match = re.search(r'^(\d+)\s+\S+\s+(\S+)\s+(active|alone)\b', data, re.M)
         if match:
-            det = match.group(0)
-            unit = det.split('  ')[0]
-            model = det.split('  ')[1]
-            return {'Unit': unit, 'model': model.split(' ')[1]}
+            unit = match.group(1)
+            model = match.group(2)
+            return {'Unit': unit, 'model': model}
 
     def parse_stacks(self, data):
         match = re.findall(r'UNIT [1-9]+: SL [1-9]+: (\S+)', data, re.M)
