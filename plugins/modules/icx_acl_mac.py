@@ -21,7 +21,7 @@ options:
     type: str
     required: true
   accounting:
-    description: Enables/Disables accounting for the ipv6 ACL.
+    description: Enables/Disables accounting for the MAC ACL.
     type: str
     choices: ['enable', 'disable']
   rule:
@@ -81,7 +81,7 @@ options:
         default: present
         choices: ['present', 'absent']
   state:
-    description: Create/Remove an IPv6 access control list (ACL).
+    description: Create/Remove a MAC access control list (ACL).
     type: str
     default: present
     choices: ['present', 'absent']

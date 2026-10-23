@@ -55,7 +55,7 @@ options:
     choices: ['any', 'all']
   retries:
     description:
-      - Specifies the number of times a command should by tried
+      - Specifies the number of times a command should be tried
         before it is considered failed. The command is run on the
         target device every retry and evaluated against the
         I(wait_for) conditions.
@@ -99,7 +99,7 @@ tasks:
         - command: 'service password-encryption sha1'
           prompt: 'Warning: Moving to higher password-encryption type,.*'
           answer: 'y'
-  - name: Run commands that require answering multiple prompt
+  - name: Run commands that require answering multiple prompts
     community.network.icx_command:
       commands:
         - command: 'username qqq password qqq'

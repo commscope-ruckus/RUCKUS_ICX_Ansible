@@ -76,7 +76,7 @@ options:
         type: str
         choices: ['radius', 'tacacs+', 'none']
       backup_method2:
-        description: Backup authorization method if primary and backup1 methods fails.
+        description: Backup authorization method if primary and backup1 methods fail.
         type: str
         choices: ['none']
       state:
